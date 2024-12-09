@@ -145,17 +145,55 @@ const ProjectForm = ({ onSubmitSuccess }) => {
 
     console.log({ ...formData, ...inst });
 
-    try {
-      const response = await fetch(
-        `${endpoint}/api/uploadWholeData`,
+    // try {
+    //   const response = await fetch(
+    //     `${endpoint}/api/uploadWholeData`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ ...formData, ...inst }),
+    //     }
+    //   );
+
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! status: ${response.status}`);
+    //   }
+
+    //   const result = await response.json();
+    //   console.log("Success:", result);
+    //   onSubmitSuccess?.();
+    //   // Handle success (e.g., show success message, redirect, etc.)
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
+  };
+
+  const sendData = async () => {
+    const inst = {
+      meetingInstructions: [
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...formData, ...inst }),
-        }
-      );
+          description: null,
+          date: null,
+          compliance: null,
+
+          feedback: formData.meetingInstructions,
+        },
+      ],
+    };
+
+    console.log({ ...formData, ...inst });
+    try {
+      const response = await fetch(`${endpoint}/api/uploadWholeData`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData, ...inst }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -163,12 +201,8 @@ const ProjectForm = ({ onSubmitSuccess }) => {
 
       const result = await response.json();
       console.log("Success:", result);
-      onSubmitSuccess?.();
-      // Handle success (e.g., show success message, redirect, etc.)
     } catch (error) {
       console.error("Error:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -631,24 +665,52 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         { label: "Official Name", name: "officialName", type: "text" },
         { label: "Official Email", name: "officialEmail", type: "text" },
         { label: "Official Phone", name: "officialPhone", type: "text" },
-        { label: "Official Designation", name: "officialDesignation", type: "text" },
-        { label: "Official Department", name: "officialDepartment", type: "text" },
+        {
+          label: "Official Designation",
+          name: "officialDesignation",
+          type: "text",
+        },
+        {
+          label: "Official Department",
+          name: "officialDepartment",
+          type: "text",
+        },
         { label: "Inspection Type", name: "inspectionType", type: "text" },
-        { label: "Inspection Instruction", name: "inspectionInstruction", type: "text" },
+        {
+          label: "Inspection Instruction",
+          name: "inspectionInstruction",
+          type: "text",
+        },
         { label: "Inspection Status", name: "inspectionStatus", type: "text" },
         { label: "Inspection Report", name: "inspectionReport", type: "text" },
       ])}
-  
+
       {/* Project Essential Test Section */}
       {renderDynamicSection("projectEssentialTest", [
         { label: "Test Name", name: "testName", type: "text" },
-        { label: "Sample Collection Date", name: "dateOfSampleCollection", type: "date" },
-        { label: "Sampling Authority", name: "samplingAuthority", type: "text" },
-        { label: "Sample Test Lab Name", name: "sampleTestLabName", type: "text" },
+        {
+          label: "Sample Collection Date",
+          name: "dateOfSampleCollection",
+          type: "date",
+        },
+        {
+          label: "Sampling Authority",
+          name: "samplingAuthority",
+          type: "text",
+        },
+        {
+          label: "Sample Test Lab Name",
+          name: "sampleTestLabName",
+          type: "text",
+        },
         { label: "Sample Test Report", name: "sampleTestReport", type: "text" },
-        { label: "Sample Collection Site Images", name: "sampleCollectionSiteImages", type: "text" },
+        {
+          label: "Sample Collection Site Images",
+          name: "sampleCollectionSiteImages",
+          type: "text",
+        },
       ])}
-  
+
       {/* Project Gallery Section */}
       {renderDynamicSection("projectGallery", [
         { label: "Image", name: "image", type: "text" },
@@ -659,18 +721,38 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         { label: "Accuracy", name: "accuracy", type: "number" },
         { label: "Time", name: "time", type: "date" },
       ])}
-  
+
       {/* Milestones Section */}
       {renderDynamicSection("mileStones", [
         { label: "Milestone Name", name: "milestoneName", type: "text" },
-        { label: "Milestone From Date", name: "milestoneFromDate", type: "date" },
-        { label: "Milestone Completion Date", name: "milestoneCompletionDate", type: "date" },
-        { label: "Milestone Actual Completion Date", name: "milestoneActualCompletionDate", type: "date" },
+        {
+          label: "Milestone From Date",
+          name: "milestoneFromDate",
+          type: "date",
+        },
+        {
+          label: "Milestone Completion Date",
+          name: "milestoneCompletionDate",
+          type: "date",
+        },
+        {
+          label: "Milestone Actual Completion Date",
+          name: "milestoneActualCompletionDate",
+          type: "date",
+        },
         { label: "Milestone Status", name: "milestoneStatus", type: "text" },
-        { label: "Milestone Description", name: "milestoneDescription", type: "text" },
-        { label: "Milestone Progress", name: "milestoneProgress", type: "number" },
+        {
+          label: "Milestone Description",
+          name: "milestoneDescription",
+          type: "text",
+        },
+        {
+          label: "Milestone Progress",
+          name: "milestoneProgress",
+          type: "number",
+        },
       ])}
-  
+
       {/* Issues Section */}
       {renderDynamicSection("issues", [
         { label: "Issue Name", name: "issueName", type: "text" },
@@ -683,13 +765,29 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         { label: "Issue Closed Date", name: "issueClosedDate", type: "date" },
         { label: "Issue Closed By", name: "issueClosedBy", type: "text" },
       ])}
-  
+
       {/* Budget Installment Section */}
       {renderDynamicSection("budgetInstallment", [
-        { label: "Installment Amount", name: "installmentAmount", type: "number" },
-        { label: "Installment Expenditure", name: "installmentExpenditure", type: "number" },
-        { label: "Amount Received Date", name: "amountReceivedDate", type: "date" },
-        { label: "Utilization Certificate", name: "utilizationCertificate", type: "text" },
+        {
+          label: "Installment Amount",
+          name: "installmentAmount",
+          type: "number",
+        },
+        {
+          label: "Installment Expenditure",
+          name: "installmentExpenditure",
+          type: "number",
+        },
+        {
+          label: "Amount Received Date",
+          name: "amountReceivedDate",
+          type: "date",
+        },
+        {
+          label: "Utilization Certificate",
+          name: "utilizationCertificate",
+          type: "text",
+        },
       ])}
     </div>
   );
@@ -767,6 +865,34 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             {isSubmitting ? "Submitting..." : "Submit Project"}
           </button>
         )}
+
+        <button
+          onClick={() => {
+            const inst = {
+              meetingInstructions: [
+                {
+                  description: null,
+                  date: null,
+                  compliance: null,
+
+                  feedback: formData.meetingInstructions,
+                },
+              ],
+            };
+
+            console.log({ ...formData, ...inst });
+          }}
+        >
+          object
+        </button>
+
+        <button
+          onClick={() => {
+            sendData();
+          }}
+        >
+          submit
+        </button>
       </div>
     </form>
   );

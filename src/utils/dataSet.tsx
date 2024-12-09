@@ -70,7 +70,7 @@ export const ProjectTableDataKeys = [
   "lastFundReceivedDate",
   "utilizationCertificateSubmissionDate",
   "delayReason",
-  "landAvailabilityDate",
+  "landHandoverDate",
   "lastUpdatedDateOnCmis",
   
   
@@ -973,6 +973,9 @@ export const projectTestHeader = {
   },
 };
 
+// export const endpoint =
+//   "https://pradyogik.in";
+  
 export const endpoint =
-  "https://pradyogik.in";
+  "http://localhost:3000";
   

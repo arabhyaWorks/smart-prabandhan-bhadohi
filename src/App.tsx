@@ -4,7 +4,7 @@ import { Layout } from "./components/Layout";
 import { Landing } from "./pages/Landing";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
-import { Projects } from "./pages/staticProjecsts";
+import { Projects } from "./pages/Projects";
 import ProjectCreation from "./components/drawer/dataEntryForm";
 
 import { Issues } from "./pages/Issues";
@@ -25,7 +25,6 @@ function App() {
       <AuthProvider>
         <EntitiesProvider>
           <Routes>
-
             <Route path="/login" element={<Login />} />
             <Route path="/" index element={<Landing />} />
             <Route path="/" element={<Layout />}>

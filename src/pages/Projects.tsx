@@ -54,6 +54,7 @@ export function Projects() {
 
       console.log("Response Data:", response.data);
       // return response.data;
+      
 
       return setProjects(response.data);
     } catch (error) {

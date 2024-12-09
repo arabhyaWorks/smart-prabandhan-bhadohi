@@ -1,9 +1,10 @@
 import axios from "axios";
+import { endpoint } from "./dataSet";
 
 const generateAndDownloadPDF = async (data) => {
   try {
     // Send POST request to API
-    const response = await axios.post("/generate-pdf", data, {
+    const response = await axios.post(`${endpoint}/generate-pdf`, data, {
       headers: {
         "Content-Type": "application/json",
       },
