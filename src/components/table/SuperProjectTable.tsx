@@ -28,7 +28,7 @@ export const DataTable = ({
 }: DataTableProps) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [entriesPerPage, setEntriesPerPage] = useState(100);
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -113,14 +113,12 @@ export const DataTable = ({
                         key={index}
                         className={classNames(
                           "px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-2 border-gray-100",
-                          index === 0 ? "w-16 text-center" : "w-40",
+                          index === 0 ? "w-16 text-center" : "w-40"
                           // key === "projectName" ? "bg-red-100 w-[20px]" : ""
-
                         )}
                         style={{
-                        maxWidth: key === "projectName" ? "500px" : "200px",
-                        overflow: "hidden",
-
+                          maxWidth: key === "projectName" ? "500px" : "200px",
+                          overflow: "hidden",
                         }}
                       >
                         {key === "projectStatus" ? (
