@@ -4,7 +4,7 @@ import { Layout } from "./components/Layout";
 import { Landing } from "./pages/Landing";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
-import { Projects } from "./pages/Projects";
+import { Projects } from "./pages/staticProjecsts";
 import ProjectCreation from "./components/drawer/dataEntryForm";
 
 import { Issues } from "./pages/Issues";
