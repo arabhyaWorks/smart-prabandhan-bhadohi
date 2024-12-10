@@ -62,7 +62,10 @@ export const ProjectFilters = ({
               width: "12rem",
             }}
             value={selectedDepartment}
-            onChange={(e) => onDepartmentChange(e.target.value)}
+            onChange={(e) => {
+              onDepartmentChange(e.target.value);
+              console.log(e.target.value);
+            }}
             className="rounded-md outline-none font-medium border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600"
           >
             <option value="">सभी विभाग</option>
