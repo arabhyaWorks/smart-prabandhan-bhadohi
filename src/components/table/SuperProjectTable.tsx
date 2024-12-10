@@ -10,6 +10,16 @@ import classNames from "classnames";
 import { ProjectTableDataKeys } from "../../utils/dataSet";
 import { convertToIST } from "../../utils/functions";
 
+const projectStatuses = [
+  "योजना चरण में",
+  "रोक पर",
+  "प्रगति पर है",
+
+  "विलंबित",
+  "पूर्ण हुआ",
+];
+
+
 interface DataTableProps {
   searchTerm: string;
   projects: Array<string>;
@@ -136,7 +146,7 @@ export const DataTable = ({
                                 : "bg-red-100 text-red-800"
                             )}
                           >
-                            {project[key]}
+                            {projectStatuses[project[key]]}
                           </p>
                         ) : key === "projectUpdate" ||
                           key === "projectGallery" ||

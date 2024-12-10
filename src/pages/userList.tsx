@@ -37,7 +37,7 @@ export default function UsersList() {
 
   const fetchUsers = async () => {
     axios
-      .get("http://localhost:3000/api/users")
+      .get(`${endpoint}/api/users`)
       .then((res) => {
         // console.log(res.data.data);
         console.log(entities);
@@ -101,7 +101,7 @@ export default function UsersList() {
       alert("Please fill all the fields");
       return;
     }
-  
+
     const payload = {
       entityId: entityId,
       entityName: entityName,
@@ -112,9 +112,9 @@ export default function UsersList() {
       userPassword: userPassword,
       userRole: 5,
     };
-  
+
     console.log("Payload:", payload); // Add this to inspect the payload
-  
+
     axios
       .post(`${endpoint}/api/users`, payload)
       .then((res) => {
@@ -254,9 +254,7 @@ export default function UsersList() {
                 />
               </div>
               {error && (
-                <div className="text-red-500 text-sm font-medium">
-                  {error}
-                </div>
+                <div className="text-red-500 text-sm font-medium">{error}</div>
               )}
             </div>
 

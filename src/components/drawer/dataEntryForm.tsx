@@ -582,7 +582,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           value={revisedProjectCompletionDate}
           onChange={setRevisedProjectCompletionDate}
           placeholder="Select date"
-          required
+          // required
         />
 
         {/* Confusion with revised project completion date */}
@@ -627,7 +627,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           value={actualCompletionDate}
           onChange={setActualCompletionDate}
           placeholder="Select date"
-          required
+          // required
         />
         <FormField
           label="Work Order Formation Date"
@@ -638,7 +638,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           value={workOrderFormationDate}
           onChange={setWorkOrderFormationDate}
           placeholder="Select date"
-          required
+          // required
         />
       </div>
 
@@ -651,7 +651,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         value={landHandoverDate}
         onChange={setLandHandoverDate}
         placeholder="Select date"
-        required
+        // required
       />
     </div>
   );
@@ -843,7 +843,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         {
           label: "Milestone Progress",
           name: "milestoneProgress",
-          type: "number",
+          type: "text",
         },
       ])}
 
