@@ -690,19 +690,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             <div key={name}>
               {type === "date" ? (
                 <input
-                  type="date"
-                  value={
-                    entry[name]
-                      ? formatToInputDate(entry[name])
-                      : "" /* Ensure the correct format for date inputs */
-                  }
+                  // type="date"
+                  value={entry[name] || ""}
                   onChange={(e) =>
-                    handleEntryChange(
-                      field,
-                      index,
-                      name,
-                      formatToDDMMYY(e.target.value) // Format to dd/MM/yy
-                    )
+                    handleEntryChange(field, index, name, e.target.value)
                   }
                   placeholder={`Select ${label}`}
                   className="w-full border p-2 rounded"
@@ -1017,4 +1008,3 @@ const ProjectForm = ({ onSubmitSuccess }) => {
 };
 
 export default ProjectForm;
-

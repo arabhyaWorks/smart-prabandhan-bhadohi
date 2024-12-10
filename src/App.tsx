@@ -6,6 +6,7 @@ import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { Projects } from "./pages/Projects";
 // import { Projects } from "./pages/staticProjecsts";
+import Testing from "./pages/testing";
 import ProjectCreation from "./components/drawer/dataEntryForm";
 
 import { Issues } from "./pages/Issues";
@@ -48,6 +49,8 @@ function App() {
               <Route path="issues" element={<Issues />} />
 
               <Route path="projectCreation" element={<ProjectCreation />} />
+              <Route path="testing" element={<Testing />} />
+              
             </Route>
           </Routes>
         </EntitiesProvider>
