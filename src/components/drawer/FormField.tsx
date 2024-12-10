@@ -1,13 +1,14 @@
-import React from 'react';
-import classNames from 'classnames';
-import DatePicker from 'react-datepicker';
+import React from "react";
+import classNames from "classnames";
+// import DatePicker from "react-datepicker";
+import { DatePicker } from "../datePicker/DatePicker";
 
 interface FormFieldProps {
   label: string;
   name: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'date';
+  type: "text" | "number" | "select" | "textarea" | "date";
   value: any;
-  onChange: (e: any) => void;
+  onChange: any;
   placeholder?: string;
   options?: { value: string; label: string }[];
   className?: string;
@@ -23,33 +24,55 @@ const FormField: React.FC<FormFieldProps> = ({
   placeholder,
   options,
   className,
-  required
+  required,
 }) => {
-  const baseInputClasses = "w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-gray-50 hover:bg-white";
+  const baseInputClasses =
+    "w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-gray-50 hover:bg-white";
 
+  const formatToDDMMYY = (dateStr) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return ""; // Handle invalid dates
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2); // Get last 2 digits of year
+    return `${day}-${month}-${year}`;
+  };
+
+  /**
+   * Helper function to convert dd/MM/yy back to input-compatible format yyyy-MM-dd
+   */
+  const formatToInputDate = (ddmmyy) => {
+    const [day, month, year] = ddmmyy.split("-");
+    if (!day || !month || !year) return ""; // Handle invalid formats
+    return `20${year}-${month}-${day}`; // Reformat to yyyy-MM-dd for input
+  };
   const renderField = () => {
     switch (type) {
-      case 'select':
+      case "select":
         return (
           <select
             name={name}
             value={value}
             onChange={onChange}
-            className={classNames(baseInputClasses, "appearance-none bg-no-repeat", {
-              "text-gray-500": !value
-            })}
+            className={classNames(
+              baseInputClasses,
+              "appearance-none bg-no-repeat",
+              {
+                "text-gray-500": !value,
+              }
+            )}
             required={required}
           >
-            <option value="">{placeholder || 'Select an option'}</option>
-            {options?.map(option => (
+            <option value="">{placeholder || "Select an option"}</option>
+            {options?.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
           </select>
         );
-      
-      case 'textarea':
+
+      case "textarea":
         return (
           <textarea
             name={name}
@@ -61,19 +84,43 @@ const FormField: React.FC<FormFieldProps> = ({
             required={required}
           />
         );
-      
-      case 'date':
+
+      case "date":
         return (
-          <DatePicker
-            selected={value}
-            onChange={(date) => onChange(date)}
-            className={baseInputClasses}
-            dateFormat="dd/MM/yyyy"
-            placeholderText={placeholder}
-            required={required}
+          // <DatePicker
+          //   selected={value}
+          //   onChange={(date) => onChange(date)}
+          //   className={baseInputClasses}
+          //   dateFormat="dd/MM/yyyy"
+          // />
+
+          // <DatePicker
+          //   value={value}
+          //   required={required}
+          //   onChange={onchange}
+          //   placeholderText={placeholder}
+          // />
+
+          // value={workOrderFormationDate}
+          // onChange={setWorkOrderFormationDate}
+
+          <input
+            type="date"
+            value={value ? formatToInputDate(value) : ""}
+            onChange={(e) =>
+              // handleEntryChange(
+              //   field,
+              //   index,
+              //   name,
+              //   formatToDDMMYY(e.target.value) // Format to dd/MM/yy
+              // )
+              onChange(formatToDDMMYY(e.target.value))
+            }
+            placeholder={`Select ${label}`}
+            className="w-full border p-2 rounded"
           />
         );
-      
+
       default:
         return (
           <input

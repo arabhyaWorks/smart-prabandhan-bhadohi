@@ -50,17 +50,17 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     fundSanctionedBy: "",
     concernedOfficialName: "",
     concernedProjectManager: "",
-    projectSanctionDate: "",
+    // projectSanctionDate: "",
     projectFinancialApprovalGoNumber: "",
-    projectFinancialApprovalDate: "",
-    actualProjectStartDate: "",
-    projectCompletionDate: "",
-    revisedProjectSanctionDate: "",
-    revisedProjectCompletionDate: "",
-    estimatedCompletionDate: "",
-    actualCompletionDate: "",
-    workOrderFormationDate: "",
-    landHandoverDate: "",
+    // projectFinancialApprovalDate: "",
+    // actualProjectStartDate: "",
+    // projectCompletionDate: "",
+    // revisedProjectSanctionDate: "",
+    // revisedProjectCompletionDate: "",
+    // estimatedCompletionDate: "",
+    // actualCompletionDate: "",
+    // workOrderFormationDate: "",
+    // landHandoverDate: "",
     contactInformation: 1,
 
     totalApprovedBudget: "",
@@ -72,7 +72,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     totalReleasedFunds: "",
     totalExpenditure: "",
 
-    contractDate: "",
+    // contractDate: "",
     delayReason: "",
     meetingInstructions: "",
 
@@ -84,6 +84,30 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     issues: [],
     budgetInstallment: [],
   });
+
+  const [projectSanctionDate, setProjectSanctionDate] = useState<Date | null>(
+    null
+  );
+  const [projectFinancialApprovalDate, setProjectFinancialApprovalDate] =
+    useState<Date | null>(null);
+  const [actualProjectStartDate, setActualProjectStartDate] =
+    useState<Date | null>(null);
+  const [projectCompletionDate, setProjectCompletionDate] =
+    useState<Date | null>(null);
+  const [revisedProjectSanctionDate, setRevisedProjectSanctionDate] =
+    useState<Date | null>(null);
+  const [revisedProjectCompletionDate, setRevisedProjectCompletionDate] =
+    useState<Date | null>(null);
+  const [estimatedCompletionDate, setEstimatedCompletionDate] =
+    useState<Date | null>(null);
+  const [actualCompletionDate, setActualCompletionDate] = useState<Date | null>(
+    null
+  );
+  const [workOrderFormationDate, setWorkOrderFormationDate] =
+    useState<Date | null>(null);
+  const [landHandoverDate, setLandHandoverDate] = useState<Date | null>(null);
+  const [contractDate, setContractDate] = useState<Date | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (
@@ -131,6 +155,20 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       contactInformation: 1,
     }));
 
+    const dates = {
+      projectSanctionDate,
+      projectFinancialApprovalDate,
+      actualProjectStartDate,
+      projectCompletionDate,
+      revisedProjectSanctionDate,
+      revisedProjectCompletionDate,
+      estimatedCompletionDate,
+      actualCompletionDate,
+      workOrderFormationDate,
+      landHandoverDate,
+      contractDate,
+    };
+
     const inst = {
       meetingInstructions: [
         {
@@ -143,7 +181,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       ],
     };
 
-    console.log({ ...formData, ...inst });
+    console.log({ ...formData, ...inst, ...dates });
 
     // try {
     //   const response = await fetch(
@@ -185,14 +223,28 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       ],
     };
 
-    console.log({ ...formData, ...inst });
+    const dates = {
+      projectSanctionDate,
+      projectFinancialApprovalDate,
+      actualProjectStartDate,
+      projectCompletionDate,
+      revisedProjectSanctionDate,
+      revisedProjectCompletionDate,
+      estimatedCompletionDate,
+      actualCompletionDate,
+      workOrderFormationDate,
+      landHandoverDate,
+      contractDate,
+    };
+
+    console.log({ ...formData, ...inst, ...dates });
     try {
       const response = await fetch(`${endpoint}/api/uploadWholeData`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, ...inst }),
+        body: JSON.stringify({ ...formData, ...inst, ...dates }),
       });
 
       if (!response.ok) {
@@ -206,7 +258,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     }
   };
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const renderProjectInformation = () => (
@@ -443,18 +495,21 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="परियोजना स्वीकृति की तिथि (Project Sanction Date)"
           name="projectSanctionDate"
           type="date"
-          value={formData.projectSanctionDate}
-          onChange={(date) => handleDateChange(date, "projectSanctionDate")}
+          value={projectSanctionDate}
+          // onChange={(date) => handleDateChange(date, "projectSanctionDate")}
+          onChange={setProjectSanctionDate}
           placeholder="Select date"
         />
         <FormField
           label="परियोजना हेतु शासन द्वारा जारी वित्तीय स्वीकृति का दिनांक (Project Financial Approval Date)"
           name="projectFinancialApprovalDate"
           type="date"
-          value={formData.projectFinancialApprovalDate}
-          onChange={(date) =>
-            handleDateChange(date, "projectFinancialApprovalDate")
-          }
+          // value={formData.projectFinancialApprovalDate}
+          // onChange={(date) =>
+          //   handleDateChange(date, "projectFinancialApprovalDate")
+          // }
+          value={projectFinancialApprovalDate}
+          onChange={setProjectFinancialApprovalDate}
           placeholder="Select date"
         />
       </div>
@@ -472,16 +527,20 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="अनुबन्ध की तिथि (Contract Date)"
           name="contractDate"
           type="date"
-          value={formData.contractDate}
-          onChange={(date) => handleDateChange(date, "contractDate")}
+          // value={formData.contractDate}
+          // onChange={(date) => handleDateChange(date, "contractDate")}
+          value={contractDate}
+          onChange={setContractDate}
           placeholder="Select date"
         />
         <FormField
           label="कार्य प्रारंभ की वास्तविक तिथि (Actual Project Start Date)"
           name="actualProjectStartDate"
           type="date"
-          value={formData.actualProjectStartDate}
-          onChange={(date) => handleDateChange(date, "actualProjectStartDate")}
+          // value={formData.actualProjectStartDate}
+          // onChange={(date) => handleDateChange(date, "actualProjectStartDate")}
+          value={actualProjectStartDate}
+          onChange={setActualProjectStartDate}
           placeholder="Select date"
         />
       </div>
@@ -491,18 +550,22 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="अनुबन्ध के अनुसार कार्य पूर्ण करने की तिथि (Project Completion Date as per work order)"
           name="projectCompletionDate"
           type="date"
-          value={formData.projectCompletionDate}
-          onChange={(date) => handleDateChange(date, "projectCompletionDate")}
+          // value={formData.projectCompletionDate}
+          // onChange={(date) => handleDateChange(date, "projectCompletionDate")}
+          value={projectCompletionDate}
+          onChange={setProjectCompletionDate}
           placeholder="Select date"
         />
         <FormField
           label="Revised Project Sanction Date"
           name="revisedProjectSanctionDate"
           type="date"
-          value={formData.revisedProjectSanctionDate}
-          onChange={(date) =>
-            handleDateChange(date, "revisedProjectSanctionDate")
-          }
+          // value={formData.revisedProjectSanctionDate}
+          // onChange={(date) =>
+          //   handleDateChange(date, "revisedProjectSanctionDate")
+          // }
+          value={revisedProjectSanctionDate}
+          onChange={setRevisedProjectSanctionDate}
           placeholder="Select date"
         />
       </div>
@@ -512,12 +575,14 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="मूल निर्धारित तिथि तक कार्य पूर्ण न होने की स्थिति मे विभाग द्वारा निर्धारित नई लक्षित तिथि (Revised Project Completion Date)"
           name="revisedProjectCompletionDate"
           type="date"
-          value={formData.revisedProjectCompletionDate}
-          onChange={(date) =>
-            handleDateChange(date, "revisedProjectCompletionDate")
-          }
+          // value={formData.revisedProjectCompletionDate}
+          // onChange={(date) =>
+          //   handleDateChange(date, "revisedProjectCompletionDate")
+          // }
+          value={revisedProjectCompletionDate}
+          onChange={setRevisedProjectCompletionDate}
           placeholder="Select date"
-          //required
+          required
         />
 
         {/* Confusion with revised project completion date */}
@@ -525,10 +590,12 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="Estimated date of completion of work as per executing agency in case of project delay"
           name="estimatedCompletionDate"
           type="date"
-          value={formData.estimatedCompletionDate}
-          onChange={(date) => handleDateChange(date, "estimatedCompletionDate")}
+          // value={formData.estimatedCompletionDate}
+          // onChange={(date) => handleDateChange(date, "estimatedCompletionDate")}
+          value={estimatedCompletionDate}
+          onChange={setEstimatedCompletionDate}
           placeholder="Select date"
-          //required
+          required
         /> */}
 
         <FormField
@@ -555,19 +622,23 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="Actual Completion Date "
           name="actualCompletionDate"
           type="date"
-          value={formData.actualCompletionDate}
-          onChange={(date) => handleDateChange(date, "actualCompletionDate")}
+          // value={formData.actualCompletionDate}
+          // onChange={(date) => handleDateChange(date, "actualCompletionDate")}
+          value={actualCompletionDate}
+          onChange={setActualCompletionDate}
           placeholder="Select date"
-          //required
+          required
         />
         <FormField
           label="Work Order Formation Date"
           name="workOrderFormationDate"
           type="date"
-          value={formData.workOrderFormationDate}
-          onChange={(date) => handleDateChange(date, "workOrderFormationDate")}
+          // value={formData.workOrderFormationDate}
+          // onChange={(date) => handleDateChange(date, "workOrderFormationDate")}
+          value={workOrderFormationDate}
+          onChange={setWorkOrderFormationDate}
           placeholder="Select date"
-          //required
+          required
         />
       </div>
 
@@ -575,10 +646,12 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         label="कार्यदायी संस्था को भूमि उपलब्ध होने की तिथि (Date of Land Handover to Executing Agency)"
         name="landHandoverDate"
         type="date"
-        value={formData.landHandoverDate}
-        onChange={(date) => handleDateChange(date, "landHandoverDate")}
+        // value={formData.landHandoverDate}
+        // onChange={(date) => handleDateChange(date, "landHandoverDate")}
+        value={landHandoverDate}
+        onChange={setLandHandoverDate}
         placeholder="Select date"
-        //required
+        required
       />
     </div>
   );
@@ -616,13 +689,22 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           {fieldsConfig.map(({ label, name, type }) => (
             <div key={name}>
               {type === "date" ? (
-                <DatePicker
-                  selected={entry[name] ? new Date(entry[name]) : undefined}
-                  onChange={(date) =>
-                    handleEntryChange(field, index, name, formatDate(date))
+                <input
+                  type="date"
+                  value={
+                    entry[name]
+                      ? formatToInputDate(entry[name])
+                      : "" /* Ensure the correct format for date inputs */
                   }
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText={`Select ${label}`}
+                  onChange={(e) =>
+                    handleEntryChange(
+                      field,
+                      index,
+                      name,
+                      formatToDDMMYY(e.target.value) // Format to dd/MM/yy
+                    )
+                  }
+                  placeholder={`Select ${label}`}
                   className="w-full border p-2 rounded"
                 />
               ) : (
@@ -656,6 +738,27 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       </button>
     </div>
   );
+
+  /**
+   * Helper function to convert date to dd/MM/yy
+   */
+  const formatToDDMMYY = (dateStr) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return ""; // Handle invalid dates
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2); // Get last 2 digits of year
+    return `${day}-${month}-${year}`;
+  };
+
+  /**
+   * Helper function to convert dd/MM/yy back to input-compatible format yyyy-MM-dd
+   */
+  const formatToInputDate = (ddmmyy) => {
+    const [day, month, year] = ddmmyy.split("-");
+    if (!day || !month || !year) return ""; // Handle invalid formats
+    return `20${year}-${month}-${day}`; // Reformat to yyyy-MM-dd for input
+  };
 
   const renderDynamicSections = () => (
     <div className="space-y-6">
@@ -793,7 +896,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form
+      // onSubmit={handleSubmit}
+      className="space-y-8"
+    >
       <StepIndicator currentStep={currentStep} steps={STEPS} />
 
       <div className="mb-8">
@@ -821,9 +927,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             {renderScheduleInformation()}
           </div>
         )}
+        {currentStep === 4 && (
+          <div className="space-y-6">{renderDynamicSections()}</div>
+        )}
       </div>
-
-      <div className="space-y-6">{renderDynamicSections()}</div>
 
       <div className="flex justify-between pt-6 border-t">
         <button
@@ -841,7 +948,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           Previous
         </button>
 
-        {currentStep < 3 ? (
+        {
           <button
             type="button"
             onClick={nextStep}
@@ -850,21 +957,23 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             Next
             <ChevronRight className="w-5 h-5 ml-2" />
           </button>
-        ) : (
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={classNames(
-              "flex items-center px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-white",
-              isSubmitting
-                ? "bg-green-500 cursor-wait"
-                : "bg-green-600 hover:bg-green-700"
-            )}
-          >
-            <Save className="w-5 h-5 mr-2" />
-            {isSubmitting ? "Submitting..." : "Submit Project"}
-          </button>
-        )}
+          // :
+          //  (
+          //   <button
+          //     type="submit"
+          //     disabled={isSubmitting}
+          //     className={classNames(
+          //       "flex items-center px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-white",
+          //       isSubmitting
+          //         ? "bg-green-500 cursor-wait"
+          //         : "bg-green-600 hover:bg-green-700"
+          //     )}
+          //   >
+          //     <Save className="w-5 h-5 mr-2" />
+          //     {isSubmitting ? "Submitting..." : "Submit Project"}
+          //   </button>
+          // )
+        }
 
         <button
           onClick={() => {
@@ -880,22 +989,32 @@ const ProjectForm = ({ onSubmitSuccess }) => {
               ],
             };
 
-            console.log({ ...formData, ...inst });
+            const dates = {
+              projectSanctionDate,
+              projectFinancialApprovalDate,
+              actualProjectStartDate,
+              projectCompletionDate,
+              revisedProjectSanctionDate,
+              revisedProjectCompletionDate,
+              estimatedCompletionDate,
+              actualCompletionDate,
+              workOrderFormationDate,
+              landHandoverDate,
+              contractDate,
+            };
+
+            console.log({ ...formData, ...inst, ...dates });
+            // alert(JSON.stringify({ ...formData, ...inst, ...dates }));
           }}
         >
           object
         </button>
 
-        <button
-          onClick={() => {
-            sendData();
-          }}
-        >
-          submit
-        </button>
+        <button onClick={sendData}>submit</button>
       </div>
     </form>
   );
 };
 
 export default ProjectForm;
+

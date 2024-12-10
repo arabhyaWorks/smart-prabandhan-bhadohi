@@ -181,8 +181,8 @@ export function Projects() {
             Export
           </button>
           <button
-            // onClick={() => setIsDrawerOpen(true)}
-            onClick={() => window.location.href = "/projectCreation"}
+            onClick={() => setIsDrawerOpen(true)}
+            // onClick={() => window.location.href = "/projectCreation"}
             className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500"
           >
             <Plus className="h-5 w-5 mr-1" />

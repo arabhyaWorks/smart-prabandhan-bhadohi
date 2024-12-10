@@ -48,17 +48,17 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     fundSanctionedBy: "",
     concernedOfficialName: "",
     concernedProjectManager: "",
-    projectSanctionDate: "",
+    // projectSanctionDate: "",
     projectFinancialApprovalGoNumber: "",
-    projectFinancialApprovalDate: "",
-    actualProjectStartDate: "",
-    projectCompletionDate: "",
-    revisedProjectSanctionDate: "",
-    revisedProjectCompletionDate: "",
-    estimatedCompletionDate: "",
-    actualCompletionDate: "",
-    workOrderFormationDate: "",
-    landHandoverDate: "",
+    // projectFinancialApprovalDate: "",
+    // actualProjectStartDate: "",
+    // projectCompletionDate: "",
+    // revisedProjectSanctionDate: "",
+    // revisedProjectCompletionDate: "",
+    // estimatedCompletionDate: "",
+    // actualCompletionDate: "",
+    // workOrderFormationDate: "",
+    // landHandoverDate: "",
     contactInformation: 1,
 
     totalApprovedBudget: "",
@@ -70,10 +70,23 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     totalReleasedFunds: "",
     totalExpenditure: "",
 
-    contractDate: "",
+    // contractDate: "",
     delayReason: "",
     meetingInstructions: "",
   });
+
+const [projectSanctionDate, setProjectSanctionDate] = useState('');
+const [projectFinancialApprovalDate, setProjectFinancialApprovalDate] = useState('');
+const [actualProjectStartDate, setActualProjectStartDate] = useState('');
+const [projectCompletionDate, setProjectCompletionDate] = useState('');
+const [revisedProjectSanctionDate, setRevisedProjectSanctionDate] = useState('');
+const [revisedProjectCompletionDate, setRevisedProjectCompletionDate] = useState('');
+const [estimatedCompletionDate, setEstimatedCompletionDate] = useState('');
+const [actualCompletionDate, setActualCompletionDate] = useState('');
+const [workOrderFormationDate, setWorkOrderFormationDate] = useState('');
+const [landHandoverDate, setLandHandoverDate] = useState('');
+const [contractDate, setContractDate] = useState('');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (
@@ -401,18 +414,22 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="परियोजना स्वीकृति की तिथि (Project Sanction Date)"
           name="projectSanctionDate"
           type="date"
-          value={formData.projectSanctionDate}
-          onChange={(date) => handleDateChange(date, "projectSanctionDate")}
+          value={projectSanctionDate}
+          // onChange={(date) => handleDateChange(date, "projectSanctionDate")}
+          onChange={setProjectSanctionDate}
           placeholder="Select date"
         />
         <FormField
           label="परियोजना हेतु शासन द्वारा जारी वित्तीय स्वीकृति का दिनांक (Project Financial Approval Date)"
           name="projectFinancialApprovalDate"
           type="date"
-          value={formData.projectFinancialApprovalDate}
-          onChange={(date) =>
-            handleDateChange(date, "projectFinancialApprovalDate")
-          }
+          // value={formData.projectFinancialApprovalDate}
+          // onChange={(date) =>
+          //   handleDateChange(date, "projectFinancialApprovalDate")
+          // }
+          value={projectFinancialApprovalDate}
+          onChange={setProjectFinancialApprovalDate}
+
           placeholder="Select date"
         />
       </div>
@@ -430,16 +447,22 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="अनुबन्ध की तिथि (Contract Date)"
           name="contractDate"
           type="date"
-          value={formData.contractDate}
-          onChange={(date) => handleDateChange(date, "contractDate")}
+          // value={formData.contractDate}
+          // onChange={(date) => handleDateChange(date, "contractDate")}
+          value={contractDate}
+          onChange={setContractDate}
+
           placeholder="Select date"
         />
         <FormField
           label="कार्य प्रारंभ की वास्तविक तिथि (Actual Project Start Date)"
           name="actualProjectStartDate"
           type="date"
-          value={formData.actualProjectStartDate}
-          onChange={(date) => handleDateChange(date, "actualProjectStartDate")}
+          // value={formData.actualProjectStartDate}
+          // onChange={(date) => handleDateChange(date, "actualProjectStartDate")}
+          value={actualProjectStartDate}
+          onChange={setActualProjectStartDate}
+
           placeholder="Select date"
         />
       </div>
@@ -449,18 +472,22 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="अनुबन्ध के अनुसार कार्य पूर्ण करने की तिथि (Project Completion Date as per work order)"
           name="projectCompletionDate"
           type="date"
-          value={formData.projectCompletionDate}
-          onChange={(date) => handleDateChange(date, "projectCompletionDate")}
+          // value={formData.projectCompletionDate}
+          // onChange={(date) => handleDateChange(date, "projectCompletionDate")}
+          value={projectCompletionDate}
+          onChange={setProjectCompletionDate}
           placeholder="Select date"
         />
         <FormField
           label="Revised Project Sanction Date"
           name="revisedProjectSanctionDate"
           type="date"
-          value={formData.revisedProjectSanctionDate}
-          onChange={(date) =>
-            handleDateChange(date, "revisedProjectSanctionDate")
-          }
+          // value={formData.revisedProjectSanctionDate}
+          // onChange={(date) =>
+          //   handleDateChange(date, "revisedProjectSanctionDate")
+          // }
+          value={revisedProjectSanctionDate}
+          onChange={setRevisedProjectSanctionDate}
           placeholder="Select date"
         />
       </div>
@@ -470,10 +497,13 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="मूल निर्धारित तिथि तक कार्य पूर्ण न होने की स्थिति मे विभाग द्वारा निर्धारित नई लक्षित तिथि (Revised Project Completion Date)"
           name="revisedProjectCompletionDate"
           type="date"
-          value={formData.revisedProjectCompletionDate}
-          onChange={(date) =>
-            handleDateChange(date, "revisedProjectCompletionDate")
-          }
+          // value={formData.revisedProjectCompletionDate}
+          // onChange={(date) =>
+          //   handleDateChange(date, "revisedProjectCompletionDate")
+          // }
+          value={revisedProjectCompletionDate}
+          onChange={setRevisedProjectCompletionDate}
+
           placeholder="Select date"
           required
         />
@@ -483,8 +513,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="Estimated date of completion of work as per executing agency in case of project delay"
           name="estimatedCompletionDate"
           type="date"
-          value={formData.estimatedCompletionDate}
-          onChange={(date) => handleDateChange(date, "estimatedCompletionDate")}
+          // value={formData.estimatedCompletionDate}
+          // onChange={(date) => handleDateChange(date, "estimatedCompletionDate")}
+          value={estimatedCompletionDate}
+          onChange={setEstimatedCompletionDate}
           placeholder="Select date"
           required
         /> */}
@@ -513,8 +545,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="Actual Completion Date "
           name="actualCompletionDate"
           type="date"
-          value={formData.actualCompletionDate}
-          onChange={(date) => handleDateChange(date, "actualCompletionDate")}
+          // value={formData.actualCompletionDate}
+          // onChange={(date) => handleDateChange(date, "actualCompletionDate")}
+          value={actualCompletionDate}
+          onChange={setActualCompletionDate}
           placeholder="Select date"
           required
         />
@@ -522,8 +556,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           label="Work Order Formation Date"
           name="workOrderFormationDate"
           type="date"
-          value={formData.workOrderFormationDate}
-          onChange={(date) => handleDateChange(date, "workOrderFormationDate")}
+          // value={formData.workOrderFormationDate}
+          // onChange={(date) => handleDateChange(date, "workOrderFormationDate")}
+          value={workOrderFormationDate}
+          onChange={setWorkOrderFormationDate}
           placeholder="Select date"
           required
         />
@@ -533,8 +569,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         label="कार्यदायी संस्था को भूमि उपलब्ध होने की तिथि (Date of Land Handover to Executing Agency)"
         name="landHandoverDate"
         type="date"
-        value={formData.landHandoverDate}
-        onChange={(date) => handleDateChange(date, "landHandoverDate")}
+        // value={formData.landHandoverDate}
+        // onChange={(date) => handleDateChange(date, "landHandoverDate")}
+        value={landHandoverDate}
+        onChange={setLandHandoverDate}
         placeholder="Select date"
         required
       />

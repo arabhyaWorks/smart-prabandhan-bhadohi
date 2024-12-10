@@ -87,15 +87,23 @@ export const DataTable = ({
           <tbody className="bg-white divide-y divide-gray-200">
             {currentEntries.map((project, index) => (
               <tr key={index} className="hover:bg-gray-50 transition-colors">
-                {headerKeys.map((key, index) => (
+                {headerKeys.map((key, headerIndex) => (
                   <td
                     key={index}
                     className={classNames(
                       "px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-2 border-gray-100",
-                      index === 0 ? "w-16 text-center" : "w-40"
+                      headerIndex === 0 ? "w-2 text-center" : "w-40"
                     )}
                   >
-                    {project[key]}
+                    {
+                      key === "id" ? (
+                        <>
+                        {index+1}
+                        </>
+                      ) : (
+                        project[key] || "-"
+                      )
+                    }
                   </td>
                 ))}
               </tr>
