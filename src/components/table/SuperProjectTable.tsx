@@ -19,7 +19,6 @@ const projectStatuses = [
   "पूर्ण हुआ",
 ];
 
-
 interface DataTableProps {
   searchTerm: string;
   projects: Array<string>;
@@ -131,7 +130,9 @@ export const DataTable = ({
                           overflow: "hidden",
                         }}
                       >
-                        {key === "projectStatus" ? (
+                        {key === "id" ? (
+                          <p>{rowIndex + 1}</p>
+                        ) : key === "projectStatus" ? (
                           <p
                             className={classNames(
                               "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
