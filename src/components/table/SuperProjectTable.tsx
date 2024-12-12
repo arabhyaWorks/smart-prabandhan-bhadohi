@@ -162,9 +162,11 @@ export const DataTable = ({
                             {project[key]}
                           </button>
                         ) : key.includes("Date") ? (
-                          convertToIST(project[key])
+                          <div className="">
+                          <p className="">{convertToIST(project[key]).split("-").join("/")}</p>
+                          </div>
                         ) : (
-                          project[key]
+                            project[key]
                         )}
                       </td>
                     )

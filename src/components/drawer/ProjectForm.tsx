@@ -344,7 +344,7 @@ const [contractDate, setContractDate] = useState('');
       <FormField
         label="परियोजना की स्वीकृत लागत (Approved Project Cost)"
         name="approvedProjectCost"
-        type="number"
+        type="text"
         value={formData.approvedProjectCost}
         onChange={handleInputChange}
         placeholder="Enter amount"
@@ -352,7 +352,7 @@ const [contractDate, setContractDate] = useState('');
       <FormField
         label="अनुबन्ध के अनुसर परियोजना की धनराशि (Contract Cost)"
         name="contractCost"
-        type="number"
+        type="text"
         value={formData.contractCost}
         onChange={handleInputChange}
         placeholder="Enter amount"
@@ -361,7 +361,7 @@ const [contractDate, setContractDate] = useState('');
       <FormField
         label="कुल अवमुक्त धनराशि (Total Released Funds)"
         name="totalReleasedFunds"
-        type="number"
+        type="text"
         value={formData.totalReleasedFunds}
         onChange={handleInputChange}
         placeholder="Enter amount"
@@ -369,7 +369,7 @@ const [contractDate, setContractDate] = useState('');
       <FormField
         label="कुल व्यय धनराशि (Total Expenditure)"
         name="totalExpenditure"
-        type="number"
+        type="text"
         value={formData.totalExpenditure}
         onChange={handleInputChange}
         placeholder="Enter amount"
@@ -505,7 +505,7 @@ const [contractDate, setContractDate] = useState('');
           onChange={setRevisedProjectCompletionDate}
 
           placeholder="Select date"
-          required
+          // required
         />
 
         {/* Confusion with revised project completion date */}
@@ -550,7 +550,7 @@ const [contractDate, setContractDate] = useState('');
           value={actualCompletionDate}
           onChange={setActualCompletionDate}
           placeholder="Select date"
-          required
+          // required
         />
         <FormField
           label="Work Order Formation Date"
@@ -561,7 +561,7 @@ const [contractDate, setContractDate] = useState('');
           value={workOrderFormationDate}
           onChange={setWorkOrderFormationDate}
           placeholder="Select date"
-          required
+          // required
         />
       </div>
 
@@ -574,7 +574,7 @@ const [contractDate, setContractDate] = useState('');
         value={landHandoverDate}
         onChange={setLandHandoverDate}
         placeholder="Select date"
-        required
+        // required
       />
     </div>
   );
@@ -602,9 +602,11 @@ const [contractDate, setContractDate] = useState('');
         )}
         {currentStep === 3 && (
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Schedule Information
+            <h2 className="text-2xl font-bold text-gray-800 ">
+              Schedule Information 
             </h2>
+            <span className="text-sm text-red-500 mb-10">(Date should be entered in dd-mm-yy format in the input)</span>
+
             {renderScheduleInformation()}
           </div>
         )}
