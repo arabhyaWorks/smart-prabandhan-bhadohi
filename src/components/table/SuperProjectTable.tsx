@@ -14,7 +14,6 @@ const projectStatuses = [
   "योजना चरण में",
   "रोक पर",
   "प्रगति पर है",
-
   "विलंबित",
   "पूर्ण हुआ",
 ];
@@ -86,7 +85,7 @@ export const DataTable = ({
                     <th
                       key={header}
                       className={classNames(
-                        "px-6 py-4 text-left text-sm font-bold text-orange-800 tracking-wider whitespace-normal border-2 border-gray-100",
+                        "px-6 py-4 text-left text-sm font-bold text-orange-800 tracking-wider border-2 border-gray-100",
                         index === 0 ? "w-16" : "w-40"
                       )}
                     >
@@ -95,22 +94,6 @@ export const DataTable = ({
                   )
               )}
             </tr>
-            {/* <tr>
-              {headers.en.map(
-                (header, index) =>
-                  visibleColumns.includes(index.toString()) && (
-                    <th
-                      key={header}
-                      className={classNames(
-                        "px-6 py-4 text-left text-sm font-bold text-orange-800 tracking-wider whitespace-normal border-2 border-gray-100",
-                        index === 0 ? "w-16" : "w-40"
-                      )}
-                    >
-                      {header}
-                    </th>
-                  )
-              )}
-            </tr> */}
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {currentEntries.map((project, rowIndex) => (
@@ -121,34 +104,36 @@ export const DataTable = ({
                       <td
                         key={index}
                         className={classNames(
-                          "px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-2 border-gray-100",
-                          index === 0 ? "w-16 text-center" : "w-40"
-                          // key === "projectName" ? "bg-red-100 w-[20px]" : ""
+                          "px-6 py-4 text-sm text-gray-900 border-2 border-gray-100",
+                          index === 0 ? "text-center" : "whitespace-normal"
                         )}
                         style={{
                           maxWidth: key === "projectName" ? "500px" : "200px",
-                          overflow: "hidden",
+                          overflowWrap: "break-word",
+                          whiteSpace: "normal",
                         }}
                       >
                         {key === "id" ? (
                           <p>{rowIndex + 1}</p>
                         ) : key === "projectStatus" ? (
-                          <p
-                            className={classNames(
-                              "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
-                              project.projectStatus === "Complete"
-                                ? "bg-green-100 text-green-800"
-                                : project.projectStatus === "कार्य प्रगति पर"
-                                ? "bg-blue-100 text-blue-800"
-                                : project.projectStatus === "प्रारंभिक चरण"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : project.projectStatus === "योजना निर्माण"
-                                ? "bg-gray-100 text-gray-800"
-                                : "bg-red-100 text-red-800"
-                            )}
-                          >
-                            {projectStatuses[project[key]]}
-                          </p>
+                          <div className="w-20 flex-row justify-center align-center">
+                            <p
+                              className={classNames(
+                                "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                                project.projectStatus === "Complete"
+                                  ? "bg-green-100 text-green-800"
+                                  : project.projectStatus === "कार्य प्रगति पर"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : project.projectStatus === "प्रारंभिक चरण"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : project.projectStatus === "योजना निर्माण"
+                                  ? "bg-gray-100 text-gray-800"
+                                  : "bg-red-100 text-red-800"
+                              )}
+                            >
+                              {projectStatuses[project[key]]}
+                            </p>
+                          </div>
                         ) : key === "projectUpdate" ||
                           key === "projectGallery" ||
                           key === "meetingInstructions" ||
@@ -172,7 +157,7 @@ export const DataTable = ({
                             onClick={() =>
                               navigate(`/projectDetail/${project.id}`)
                             }
-                            className="text-black-500  hover:underline focus:outline-none"
+                            className="text-black-500 hover:underline focus:outline-none"
                           >
                             {project[key]}
                           </button>
