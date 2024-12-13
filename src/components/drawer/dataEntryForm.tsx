@@ -85,28 +85,20 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     budgetInstallment: [],
   });
 
-  const [projectSanctionDate, setProjectSanctionDate] = useState<Date | null>(
-    null
-  );
+  const [projectSanctionDate, setProjectSanctionDate] = useState("");
   const [projectFinancialApprovalDate, setProjectFinancialApprovalDate] =
-    useState<Date | null>(null);
-  const [actualProjectStartDate, setActualProjectStartDate] =
-    useState<Date | null>(null);
-  const [projectCompletionDate, setProjectCompletionDate] =
-    useState<Date | null>(null);
+    useState("");
+  const [actualProjectStartDate, setActualProjectStartDate] = useState("");
+  const [projectCompletionDate, setProjectCompletionDate] = useState("");
   const [revisedProjectSanctionDate, setRevisedProjectSanctionDate] =
-    useState<Date | null>(null);
+    useState("");
   const [revisedProjectCompletionDate, setRevisedProjectCompletionDate] =
-    useState<Date | null>(null);
-  const [estimatedCompletionDate, setEstimatedCompletionDate] =
-    useState<Date | null>(null);
-  const [actualCompletionDate, setActualCompletionDate] = useState<Date | null>(
-    null
-  );
-  const [workOrderFormationDate, setWorkOrderFormationDate] =
-    useState<Date | null>(null);
-  const [landHandoverDate, setLandHandoverDate] = useState<Date | null>(null);
-  const [contractDate, setContractDate] = useState<Date | null>(null);
+    useState("");
+  const [estimatedCompletionDate, setEstimatedCompletionDate] = useState("");
+  const [actualCompletionDate, setActualCompletionDate] = useState("");
+  const [workOrderFormationDate, setWorkOrderFormationDate] = useState("");
+  const [landHandoverDate, setLandHandoverDate] = useState("");
+  const [contractDate, setContractDate] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -139,11 +131,6 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       [entityType]: entities[index].entity_name,
       [id]: entities[index].id,
     }));
-  };
-
-  const handleDateChange = (date: Date | null, field: keyof FormData) => {
-    setFormData((prev) => ({ ...prev, [field]: formatDate(date) }));
-    console.log(formatDate(date));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -182,6 +169,64 @@ const ProjectForm = ({ onSubmitSuccess }) => {
 
     console.log({ ...formData, ...inst, ...dates });
 
+    // try {
+    //   const response = await fetch(
+    //     `${endpoint}/api/uploadWholeData`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ ...formData, ...inst }),
+    //     }
+    //   );
+
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! status: ${response.status}`);
+    //   }
+
+    //   const result = await response.json();
+    //   console.log("Success:", result);
+    //   onSubmitSuccess?.();
+    //   // Handle success (e.g., show success message, redirect, etc.)
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
+  };
+
+  const sendData = async (e) => {
+    e.preventDefault();
+
+    setIsSubmitting(true);
+    const inst = {
+      meetingInstructions: [
+        {
+          description: null,
+          date: null,
+          compliance: null,
+
+          feedback: formData.meetingInstructions,
+        },
+      ],
+    };
+
+    const dates = {
+      projectSanctionDate,
+      projectFinancialApprovalDate,
+      actualProjectStartDate,
+      projectCompletionDate,
+      revisedProjectSanctionDate,
+      revisedProjectCompletionDate,
+      estimatedCompletionDate,
+      actualCompletionDate,
+      workOrderFormationDate,
+      landHandoverDate,
+      contractDate,
+    };
+
+    console.log({ ...formData, ...inst, ...dates });
     try {
       const response = await fetch(`${endpoint}/api/uploadWholeData`, {
         method: "POST",
@@ -197,7 +242,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
 
       const result = await response.json();
       console.log("Success:", result);
-      onSubmitSuccess?.();
+      if (result.success) {
+        alert("Project data uploaded successfully");
+        onSubmitSuccess?.();
+      }
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -205,57 +253,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     }
   };
 
-  // const sendData = async (e) => {
-  //   e.preventDefault();
-
-  //   const inst = {
-  //     meetingInstructions: [
-  //       {
-  //         description: null,
-  //         date: null,
-  //         compliance: null,
-
-  //         feedback: formData.meetingInstructions,
-  //       },
-  //     ],
-  //   };
-
-  //   const dates = {
-  //     projectSanctionDate,
-  //     projectFinancialApprovalDate,
-  //     actualProjectStartDate,
-  //     projectCompletionDate,
-  //     revisedProjectSanctionDate,
-  //     revisedProjectCompletionDate,
-  //     estimatedCompletionDate,
-  //     actualCompletionDate,
-  //     workOrderFormationDate,
-  //     landHandoverDate,
-  //     contractDate,
-  //   };
-
-  //   console.log({ ...formData, ...inst, ...dates });
-  //   try {
-  //     const response = await fetch(`${endpoint}/api/uploadWholeData`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ ...formData, ...inst, ...dates }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const result = await response.json();
-  //     console.log("Success:", result);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
-
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const renderProjectInformation = () => (
@@ -727,6 +725,27 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     </div>
   );
 
+  /**
+   * Helper function to convert date to dd/MM/yy
+   */
+  const formatToDDMMYY = (dateStr) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return ""; // Handle invalid dates
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2); // Get last 2 digits of year
+    return `${day}-${month}-${year}`;
+  };
+
+  /**
+   * Helper function to convert dd/MM/yy back to input-compatible format yyyy-MM-dd
+   */
+  const formatToInputDate = (ddmmyy) => {
+    const [day, month, year] = ddmmyy.split("-");
+    if (!day || !month || !year) return ""; // Handle invalid formats
+    return `20${year}-${month}-${day}`; // Reformat to yyyy-MM-dd for input
+  };
+
   const renderDynamicSections = () => (
     <div className="space-y-6">
       {/* Project Inspection Section */}
@@ -863,7 +882,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form
+      // onSubmit={handleSubmit}
+      className="space-y-8"
+    >
       <StepIndicator currentStep={currentStep} steps={STEPS} />
 
       <div className="mb-8">
@@ -912,7 +934,33 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           Previous
         </button>
 
-        {currentStep < 3 ? (
+        {currentStep < 3 && (
+          <button
+            type="button"
+            onClick={nextStep}
+            className="flex items-center px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            Next
+            <ChevronRight className="w-5 h-5 ml-2" />
+          </button>
+        )}
+
+        {currentStep === 3 && (
+          <button
+            className={classNames(
+              "flex items-center px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-white",
+              isSubmitting
+                ? "bg-green-500 cursor-wait"
+                : "bg-green-600 hover:bg-green-700"
+            )}
+            onClick={sendData}
+          >
+            <Save className="w-5 h-5 mr-2" />
+            {isSubmitting ? "Submitting..." : "Submit Project"}
+          </button>
+        )}
+
+        {/* {currentStep < 3 ? (
           <button
             type="button"
             onClick={nextStep}
@@ -923,8 +971,8 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           </button>
         ) : (
           <button
-            type="submit"
             disabled={isSubmitting}
+            onClick={sendData}
             className={classNames(
               "flex items-center px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-white",
               isSubmitting
@@ -935,7 +983,44 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             <Save className="w-5 h-5 mr-2" />
             {isSubmitting ? "Submitting..." : "Submit Project"}
           </button>
-        )}
+        )} */}
+
+        {/* <button
+          onClick={() => {
+            const inst = {
+              meetingInstructions: [
+                {
+                  description: null,
+                  date: null,
+                  compliance: null,
+
+                  feedback: formData.meetingInstructions,
+                },
+              ],
+            };
+
+            const dates = {
+              projectSanctionDate,
+              projectFinancialApprovalDate,
+              actualProjectStartDate,
+              projectCompletionDate,
+              revisedProjectSanctionDate,
+              revisedProjectCompletionDate,
+              estimatedCompletionDate,
+              actualCompletionDate,
+              workOrderFormationDate,
+              landHandoverDate,
+              contractDate,
+            };
+
+            console.log({ ...formData, ...inst, ...dates });
+            // alert(JSON.stringify({ ...formData, ...inst, ...dates }));
+          }}
+        >
+          object
+        </button> */}
+
+        {/* <button onClick={sendData}>submit</button> */}
       </div>
     </form>
   );

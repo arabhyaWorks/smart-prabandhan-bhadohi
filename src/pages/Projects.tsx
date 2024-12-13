@@ -7,7 +7,7 @@ import { Plus, Search, Download, Filter } from "lucide-react";
 import { DataTable } from "../components/table/SuperProjectTable";
 import { ProjectFilters } from "../components/table/ProjectFilters";
 import Drawer from "../components/drawer/Drawer";
-import ProjectForm from "../components/drawer/ProjectForm";
+import ProjectForm from "../components/drawer/dataEntryForm";
 import { projectsData, headers } from "../utils/dataSet";
 import { endpoint } from "../utils/dataSet";
 
