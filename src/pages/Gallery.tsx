@@ -16,106 +16,6 @@ interface GalleryProps {
   isSidebarOpen: boolean;
 }
 
-// Sample project data
-const projects = [
-  {
-    id: 1,
-    title:
-      "Project Estimate for construction of crated stone Boulder cutter to prevent of erosion in 450 meter length at right bank of river Ganga in village- Mahuji, Block- Dhanapur Tahsil- Sakaldiha, Distt- Bhadohi.",
-    agency: "Bandhi Prakhand",
-    images: [
-      {
-        url: "https://cdn.britannica.com/20/119620-050-AC901996/Yichang-Three-Gorges-Dam-Yangtze-River-China.jpg",
-        description: "Construction Progress - Phase 1",
-        uploadedAt: "2024-01-08T16:53:38",
-      },
-      {
-        url: "https://cdn.britannica.com/20/119620-050-AC901996/Yichang-Three-Gorges-Dam-Yangtze-River-China.jpg",
-        description: "Site Overview",
-        uploadedAt: "2024-01-08T16:52:16",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title:
-      "R.O.B. IN LIEU OF LC No.-102B/3E ON CHANDAULI- SAKALDIHA ROAD BETWEEN KUCHAMAN-SAKALDIHA RAILWAY STATION OF ECR RAIL SECTION IN DISTT. CHANDAULI",
-    agency: "PWD Chandauli",
-    images: [
-      {
-        url: "https://cdn.britannica.com/58/1758-050-F33B1845/Itaipu-Dam-Upper-Parana-River-Paraguay-Ciudad.jpg",
-        description: "M.O. Residence",
-        uploadedAt: "2024-08-24T16:26:57",
-      },
-      {
-        url: "https://cdn.britannica.com/58/1758-050-F33B1845/Itaipu-Dam-Upper-Parana-River-Paraguay-Ciudad.jpg",
-        description: "PHC Main Building",
-        uploadedAt: "2024-08-24T16:26:51",
-      },
-    ],
-  },
-];
-
-const projectDataGallery = [
-  {
-    projectId: 84,
-    projectName: "Dummy data to test the gallery",
-    executiveAgencyId: 23,
-    executiveAgencyName: "लोक निर्माण विभाग",
-    departmentId: 18,
-    departmentName: "लोक निर्माण विभाग",
-    gallery: [
-      {
-        image:
-          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
-        imageDescription: "Foundation work progress",
-        uploadedAt: "2024-01-15T04:30:00.000Z",
-      },
-      {
-        image:
-          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
-        imageDescription: "Foundation work progress",
-        uploadedAt: "2024-01-15T04:30:00.000Z",
-      },
-    ],
-  },
-  {
-    projectId: 48,
-    projectName:
-      "प्रधानमंत्री आयुष्मान भारत हेल्थ इंफ्रास्ट्रक्चर मिशन  PM-ABHIM  के अंतर्गत सामुदायिक स्वास्थ्य  केंद्र वर्ष 2025 -26  के जनपद संत रविदास नगर के ब्लॉक  ज्ञानपुर में हेल्थ यूनिट लैब  गोपीगंज  के भवन निर्माण का कार्य ",
-    executiveAgencyId: 21,
-    executiveAgencyName: "उ0 प्र0 प्रोजेक्ट्स कारपोरेशन लि0-16",
-    departmentId: 13,
-    departmentName: "स्वास्थ्य  विभाग  BPHU",
-    gallery: [
-      {
-        image:
-          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
-        imageDescription: "Foundation work progress",
-        uploadedAt: "2024-01-15T04:30:00.000Z",
-      },
-      {
-        image:
-          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
-        imageDescription: "Foundation work progress",
-        uploadedAt: "2024-01-15T04:30:00.000Z",
-      },
-      {
-        image:
-          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
-        imageDescription: "Foundation work progress",
-        uploadedAt: "2024-01-15T04:30:00.000Z",
-      },
-      {
-        image:
-          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
-        imageDescription: "Foundation work progress",
-        uploadedAt: "2024-01-15T04:30:00.000Z",
-      },
-    ],
-  },
-];
-
 export default function Gallery({ isSidebarOpen }: GalleryProps) {
   const { entities, reloadEntities } = useEntities();
   const [executingAgencies, setExecutingAgencies] = useState(
@@ -129,6 +29,10 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
 
   const [projectGallery, setProjectGallery] = useState([]);
   const [filterSelectedProject, setFilterSelectedProject] = useState(null);
+  const [uploadData, setUploadData] = useState({
+    image: "",
+    imageDescription: "",
+  });
 
   const fetchProjectGallery = async () => {
     const url = `${endpoint}/api/fetchGallery`;
@@ -148,11 +52,32 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
     }
   };
 
+  // Handle Upload Image
+  const handleUploadImage = async () => {
+    // console.log("Selected Project:", selectedProject);
+    const url = `${endpoint}/api/projects/${selectedProject.projectId}/gallery`;
+    try {
+      const response = await axios.post(
+        url,
+        { ...uploadData, ...{ time: new Date() } },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log("Image uploaded successfully:", response.data);
+      setShowUpdateModal(false);
+      fetchProjectGallery(); // Refresh gallery after upload
+    } catch (error) {
+      console.error(
+        "Error uploading image:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
   useEffect(() => {
     fetchProjectGallery();
   }, []);
-
-  const agencies = [...new Set(projects.map((project) => project.agency))];
 
   const filteredProjects = projectGallery.filter((project) => {
     const matchesAgency =
@@ -261,7 +186,7 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
               key={project.id}
               className="bg-white rounded-lg shadow-sm overflow-hidden"
             >
-              <div className="p-4 border-b flex ">
+              <div className="p-4 border-b flex justify-between	gap-3 ">
                 <div className="">
                   <h2 className="text-xl font-semibold text-gray-900">
                     {project.projectName}
@@ -332,9 +257,27 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Project Name
                 </label>
-                <p className="text-sm text-gray-600">{selectedProject.title}</p>
+                <p className="text-sm text-gray-600">
+                  {selectedProject.projectName}
+                </p>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Enter the link
+                </label>
+                <textarea
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  rows={1}
+                  value={uploadData.image}
+                  onChange={(e) =>
+                    setUploadData({ ...uploadData, image: e.target.value })
+                  }
+                  placeholder="Enter the link of the image"
+                />
+              </div>
+
+              {/* 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Upload Image
@@ -348,7 +291,7 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
                     <input type="file" className="hidden" />
                   </label>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div>
@@ -356,6 +299,13 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
                 Description
               </label>
               <textarea
+                value={uploadData.imageDescription}
+                onChange={(e) => {
+                  setUploadData({
+                    ...uploadData,
+                    imageDescription: e.target.value,
+                  });
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 rows={4}
                 placeholder="Enter image description..."
@@ -369,8 +319,13 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors">
-                Update Image
+              <button
+                onClick={() => {
+                  handleUploadImage();
+                }}
+                className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+              >
+                Update Gallery
               </button>
             </div>
           </div>
