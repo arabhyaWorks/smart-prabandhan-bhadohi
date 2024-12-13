@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import {
@@ -15,6 +15,7 @@ import { DepartmentPieChart } from "../components/dashboard/dashboardPieChart";
 import { DepartmentBarChart } from "../components/dashboard/DepartmentBarChart";
 import { use } from "framer-motion/client";
 import { endpoint } from "../utils/dataSet";
+import { useEntities } from "../context/EntityContect";
 
 const projectStatusData = [
   { name: "In Progress", value: 45 },
@@ -46,6 +47,12 @@ export function Dashboard() {
   const [stats, setStats] = useState({});
   const pieChartRef = useRef(null);
   const barChartRef = useRef(null);
+  const {entities} = useEntities();
+  // console.log(entities);
+  
+  
+  
+
 
   const fetchProjectStatus = async () => {
     try {
@@ -133,7 +140,7 @@ export function Dashboard() {
           icon={Activity}
           trend={{ value: 8, label: "from last month" }}
         />
-        <StatCard title="Executing Agencies" value="6" icon={Users} />
+        <StatCard title="Executing Agencies" value={entities?.length} icon={Users} />
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
