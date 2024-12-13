@@ -87,50 +87,16 @@ const FormField: React.FC<FormFieldProps> = ({
 
       case "date":
         return (
-          // <DatePicker
-          //   selected={value}
-          //   onChange={(date) => onChange(date)}
-          //   className={baseInputClasses}
-          //   dateFormat="dd/MM/yyyy"
-          // />
-
-          // <DatePicker
-          //   value={value}
-          //   required={required}
-          //   onChange={onchange}
-          //   placeholderText={placeholder}
-          // />
-
-          // value={workOrderFormationDate}
-          // onChange={setWorkOrderFormationDate}
-
-          // <input
-          //   type="date"
-          //   value={value ? formatToInputDate(value) : ""}
-          //   onChange={(e) =>
-          //     // handleEntryChange(
-          //     //   field,
-          //     //   index,
-          //     //   name,
-          //     //   formatToDDMMYY(e.target.value) // Format to dd/MM/yy
-          //     // )
-          //     onChange(formatToDDMMYY(e.target.value))
-          //   }
-          //   placeholder={`Select ${label}`}
-          //   className="w-full border p-2 rounded"
-          // />
-
-          <textarea
-            name={name}
+          <input
+            type="date"
             value={value}
             onChange={(e) => {
-              // console.log("e", e.target.value);
+              console.log("e", e.target.value);
               onChange(e.target.value);
             }}
+            name={name}
             placeholder={placeholder}
             className={baseInputClasses}
-            rows={1}
-            required={required}
           />
         );
 

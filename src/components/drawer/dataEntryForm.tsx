@@ -151,7 +151,6 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     setIsSubmitting(true);
     setFormData((prev) => ({
       ...prev,
-
       contactInformation: 1,
     }));
 
@@ -183,61 +182,6 @@ const ProjectForm = ({ onSubmitSuccess }) => {
 
     console.log({ ...formData, ...inst, ...dates });
 
-    // try {
-    //   const response = await fetch(
-    //     `${endpoint}/api/uploadWholeData`,
-    //     {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({ ...formData, ...inst }),
-    //     }
-    //   );
-
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! status: ${response.status}`);
-    //   }
-
-    //   const result = await response.json();
-    //   console.log("Success:", result);
-    //   onSubmitSuccess?.();
-    //   // Handle success (e.g., show success message, redirect, etc.)
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
-  };
-
-  const sendData = async () => {
-    const inst = {
-      meetingInstructions: [
-        {
-          description: null,
-          date: null,
-          compliance: null,
-
-          feedback: formData.meetingInstructions,
-        },
-      ],
-    };
-
-    const dates = {
-      projectSanctionDate,
-      projectFinancialApprovalDate,
-      actualProjectStartDate,
-      projectCompletionDate,
-      revisedProjectSanctionDate,
-      revisedProjectCompletionDate,
-      estimatedCompletionDate,
-      actualCompletionDate,
-      workOrderFormationDate,
-      landHandoverDate,
-      contractDate,
-    };
-
-    console.log({ ...formData, ...inst, ...dates });
     try {
       const response = await fetch(`${endpoint}/api/uploadWholeData`, {
         method: "POST",
@@ -253,12 +197,65 @@ const ProjectForm = ({ onSubmitSuccess }) => {
 
       const result = await response.json();
       console.log("Success:", result);
+      onSubmitSuccess?.();
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
+  // const sendData = async (e) => {
+  //   e.preventDefault();
+
+  //   const inst = {
+  //     meetingInstructions: [
+  //       {
+  //         description: null,
+  //         date: null,
+  //         compliance: null,
+
+  //         feedback: formData.meetingInstructions,
+  //       },
+  //     ],
+  //   };
+
+  //   const dates = {
+  //     projectSanctionDate,
+  //     projectFinancialApprovalDate,
+  //     actualProjectStartDate,
+  //     projectCompletionDate,
+  //     revisedProjectSanctionDate,
+  //     revisedProjectCompletionDate,
+  //     estimatedCompletionDate,
+  //     actualCompletionDate,
+  //     workOrderFormationDate,
+  //     landHandoverDate,
+  //     contractDate,
+  //   };
+
+  //   console.log({ ...formData, ...inst, ...dates });
+  //   try {
+  //     const response = await fetch(`${endpoint}/api/uploadWholeData`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ ...formData, ...inst, ...dates }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+
+  //     const result = await response.json();
+  //     console.log("Success:", result);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const renderProjectInformation = () => (
@@ -730,27 +727,6 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     </div>
   );
 
-  /**
-   * Helper function to convert date to dd/MM/yy
-   */
-  const formatToDDMMYY = (dateStr) => {
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return ""; // Handle invalid dates
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = String(date.getFullYear()).slice(-2); // Get last 2 digits of year
-    return `${day}-${month}-${year}`;
-  };
-
-  /**
-   * Helper function to convert dd/MM/yy back to input-compatible format yyyy-MM-dd
-   */
-  const formatToInputDate = (ddmmyy) => {
-    const [day, month, year] = ddmmyy.split("-");
-    if (!day || !month || !year) return ""; // Handle invalid formats
-    return `20${year}-${month}-${day}`; // Reformat to yyyy-MM-dd for input
-  };
-
   const renderDynamicSections = () => (
     <div className="space-y-6">
       {/* Project Inspection Section */}
@@ -887,10 +863,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
   );
 
   return (
-    <form
-      // onSubmit={handleSubmit}
-      className="space-y-8"
-    >
+    <form onSubmit={handleSubmit} className="space-y-8">
       <StepIndicator currentStep={currentStep} steps={STEPS} />
 
       <div className="mb-8">
@@ -918,9 +891,9 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             {renderScheduleInformation()}
           </div>
         )}
-        {currentStep === 4 && (
+        {/* {currentStep === 4 && (
           <div className="space-y-6">{renderDynamicSections()}</div>
-        )}
+        )} */}
       </div>
 
       <div className="flex justify-between pt-6 border-t">
@@ -939,7 +912,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           Previous
         </button>
 
-        {
+        {currentStep < 3 ? (
           <button
             type="button"
             onClick={nextStep}
@@ -948,60 +921,21 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             Next
             <ChevronRight className="w-5 h-5 ml-2" />
           </button>
-          // :
-          //  (
-          //   <button
-          //     type="submit"
-          //     disabled={isSubmitting}
-          //     className={classNames(
-          //       "flex items-center px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-white",
-          //       isSubmitting
-          //         ? "bg-green-500 cursor-wait"
-          //         : "bg-green-600 hover:bg-green-700"
-          //     )}
-          //   >
-          //     <Save className="w-5 h-5 mr-2" />
-          //     {isSubmitting ? "Submitting..." : "Submit Project"}
-          //   </button>
-          // )
-        }
-
-        <button
-          onClick={() => {
-            const inst = {
-              meetingInstructions: [
-                {
-                  description: null,
-                  date: null,
-                  compliance: null,
-
-                  feedback: formData.meetingInstructions,
-                },
-              ],
-            };
-
-            const dates = {
-              projectSanctionDate,
-              projectFinancialApprovalDate,
-              actualProjectStartDate,
-              projectCompletionDate,
-              revisedProjectSanctionDate,
-              revisedProjectCompletionDate,
-              estimatedCompletionDate,
-              actualCompletionDate,
-              workOrderFormationDate,
-              landHandoverDate,
-              contractDate,
-            };
-
-            console.log({ ...formData, ...inst, ...dates });
-            // alert(JSON.stringify({ ...formData, ...inst, ...dates }));
-          }}
-        >
-          object
-        </button>
-
-        <button onClick={sendData}>submit</button>
+        ) : (
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={classNames(
+              "flex items-center px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-white",
+              isSubmitting
+                ? "bg-green-500 cursor-wait"
+                : "bg-green-600 hover:bg-green-700"
+            )}
+          >
+            <Save className="w-5 h-5 mr-2" />
+            {isSubmitting ? "Submitting..." : "Submit Project"}
+          </button>
+        )}
       </div>
     </form>
   );
