@@ -24,6 +24,7 @@ export function EntitiesProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await axios.get(`${endpoint}/api/entities`);
       setEntities(response.data.data);
+
     } catch (error) {
       console.error('Error fetching entities:', error);
     }

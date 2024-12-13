@@ -7,6 +7,11 @@ import {
   Plus,
 } from "lucide-react";
 
+import axios from "axios";
+import { endpoint } from "../utils/dataSet";
+import { useEntities } from "../context/EntityContect";
+import { parse } from "date-fns";
+
 interface GalleryProps {
   isSidebarOpen: boolean;
 }
@@ -51,20 +56,121 @@ const projects = [
   },
 ];
 
+const projectDataGallery = [
+  {
+    projectId: 84,
+    projectName: "Dummy data to test the gallery",
+    executiveAgencyId: 23,
+    executiveAgencyName: "लोक निर्माण विभाग",
+    departmentId: 18,
+    departmentName: "लोक निर्माण विभाग",
+    gallery: [
+      {
+        image:
+          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
+        imageDescription: "Foundation work progress",
+        uploadedAt: "2024-01-15T04:30:00.000Z",
+      },
+      {
+        image:
+          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
+        imageDescription: "Foundation work progress",
+        uploadedAt: "2024-01-15T04:30:00.000Z",
+      },
+    ],
+  },
+  {
+    projectId: 48,
+    projectName:
+      "प्रधानमंत्री आयुष्मान भारत हेल्थ इंफ्रास्ट्रक्चर मिशन  PM-ABHIM  के अंतर्गत सामुदायिक स्वास्थ्य  केंद्र वर्ष 2025 -26  के जनपद संत रविदास नगर के ब्लॉक  ज्ञानपुर में हेल्थ यूनिट लैब  गोपीगंज  के भवन निर्माण का कार्य ",
+    executiveAgencyId: 21,
+    executiveAgencyName: "उ0 प्र0 प्रोजेक्ट्स कारपोरेशन लि0-16",
+    departmentId: 13,
+    departmentName: "स्वास्थ्य  विभाग  BPHU",
+    gallery: [
+      {
+        image:
+          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
+        imageDescription: "Foundation work progress",
+        uploadedAt: "2024-01-15T04:30:00.000Z",
+      },
+      {
+        image:
+          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
+        imageDescription: "Foundation work progress",
+        uploadedAt: "2024-01-15T04:30:00.000Z",
+      },
+      {
+        image:
+          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
+        imageDescription: "Foundation work progress",
+        uploadedAt: "2024-01-15T04:30:00.000Z",
+      },
+      {
+        image:
+          "https://pmschandauli.com//upload/project/363/main/240817014601.jpeg",
+        imageDescription: "Foundation work progress",
+        uploadedAt: "2024-01-15T04:30:00.000Z",
+      },
+    ],
+  },
+];
+
 export default function Gallery({ isSidebarOpen }: GalleryProps) {
+  const { entities, reloadEntities } = useEntities();
+  const [executingAgencies, setExecutingAgencies] = useState(
+    entities?.filter((entity) => entity.entity_type === 2)
+  );
+
   const [selectedAgency, setSelectedAgency] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState({});
 
+  const [projectGallery, setProjectGallery] = useState([]);
+  const [filterSelectedProject, setFilterSelectedProject] = useState(null);
+
+  const fetchProjectGallery = async () => {
+    const url = `${endpoint}/api/fetchGallery`;
+
+    try {
+      const response = await axios.get(url, {});
+
+      console.log("Response Data:", response.data.data);
+
+      return setProjectGallery(response.data.data);
+    } catch (error) {
+      console.error(
+        "Error fetching data:",
+        error.response ? error.response.data : error.message
+      );
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchProjectGallery();
+  }, []);
+
   const agencies = [...new Set(projects.map((project) => project.agency))];
 
-  const filteredProjects = projects.filter((project) => {
-    const matchesAgency = !selectedAgency || project.agency === selectedAgency;
-    const matchesSearch = project.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesAgency && matchesSearch;
+  const filteredProjects = projectGallery.filter((project) => {
+    const matchesAgency =
+      !selectedAgency || project.executiveAgencyId === parseInt(selectedAgency);
+
+    const matchesProjectId =
+      !filterSelectedProject ||
+      project.projectId === parseInt(filterSelectedProject);
+    // const matchesSearch = project.projectName
+    //   .toLowerCase()
+    //   .includes(searchQuery.toLowerCase());
+    return matchesAgency && matchesProjectId;
+    // const matchesAgency = !selectedAgency || project.agency === selectedAgency;
+    // const matchesSearch = project.title
+    //   .toLowerCase()
+    //   .includes(searchQuery.toLowerCase());
+    // return matchesAgency && matchesSearch;
+    // return project;
   });
 
   const handleUpdateProgress = (project: object) => {
@@ -92,11 +198,15 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
                 onChange={(e) => setSelectedAgency(e.target.value)}
               >
                 <option value="">All Executing Agencies</option>
-                {agencies.map((agency) => (
-                  <option key={agency} value={agency}>
-                    {agency}
-                  </option>
-                ))}
+                <>
+                  {entities
+                    ?.filter((entity) => entity.entity_type === 2)
+                    .map((entity) => (
+                      <option key={entity.id} value={entity.id}>
+                        {entity.entity_name}
+                      </option>
+                    ))}
+                </>
               </select>
             </div>
             <div className="relative">
@@ -106,15 +216,29 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
               />
               <select
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                value={selectedAgency}
-                onChange={(e) => setSelectedAgency(e.target.value)}
+                value={filterSelectedProject}
+                onChange={(e) => setFilterSelectedProject(e.target.value)}
               >
                 <option value="">Project Names</option>
-                {agencies.map((agency) => (
-                  <option key={agency} value={agency}>
-                    {agency}
-                  </option>
-                ))}
+                {projectGallery.map((project, index) => {
+                  if (!selectedAgency) {
+                    return (
+                      <option key={index} value={project.projectId}>
+                        {project.projectName}
+                      </option>
+                    );
+                  } else {
+                    if (
+                      project.executiveAgencyId === parseInt(selectedAgency)
+                    ) {
+                      return (
+                        <option key={index} value={project.projectId}>
+                          {project.projectName}
+                        </option>
+                      );
+                    }
+                  }
+                })}
               </select>
             </div>
 
@@ -122,7 +246,7 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
               className="px-4 py-2 text-orange-500 border border-orange-500 rounded-lg hover:bg-orange-50 transition-colors"
               onClick={() => {
                 setSelectedAgency("");
-                setSearchQuery("");
+                setFilterSelectedProject(null);
               }}
             >
               Reset Filters
@@ -140,9 +264,14 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
               <div className="p-4 border-b flex ">
                 <div className="">
                   <h2 className="text-xl font-semibold text-gray-900">
-                    {project.title}
+                    {project.projectName}
                   </h2>
-                  <p className="text-sm text-gray-500 mt-1">{project.agency}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {project.executiveAgencyName}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {project.departmentName}
+                  </p>
                 </div>
 
                 <div className="">
@@ -157,20 +286,20 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                {project.images.map((image, index) => (
+                {project.gallery.map((image, index) => (
                   <div
                     key={index}
                     className="group relative aspect-[948/592] overflow-hidden rounded-lg"
                   >
                     <img
-                      src={image.url}
-                      alt={image.description}
+                      src={image.image}
+                      alt={image.imageDescription}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity">
                       <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform">
                         <p className="text-sm font-medium">
-                          {image.description}
+                          {image.imageDescription}
                         </p>
                         <p className="text-xs opacity-75 mt-1">
                           Uploaded:{" "}

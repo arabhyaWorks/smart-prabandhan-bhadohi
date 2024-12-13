@@ -114,8 +114,10 @@ export const DataTable = ({
                         }}
                       >
                         {key === "id" ? (
-                          <p>{rowIndex + 1}</p>
-                        ) : key === "projectStatus" ? (
+                          // <p>{rowIndex + 1}</p>
+                          project[key]
+                        ) : //
+                        key === "projectStatus" ? (
                           <div className="w-20 flex-row justify-center align-center">
                             <p
                               className={classNames(
@@ -163,10 +165,12 @@ export const DataTable = ({
                           </button>
                         ) : key.includes("Date") ? (
                           <div className="">
-                          <p className="">{convertToIST(project[key]).split("-").join("/")}</p>
+                            <p className="">
+                              {convertToIST(project[key]).split("-").join("/")}
+                            </p>
                           </div>
                         ) : (
-                            project[key]
+                          project[key]
                         )}
                       </td>
                     )
