@@ -67,14 +67,18 @@ export function Projects() {
   }
 
   const filteredProjects = projects.filter((project) => {
+    console.log(project);
+    
     const matchesSearch =
       project.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.executingAgency.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDepartment =
-      !selectedDepartment || project.departmentName === selectedDepartment;
+      !selectedDepartment || project.projectDepartment === selectedDepartment;
     const matchesStatus =
       !selectedStatus || project.projectStatus === selectedStatus;
-    return matchesSearch && matchesDepartment && matchesStatus;
+    const matchesExecutiveAgency =
+      !selectedExecutiveAgency || project.executingAgency === selectedExecutiveAgency
+    return matchesSearch && matchesDepartment && matchesStatus && matchesExecutiveAgency;
   });
 
   const exportToExcel = (projects) => {
