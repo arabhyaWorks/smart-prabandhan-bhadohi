@@ -379,7 +379,7 @@ export default function UsersList() {
                         entity.entity_type === 2 || entity.entity_type === 3
                     )
                     .map((entity) => (
-                      <option key={entity.id} value={}>
+                      <option key={entity.id} value={entity}>
                         {entity.entity_name}
                       </option>
                     ))}
