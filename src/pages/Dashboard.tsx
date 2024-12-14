@@ -15,6 +15,7 @@ import { DepartmentPieChart } from "../components/dashboard/dashboardPieChart";
 import { DepartmentBarChart } from "../components/dashboard/DepartmentBarChart";
 import { use } from "framer-motion/client";
 import { endpoint } from "../utils/dataSet";
+import { useEntities } from "../context/EntityContect";
 
 const projectStatusData = [
   { name: "In Progress", value: 45 },
@@ -41,6 +42,8 @@ const projectStatusLabels = [
 ];
 
 export function Dashboard() {
+  const { entities, reloadEntities } = useEntities();
+
   const [projectStatus, setProjectStatus] = useState([]);
   const [departmentData, setDepartmentData] = useState([]);
   const [stats, setStats] = useState({});
@@ -77,12 +80,14 @@ export function Dashboard() {
   // Fetch Overall Stats Data
   const fetchStatsData = async () => {
     try {
-      const response = await axios.get(`${endpoint}/api/stats/budget-overview`,
+      const response = await axios.get(
+        `${endpoint}/api/stats/budget-overview`,
         {
           headers: {
             "ngrok-skip-browser-warning": "true",
           },
-        });
+        }
+      );
       // console.log(response.data);
       setStats(response.data);
     } catch (error) {
@@ -123,7 +128,7 @@ export function Dashboard() {
           trend={{ value: 1.5, label: "from last month" }}
         />
         <StatCard
-          title="Total Budget (Lacs)"
+          title="Total Budget (Crore)"
           value={"₹" + stats?.totalBudget?.approved}
           icon={IndianRupee}
         />
@@ -133,7 +138,11 @@ export function Dashboard() {
           icon={Activity}
           trend={{ value: 8, label: "from last month" }}
         />
-        <StatCard title="Executing Agencies" value="6" icon={Users} />
+        <StatCard
+          title="Executing Agencies"
+          value={entities?.filter((entity) => entity.entity_type === 2).length}
+          icon={Users}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">

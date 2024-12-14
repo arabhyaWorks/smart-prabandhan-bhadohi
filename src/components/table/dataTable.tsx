@@ -89,7 +89,7 @@ export const DataTable = ({
               <tr key={index} className="hover:bg-gray-50 transition-colors">
                 {headerKeys.map((key, headerIndex) => (
                   <td
-                    key={index}
+                    key={headerIndex}
                     className={classNames(
                       "px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-2 border-gray-100",
                       headerIndex === 0 ? "w-2 text-center" : "w-40"

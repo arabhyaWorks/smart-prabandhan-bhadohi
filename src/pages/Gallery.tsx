@@ -181,62 +181,66 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
 
         {/* Gallery Grid */}
         <div className="space-y-8">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white rounded-lg shadow-sm overflow-hidden"
-            >
-              <div className="p-4 border-b flex justify-between	gap-3 ">
-                <div className="">
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    {project.projectName}
-                  </h2>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {project.executiveAgencyName}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {project.departmentName}
-                  </p>
+          {filteredProjects.length > 0 ? (
+            filteredProjects.map((project) => (
+              <div
+                key={project.id}
+                className="bg-white rounded-lg shadow-sm overflow-hidden"
+              >
+                <div className="p-4 border-b flex justify-between	gap-3 ">
+                  <div className="">
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      {project.projectName}
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {project.executiveAgencyName}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {project.departmentName}
+                    </p>
+                  </div>
+
+                  <div className="">
+                    <button
+                      onClick={() => handleUpdateProgress(project)}
+                      className=" w-[170px] px-4 py-2 bg-orange-500 text-white rounded-lg flex items-center gap-2 hover:bg-orange-600 transition-colors"
+                    >
+                      <ImageIcon size={20} />
+                      Upload Images
+                    </button>
+                  </div>
                 </div>
 
-                <div className="">
-                  <button
-                    onClick={() => handleUpdateProgress(project)}
-                    className=" w-[170px] px-4 py-2 bg-orange-500 text-white rounded-lg flex items-center gap-2 hover:bg-orange-600 transition-colors"
-                  >
-                    <ImageIcon size={20} />
-                    Upload Images
-                  </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                {project.gallery.map((image, index) => (
-                  <div
-                    key={index}
-                    className="group relative aspect-[948/592] overflow-hidden rounded-lg"
-                  >
-                    <img
-                      src={image.image}
-                      alt={image.imageDescription}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity">
-                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform">
-                        <p className="text-sm font-medium">
-                          {image.imageDescription}
-                        </p>
-                        <p className="text-xs opacity-75 mt-1">
-                          Uploaded:{" "}
-                          {new Date(image.uploadedAt).toLocaleString()}
-                        </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                  {project.gallery.map((image, index) => (
+                    <div
+                      key={index}
+                      className="group relative aspect-[948/592] overflow-hidden rounded-lg"
+                    >
+                      <img
+                        src={image.image}
+                        alt={image.imageDescription}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity">
+                        <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform">
+                          <p className="text-sm font-medium">
+                            {image.imageDescription}
+                          </p>
+                          <p className="text-xs opacity-75 mt-1">
+                            Uploaded:{" "}
+                            {new Date(image.uploadedAt).toLocaleString()}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="text-center text-gray-500">No project found</div>
+          )}
         </div>
       </div>
 
