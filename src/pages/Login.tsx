@@ -1,18 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { LogIn } from "lucide-react";
 import bgImage from "../assets/bg_img.png";
+import { endpoint } from "../utils/dataSet";
 
 export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    navigate("/dashboard");
+    const payload = {
+      userEmail: username,
+      userPassword: password,
+    };
+
+    try {
+      const response = await axios.post(`${endpoint}/api/login`, payload);
+      if (response.data.success) {
+        const token = response.data.token;
+        const user = response.data.user;
+
+        // Store token and user information in local storage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Navigate to the dashboard
+        navigate("/dashboard");
+      } else {
+        setErrorMessage("Invalid username or password.");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
+    }
   };
 
   return (
@@ -30,12 +59,18 @@ export function Login() {
             />
           </div>
           <h2 className="text-2xl font-bold text-black">
-            Project Monitering System
+            Project Monitoring System
           </h2>
           <p className="text-gray-600 font-medium">Bhadohi District</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {errorMessage && (
+            <div className="text-red-500 text-sm text-center">
+              {errorMessage}
+            </div>
+          )}
+
           <div>
             <label
               htmlFor="username"

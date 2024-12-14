@@ -74,6 +74,8 @@ export default function UsersList() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("data");
+    const entityData = JSON.parse(entityId);
+    console.log(entityData);
     console.log(
       userName,
       userEmail,
@@ -96,7 +98,7 @@ export default function UsersList() {
       entityName !== null
     ) {
       const payload = {
-        entityId: entityId,
+        entityId: entityId.id,
         entityName: entityName,
         userName: userName,
         userEmail: userEmail,
@@ -106,43 +108,54 @@ export default function UsersList() {
         userRole: userRole,
       };
 
-      axios
-        .post(`${endpoint}/api/users`, payload)
-        .then(async (res) => {
-          console.log(res.data);
-          const accountDetails = `
-          Account Details:
-          ---------------
-          Name: ${userName}
-          Username/Email: ${userEmail}
-          Password: ${userPassword}
-          Role: ${userRole}
-          Entity: ${entityName}
-          
-          Please keep these credentials safe.`;
+      console.log(
+        payload.entityId,
+        payload.entityName,
+        payload.userName,
+        payload.userEmail,
+        payload.userPhone,
+        payload.userDesignation,
+        payload.userPassword,
+        payload.userRole
+      );
 
-          const copied = await copyToClipboard(accountDetails);
-          if (copied) {
-            alert("Account details copied to clipboard");
-          }
-          alert("User created successfully");
+      // axios
+      //   .post(`${endpoint}/api/users`, payload)
+      //   .then(async (res) => {
+      //     console.log(res.data);
+      //     const accountDetails = `
+      //     Account Details:
+      //     ---------------
+      //     Name: ${userName}
+      //     Username/Email: ${userEmail}
+      //     Password: ${userPassword}
+      //     Role: ${userRole}
+      //     Entity: ${entityName}
 
-          setUserName(null);
-          setUserEmail(null);
-          setUserPhone(null);
-          setUserDesignation(null);
-          setUserPassword(null);
-          setUserRole(null);
-          setEntityId(null);
-          setEntityName(null);
-          setError("");
-          fetchUsers();
-          setShowModal(false);
-        })
-        .catch((err) => {
-          console.log(err.response.data); // Log backend error message
-          setError(err.response.data.message);
-        });
+      //     Please keep these credentials safe.`;
+
+      //     const copied = await copyToClipboard(accountDetails);
+      //     if (copied) {
+      //       alert("Account details copied to clipboard");
+      //     }
+      //     alert("User created successfully");
+
+      //     setUserName(null);
+      //     setUserEmail(null);
+      //     setUserPhone(null);
+      //     setUserDesignation(null);
+      //     setUserPassword(null);
+      //     setUserRole(null);
+      //     setEntityId(null);
+      //     setEntityName(null);
+      //     setError("");
+      //     fetchUsers();
+      //     setShowModal(false);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err.response.data); // Log backend error message
+      //     setError(err.response.data.message);
+      //   });
     } else {
       setError("Please fill all the fields");
       return;
@@ -335,6 +348,8 @@ export default function UsersList() {
         </div>
       )} */}
 
+      <h1>{(entityName, entityId)}</h1>
+
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -352,7 +367,7 @@ export default function UsersList() {
                     const value = JSON.parse(e.target.value);
                     console.log(value);
 
-                    setEntityId(value.id);
+                    setEntityId(value);
                     setEntityName(value.entity_name);
                   }}
                   className="w-full px-3 py-2 border rounded-lg"
@@ -364,7 +379,7 @@ export default function UsersList() {
                         entity.entity_type === 2 || entity.entity_type === 3
                     )
                     .map((entity) => (
-                      <option key={entity.id} value={JSON.stringify(entity)}>
+                      <option key={entity.id} value={}>
                         {entity.entity_name}
                       </option>
                     ))}

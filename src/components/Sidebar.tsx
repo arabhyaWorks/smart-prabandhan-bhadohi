@@ -31,11 +31,11 @@ const menuItems = [
     label: "Inspection Panel",
     route: "/projectInspection",
   },
-  {
-    icon: FileCheck,
-    label: "Project Essential Test",
-    route: "/projectTest",
-  },
+  // {
+  //   icon: FileCheck,
+  //   label: "Project Essential Test",
+  //   route: "/projectTest",
+  // },
   { icon: Receipt, label: "Budget & UC Upload", route: "/budget-uc-upload" },
   { icon: Milestone, label: "Milestones", route: "/milestones" },
   { icon: AlertCircle, label: "Issue Management", route: "/issue-management" },
