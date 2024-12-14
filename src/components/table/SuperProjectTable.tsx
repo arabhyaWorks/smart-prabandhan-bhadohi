@@ -114,8 +114,8 @@ export const DataTable = ({
                         }}
                       >
                         {key === "id" ? (
-                          // <p>{rowIndex + 1}</p>
-                          project[key]
+                          <p>{rowIndex + 1}</p>
+                          // project[key]
                         ) : //
                         key === "projectStatus" ? (
                           <div className="w-20 flex-row justify-center align-center">
