@@ -34,7 +34,8 @@ const STEPS = [
 ];
 
 const ProjectForm = ({ onSubmitSuccess }) => {
-  const { entities, reloadEntities } = useEntities();
+  const { entities, reloadEntities, user, setUser } = useEntities();
+  // [user, setUserState]
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({

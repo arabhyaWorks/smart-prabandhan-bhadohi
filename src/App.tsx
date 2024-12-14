@@ -5,7 +5,7 @@ import { Landing } from "./pages/Landing";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { Projects } from "./pages/Projects";
-import Testing from "./pages/testing";
+import Testing from "./pages/testing.jsx";
 import ProjectCreation from "./components/drawer/dataEntryForm";
 
 import { Issues } from "./pages/Issues";

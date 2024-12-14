@@ -39,7 +39,6 @@ export const ProjectFilters = ({
   onToggleColumn,
 }: ProjectFiltersProps) => {
   const { entities, reloadEntities } = useEntities();
-  console.warn("These are the entities");
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -64,7 +63,6 @@ export const ProjectFilters = ({
             value={selectedDepartment}
             onChange={(e) => {
               onDepartmentChange(e.target.value);
-              console.log(e.target.value);
             }}
             className="rounded-md outline-none font-medium border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600"
           >

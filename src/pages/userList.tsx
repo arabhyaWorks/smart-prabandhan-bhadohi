@@ -119,43 +119,43 @@ export default function UsersList() {
         payload.userRole
       );
 
-      // axios
-      //   .post(`${endpoint}/api/users`, payload)
-      //   .then(async (res) => {
-      //     console.log(res.data);
-      //     const accountDetails = `
-      //     Account Details:
-      //     ---------------
-      //     Name: ${userName}
-      //     Username/Email: ${userEmail}
-      //     Password: ${userPassword}
-      //     Role: ${userRole}
-      //     Entity: ${entityName}
+      axios
+        .post(`${endpoint}/api/users`, payload)
+        .then(async (res) => {
+          console.log(res.data);
+          const accountDetails = `
+          Account Details:
+          ---------------
+          Name: ${userName}
+          Username/Email: ${userEmail}
+          Password: ${userPassword}
+          Role: ${userRole}
+          Entity: ${entityName}
 
-      //     Please keep these credentials safe.`;
+          Please keep these credentials safe.`;
 
-      //     const copied = await copyToClipboard(accountDetails);
-      //     if (copied) {
-      //       alert("Account details copied to clipboard");
-      //     }
-      //     alert("User created successfully");
+          const copied = await copyToClipboard(accountDetails);
+          if (copied) {
+            alert("Account details copied to clipboard");
+          }
+          alert("User created successfully");
 
-      //     setUserName(null);
-      //     setUserEmail(null);
-      //     setUserPhone(null);
-      //     setUserDesignation(null);
-      //     setUserPassword(null);
-      //     setUserRole(null);
-      //     setEntityId(null);
-      //     setEntityName(null);
-      //     setError("");
-      //     fetchUsers();
-      //     setShowModal(false);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err.response.data); // Log backend error message
-      //     setError(err.response.data.message);
-      //   });
+          setUserName(null);
+          setUserEmail(null);
+          setUserPhone(null);
+          setUserDesignation(null);
+          setUserPassword(null);
+          setUserRole(null);
+          setEntityId(null);
+          setEntityName(null);
+          setError("");
+          fetchUsers();
+          setShowModal(false);
+        })
+        .catch((err) => {
+          console.log(err.response.data); // Log backend error message
+          setError(err.response.data.message);
+        });
     } else {
       setError("Please fill all the fields");
       return;

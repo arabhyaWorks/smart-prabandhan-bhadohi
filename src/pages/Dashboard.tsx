@@ -24,6 +24,12 @@ const projectStatusData = [
   { name: "In Planning", value: 10 },
 ];
 
+const data = {
+  totalApprovedBudget: "146.19",
+  totalReleasedFunds: "82.76",
+  totalExpenditure: "55.77",
+  totalPendingBudget: "90.42",
+};
 const budgetData = [
   {
     name: "Total",
@@ -164,9 +170,9 @@ export function Dashboard() {
         <div className="rounded-lg bg-white shadow">
           <div className="p-6">
             <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Budget Overview (in Lacs)
+              Budget Overview (in Crores)
             </h3>
-            <BudgetChart data={budgetData} />
+            <BudgetChart/>
           </div>
         </div>
       </div>

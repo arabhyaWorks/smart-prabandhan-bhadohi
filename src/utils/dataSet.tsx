@@ -978,9 +978,9 @@ export const projectTestHeader = {
   },
 };
 
-export const endpoint =
-  "https://pradyogik.in";
-  
 // export const endpoint =
-//   "http://localhost:3000";
+//   "https://pradyogik.in";
+  
+export const endpoint =
+  "http://localhost:3000";
   
