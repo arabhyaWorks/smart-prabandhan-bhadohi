@@ -88,6 +88,8 @@ export const ProjectTableDataKeys = [
   "meetingDescription",
   "meetingCompliance",
   "meetingfeedback",
+
+  "viewMeetingLog"
 ];
 
 interface Project {
@@ -852,6 +854,7 @@ export const headers = {
     "समीक्षा बैठक निर्देश", // meetingDescription
     "दिये गये निर्देश के सापेक्ष अनुपालन", // meetingCompliance
     "अभ्यूक्ति", // meetingfeedback meetingComment
+    "मीटिंग लॉग देखें"
   ],
   en: [
     "Serial Number", // क्रम संख्या

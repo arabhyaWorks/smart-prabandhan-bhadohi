@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { ProjectTableDataKeys } from "../../utils/dataSet";
 import { convertToIST } from "../../utils/functions";
+import { MeetingLogModal } from "../../pages/Projects";
 
 const projectStatuses = [
   // "योजना चरण में",
@@ -43,6 +44,7 @@ export const DataTable = ({
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(100);
+  const [showModal, setShowModal] = useState(false);
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -103,85 +105,117 @@ export const DataTable = ({
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {currentEntries.map((project, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-gray-50 transition-colors">
-                {ProjectTableDataKeys.map(
-                  (key, index) =>
-                    visibleColumns.includes(index.toString()) && (
-                      <td
-                        key={index}
-                        className={classNames(
-                          "px-6 py-4 text-sm text-gray-900 border-2 border-gray-100",
-                          index === 0 ? "text-center" : "whitespace-normal"
-                        )}
-                        style={{
-                          maxWidth: key === "projectName" ? "500px" : "200px",
-                          overflowWrap: "break-word",
-                          whiteSpace: "normal",
-                        }}
-                      >
-                        {key === "id" ? (
-                          <p>{rowIndex + 1}</p>
-                          // project[key]
-                        ) : //
-                        key === "projectStatus" ? (
-                          <div className="w-20 flex-row justify-center align-center">
-                            <p
+              <>
+                <tr
+                  key={rowIndex}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  {ProjectTableDataKeys.map(
+                    (key, index) =>
+                      visibleColumns.includes(index.toString()) && (
+                        <td
+                          key={index}
+                          className={classNames(
+                            "px-6 py-4 text-sm text-gray-900 border-2 border-gray-100",
+                            index === 0 ? "text-center" : "whitespace-normal"
+                          )}
+                          style={{
+                            maxWidth:
+                              key === "projectName"
+                                ? "500px"
+                                : key === "viewMeetingLog"
+                                ? "300px"
+                                : "200px",
+                            overflowWrap: "break-word",
+                            whiteSpace: "normal",
+                          }}
+                        >
+                          {key === "id" ? (
+                            <p>{rowIndex + 1}</p>
+                          ) : // project[key]
+                          //
+                          key === "projectStatus" ? (
+                            <div className="w-20 flex-row justify-center align-center">
+                              <p
+                                className={classNames(
+                                  "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                                  project.projectStatus === "Complete"
+                                    ? "bg-green-100 text-green-800"
+                                    : project.projectStatus ===
+                                      "कार्य प्रगति पर"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : project.projectStatus === "प्रारंभिक चरण"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : project.projectStatus === "योजना निर्माण"
+                                    ? "bg-gray-100 text-gray-800"
+                                    : "bg-red-100 text-red-800"
+                                )}
+                              >
+                                {projectStatuses[parseInt(project[key]) - 1]}
+                              </p>
+                            </div>
+                          ) : key === "projectUpdate" ||
+                            key === "projectGallery" ||
+                            key === "meetingInstructions" ||
+                            key === "complianceOfMeetingInstructions" ? (
+                            <button
                               className={classNames(
-                                "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
-                                project.projectStatus === "Complete"
-                                  ? "bg-green-100 text-green-800"
-                                  : project.projectStatus === "कार्य प्रगति पर"
-                                  ? "bg-blue-100 text-blue-800"
-                                  : project.projectStatus === "प्रारंभिक चरण"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : project.projectStatus === "योजना निर्माण"
-                                  ? "bg-gray-100 text-gray-800"
-                                  : "bg-red-100 text-red-800"
+                                "bg-[#4AA3E0] px-2 py-[1px] rounded shadow text-white",
+                                key === "projectGallery"
+                                  ? "bg-[#FFB74D]"
+                                  : key === "meetingInstructions"
+                                  ? "bg-[#66BB6A]"
+                                  : key === "complianceOfMeetingInstructions"
+                                  ? "bg-[#5A87D2]"
+                                  : ""
                               )}
                             >
-                              {projectStatuses[parseInt(project[key])-1]}
-                            </p>
-                          </div>
-                        ) : key === "projectUpdate" ||
-                          key === "projectGallery" ||
-                          key === "meetingInstructions" ||
-                          key === "complianceOfMeetingInstructions" ? (
-                          <button
-                            className={classNames(
-                              "bg-[#4AA3E0] px-2 py-[1px] rounded shadow text-white",
-                              key === "projectGallery"
-                                ? "bg-[#FFB74D]"
-                                : key === "meetingInstructions"
-                                ? "bg-[#66BB6A]"
-                                : key === "complianceOfMeetingInstructions"
-                                ? "bg-[#5A87D2]"
-                                : ""
-                            )}
-                          >
-                            {project[key]}
-                          </button>
-                        ) : key === "projectName" ? (
-                          <button
-                            onClick={() =>
-                              navigate(`/projectDetail/${project.id}`)
-                            }
-                            className="text-black-500 hover:underline focus:outline-none"
-                          >
-                            {project[key]}
-                          </button>
-                        ) : key.includes("Date") ? (
-                          <div className="">
-                            <p className="">
-                              {convertToIST(project[key]).split("-").join("/")}
-                            </p>
-                          </div>
-                        ) : (
-                          project[key]
-                        )}
-                      </td>
-                    )
-                )}
-              </tr>
+                              {project[key]}
+                            </button>
+                          ) : key === "projectName" ? (
+                            <button
+                              onClick={() =>
+                                navigate(`/projectDetail/${project.id}`)
+                              }
+                              className="text-black-500 hover:underline focus:outline-none"
+                            >
+                              {project[key]}
+                            </button>
+                          ) : key.includes("Date") ? (
+                            <div className="">
+                              <p className="">
+                                {convertToIST(project[key])
+                                  .split("-")
+                                  .join("/")}
+                              </p>
+                            </div>
+                          ) : key === "viewMeetingLog" ? (
+                            <button
+                              // onClick={() =>
+                              //   // navigate(`/meetingLog/${project.id}`)
+                              // }
+
+                              onClick={() => setShowModal(true)}
+                              className="text-white w-full rounded-md px-4 bg-blue-400 hover:underline focus:outline-none"
+                            >
+                              {/* {project[key]} */}
+                              View Meeting Log
+                            </button>
+                          ) : (
+                            project[key]
+                          )}
+                        </td>
+                      )
+                  )}
+                </tr>
+
+                <MeetingLogModal
+                  projectName={project.projectName}
+                  projectId={48}
+                  closeModal={() => setShowModal(false)}
+                  showModal={showModal}
+                />
+              </>
             ))}
           </tbody>
         </table>

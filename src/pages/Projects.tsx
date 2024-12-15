@@ -12,7 +12,12 @@ import ProjectForm from "../components/drawer/dataEntryForm";
 import classNames from "classnames";
 import { convertToIST } from "../utils/functions";
 
-const MeetingLogModal = ({ projectName, projectId, closeModal, showModal }) => {
+export const MeetingLogModal = ({
+  projectName,
+  projectId,
+  closeModal,
+  showModal,
+}) => {
   const meetingHeaders = [
     "क्रम संख्या",
     "समीक्षा बैठक निर्देश",
@@ -66,8 +71,11 @@ const MeetingLogModal = ({ projectName, projectId, closeModal, showModal }) => {
     >
       <div className="bg-white rounded-lg shadow-lg overflow-auto max-h-[80vh] w-[90%]">
         <h2 className="text-lg font-bold text-gray-900 p-4 border-b">
-          Meeting Logs for {projectName}
+          Meeting Logs
         </h2>
+        <h3 className="text-sm font-semibold text-gray-900 p-4 border-b">
+          {projectName}
+        </h3>
         <div className="p-5">
           <table className="min-w-full  divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -125,8 +133,6 @@ const MeetingLogModal = ({ projectName, projectId, closeModal, showModal }) => {
     </div>
   );
 };
-
-export default MeetingLogModal;
 
 export function Projects() {
   const { user } = useEntities(); // Access user data from the context
@@ -287,13 +293,6 @@ export function Projects() {
           <ProjectForm onSubmitSuccess={() => setIsDrawerOpen(false)} />
         </div>
       </Drawer>
-
-      <MeetingLogModal
-        projectName="Project Name"
-        projectId={48}
-        closeModal={() => setShowModal(false)}
-        showModal={showModal}
-      />
     </div>
   );
 }
