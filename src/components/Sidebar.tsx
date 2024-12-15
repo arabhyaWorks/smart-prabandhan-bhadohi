@@ -65,6 +65,9 @@ interface SidebarProps {
 const indiaLogo =
   "https://upload.wikimedia.org/wikipedia/commons/f/fa/Seal_of_Uttar_Pradesh.svg";
 
+  const Playlogo =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/1200px-Google_Play_Store_badge_EN.svg.png";
+
 export default function Sidebar({ isOpen }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -119,6 +122,15 @@ export default function Sidebar({ isOpen }: SidebarProps) {
             })}
           </ul>
         </nav>
+
+        <div className="p-4 ">
+          <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+          >
+            {/* img src={Playlogo} alt="Playstore Logo" className="w-10 h-10"  */}
+            <img src={Playlogo} alt="Playstore Logo" className="w-full " />
+
+          </button>
+        </div>
 
         <div className="p-4 border-t border-gray-200">
           <button

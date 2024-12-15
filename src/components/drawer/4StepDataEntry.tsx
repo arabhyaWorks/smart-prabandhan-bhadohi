@@ -686,7 +686,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
             <div key={name}>
               {type === "date" ? (
                 <input
-                  // type="date"
+                  type="date"
                   value={entry[name] || ""}
                   onChange={(e) =>
                     handleEntryChange(field, index, name, e.target.value)

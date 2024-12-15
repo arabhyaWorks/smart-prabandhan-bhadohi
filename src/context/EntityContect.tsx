@@ -24,6 +24,8 @@ interface EntitiesContextType {
   reloadEntities: () => Promise<void>;
   user: User | null;
   setUser: (user: User | null) => void;
+  projectNameData: any;
+  setProjectNameData: any;
 }
 
 const EntitiesContext = createContext<EntitiesContextType | undefined>(
@@ -33,6 +35,7 @@ const EntitiesContext = createContext<EntitiesContextType | undefined>(
 export function EntitiesProvider({ children }: { children: React.ReactNode }) {
   const [entities, setEntities] = useState<Entity[] | null>(null);
   const [user, setUserState] = useState<User | null>(null);
+  const [projectNameData, setProjectNameData] = useState([]);
 
   // Fetch entities from API
   const fetchEntities = async () => {
@@ -51,6 +54,16 @@ export function EntitiesProvider({ children }: { children: React.ReactNode }) {
       : null;
     if (storedUser) {
       setUserState(storedUser);
+    }
+  };
+
+  const fetchProjectNameData = async () => {
+    try {
+      const response = await axios.get(`${endpoint}/api/projectsDetailName`);
+      // console.log("response.data.data", response.data.data);
+      setProjectNameData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching project names:", error);
     }
   };
 
@@ -73,10 +86,13 @@ export function EntitiesProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     fetchEntities();
     fetchUser();
+    fetchProjectNameData();
   }, []);
 
   return (
-    <EntitiesContext.Provider value={{ entities, reloadEntities, user, setUser }}>
+    <EntitiesContext.Provider
+      value={{ entities, reloadEntities, user, setUser, projectNameData, setProjectNameData }}
+    >
       {children}
     </EntitiesContext.Provider>
   );

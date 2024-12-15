@@ -5,22 +5,23 @@ import { budgetUcupload, BudgetUcHeaders } from "../utils/dataSet";
 import axios from "axios";
 import { endpoint } from "../utils/dataSet";
 import { useEntities } from "../context/EntityContect";
+import { set } from "date-fns";
 
 export default function BudgetUcUpload() {
   // const { user } = useEntities(); // Access user context
-  const { entities } = useEntities(); // Access user context
+  const { user, entities, projectNameData, setProjectNameData } = useEntities(); // Access user context
 
-  const user = {
-    id: 17,
-    userName: "Testing",
-    userEmail: "user@testing.com",
-    userRole: 1,
-    entityId: 16,
-    entityName: "उत्तर प्रदेश जल निगम (RURAL)",
-    entityTypeId: 1,
-    userDesignation: "testing",
-    userPhoneNumber: "1234567890",
-  };
+  // const user = {
+  //   id: 17,
+  //   userName: "Testing",
+  //   userEmail: "user@testing.com",
+  //   userRole: 3,
+  //   entityId: 16,
+  //   entityName: "उत्तर प्रदेश जल निगम (RURAL)",
+  //   entityTypeId: 1,
+  //   userDesignation: "testing",
+  //   userPhoneNumber: "1234567890",
+  // };
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [budgetUcupload, setBudgetUcupload] = useState([]);
@@ -66,14 +67,58 @@ export default function BudgetUcUpload() {
     }
   };
 
-  // useEffect(() => {
-  //   if (user)
-  //      fetchBudgetUcupload();
-  // }, [user]);
+  useEffect(() => {
+    if (user)
+       fetchBudgetUcupload();
+  }, [user]);
+
+  const uploadBudgetUc = async (e) => {
+    e.preventDefault();
+    console.log("uploading budget uc");
+    console.log("selectedProject", selectedProject);
+    console.log("installmentAmount", installmentAmount);
+    console.log("expenditureAmount", expenditureAmount);
+    console.log("amountReceivedDate", amountReceivedDate);
+    console.log("utilizationCertificate", utilizationCertificate);
+
+    if (
+      selectedProject === "" ||
+      installmentAmount === "" ||
+      expenditureAmount === "" ||
+      amountReceivedDate === "" ||
+      utilizationCertificate === ""
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `${endpoint}/api/projects/${selectedProject}/budget-installments`,
+        {
+          projectId: selectedProject,
+          installmentAmount,
+          installmentExpenditure: expenditureAmount,
+          amountReceivedDate,
+          utilizationCertificate,
+        }
+      );
+      console.log(response.data);
+      fetchBudgetUcupload();
+      setShowModal(false);
+      setInstallmentAmount("");
+      setExpenditureAmount("");
+      setAmountReceivedDate("");
+      setUtilizationCertificate("");
+
+      alert("Budget UC uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading budget uc:", error);
+    }
+  };
 
   useEffect(() => {
     fetchBudgetUcupload();
-  }, []);
+  }, [projectNameData]);
 
   return (
     <div className="">
@@ -131,37 +176,82 @@ export default function BudgetUcUpload() {
               Add Projects Budget Received Installment
             </h2>
             <div className="space-y-4 mt-10">
-              {/* <div className="flex gap-2"> */}
-            
               <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Select Project
                 </label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
-
+                <select
+                  value={selectedProject}
+                  onChange={(e) => setSelectedProject(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                >
+                  <option value={""}>Select Project</option>
+                  {projectNameData
+                    .filter(
+                      (project) =>
+                        project[
+                          user.entityTypeId == 1
+                            ? "departmentId"
+                            : "executiveAgencyId"
+                        ] == user.entityId
+                    )
+                    .map((project) => (
+                      <option key={project.id} value={project.id}>
+                        {project.projectName}
+                      </option>
+                    ))}
                 </select>
               </div>
-
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Name
-                </label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                  <option value="Project 1">Project 1</option>
-                  <option value="Project 2">Project 2</option>
-                </select>
-              </div>
-              {/* </div> */}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Installment Amount (In Lac)
+                  Installment Amount (In Crore)
                 </label>
-                <textarea
+                <input
+                  value={installmentAmount}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value.match(/^\d*\.?\d{0,2}$/)) {
+                      setInstallmentAmount(value);
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  rows={1}
-                  placeholder="Enter Installment Amount (In Lac)"
+                  placeholder="Enter Installment Amount (In Crore)"
+                  type="text"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Expenditure Amount (In Crore)
+                </label>
+                <input
+                  value={expenditureAmount}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value.match(/^\d*\.?\d{0,2}$/)) {
+                      setExpenditureAmount(value);
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  placeholder="Enter Installment Amount (In Crore)"
+                  type="text"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Utilization Certificate
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={utilizationCertificate}
+                    onChange={(e) => setUtilizationCertificate(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    placeholder="Enter the link Utilization Certificate"
+                  />
+                </div>
               </div>
 
               <div>
@@ -171,6 +261,8 @@ export default function BudgetUcUpload() {
                 <div className="relative">
                   <input
                     type="date"
+                    value={amountReceivedDate}
+                    onChange={(e) => setAmountReceivedDate(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -180,12 +272,21 @@ export default function BudgetUcUpload() {
             {/* Modal Buttons */}
             <div className="flex justify-end gap-3 mt-6">
               <button
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setShowModal(false);
+                  setInstallmentAmount("");
+                  setExpenditureAmount("");
+                  setAmountReceivedDate("");
+                  setUtilizationCertificate("");
+                }}
                 className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors">
+              <button
+                onClick={uploadBudgetUc}
+                className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+              >
                 Submit
               </button>
             </div>
