@@ -11,9 +11,15 @@ import { ProjectTableDataKeys } from "../../utils/dataSet";
 import { convertToIST } from "../../utils/functions";
 
 const projectStatuses = [
-  "योजना चरण में",
-  "रोक पर",
+  // "योजना चरण में",
+  // "रोक पर",
+  // "प्रगति पर है",
+  // "विलंबित",
+  // "पूर्ण हुआ",
+
+  "योजना चरण",
   "प्रगति पर है",
+  "रोक पर",
   "विलंबित",
   "पूर्ण हुआ",
 ];
@@ -133,7 +139,7 @@ export const DataTable = ({
                                   : "bg-red-100 text-red-800"
                               )}
                             >
-                              {projectStatuses[project[key]]}
+                              {projectStatuses[parseInt(project[key])-1]}
                             </p>
                           </div>
                         ) : key === "projectUpdate" ||

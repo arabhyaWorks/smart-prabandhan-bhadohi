@@ -1,6 +1,14 @@
-import React from 'react';
-import { Mail, Phone, Building2, UserCircle, Shield, LogOut, HelpCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import {
+  Mail,
+  Phone,
+  Building2,
+  UserCircle,
+  Shield,
+  LogOut,
+  HelpCircle,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileCardProps {
   name: string;
@@ -12,12 +20,20 @@ interface ProfileCardProps {
   onClose: () => void;
 }
 
-export function ProfileCard({ name, designation, email, agency, phone, role, onClose }: ProfileCardProps) {
+export function ProfileCard({
+  name,
+  designation,
+  email,
+  agency,
+  phone,
+  role,
+  onClose,
+}: ProfileCardProps) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     // Add logout logic here
-    navigate('/login');
+    navigate("/login");
     onClose();
   };
 
@@ -28,13 +44,19 @@ export function ProfileCard({ name, designation, email, agency, phone, role, onC
           <div className="w-28 h-18  rounded-full flex items-center justify-center">
             <UserCircle className="w-24 h-24 text-orange-500" />
           </div>
-          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm flex items-center justify-center ">
+          <div
+            style={{
+              marginTop: "-20px",
+              marginLeft: "-5px",
+            }}
+            className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm flex items-center justify-center"
+          >
             {role}
           </div>
         </div>
       </div>
-      
-      <div className="space-y-6">
+
+      <div className="space-y-6 mt-[-20px]">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900">{name}</h2>
           <p className="text-orange-600 font-medium">{designation}</p>
@@ -76,7 +98,9 @@ export function ProfileCard({ name, designation, email, agency, phone, role, onC
 
         <div className="space-y-3">
           <button
-            onClick={() => window.location.href = 'mailto:support@pmsbhadohi.com'}
+            onClick={() =>
+              (window.location.href = "mailto:support@pmsbhadohi.com")
+            }
             className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
           >
             <HelpCircle className="w-5 h-5" />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import './sidebar.css'
 import {
@@ -67,6 +67,7 @@ const indiaLogo =
 
 export default function Sidebar({ isOpen }: SidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -120,8 +121,16 @@ export default function Sidebar({ isOpen }: SidebarProps) {
         </nav>
 
         <div className="p-4 border-t border-gray-200">
-          <a
-            href="/login"
+          <button
+            // href="/login"
+            onClick={() => {
+              localStorage.removeItem("user");
+              navigate("/login");
+            }}
+
+
+
+
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
@@ -136,7 +145,7 @@ export default function Sidebar({ isOpen }: SidebarProps) {
                 </motion.span>
               )}
             </AnimatePresence>
-          </a>
+          </button>
         </div>
       </motion.div>
     </>

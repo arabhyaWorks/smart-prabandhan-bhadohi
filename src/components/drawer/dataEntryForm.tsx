@@ -35,8 +35,6 @@ const STEPS = [
 
 const ProjectForm = ({ onSubmitSuccess }) => {
   const { entities, reloadEntities, user, setUser } = useEntities();
-  // [user, setUserState]
-
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     projectName: "",
@@ -62,7 +60,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     // actualCompletionDate: "",
     // workOrderFormationDate: "",
     // landHandoverDate: "",
-    contactInformation: 1,
+    contactInformation: "",
 
     totalApprovedBudget: "",
     revisedProjectCost: "",
@@ -260,6 +258,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
   const renderProjectInformation = () => (
     <div className="space-y-6 animate-fadeIn">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* <h1>{user?.entityId}</h1> */}
         <FormField
           label="Project Department"
           name="projectDepartment,departmentId"
@@ -267,12 +266,12 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           value={formData.departmentId} // Use the ID to match the selected option
           onChange={handleEntityChange}
           options={entities
-            ?.filter((entity) => entity.entity_type === 1)
+            ?.filter((entity) => entity.id == user?.entityId)
             .map((entity) => ({
               value: entity.id, // The value should match `departmentId`
               label: entity.entity_name,
             }))}
-          //required
+          required
         />
         <FormField
           label="Executing Agency"
@@ -286,7 +285,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
               value: entity.id, // ID as the option value
               label: entity.entity_name, // Display name as the option label
             }))}
-          //required
+          required
         />
       </div>
 
@@ -305,7 +304,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           value: category,
           label: category,
         }))}
-        //required
+        required
       />
 
       <FormField
@@ -315,7 +314,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         value={formData.projectName}
         onChange={handleInputChange}
         placeholder="Enter project name"
-        //required
+        required
       />
 
       <FormField
@@ -330,7 +329,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       <FormField
         label="Goal & Objectives"
         name="projectGoal"
-        type="textarea"
+        type="text"
         value={formData.projectGoal}
         onChange={handleInputChange}
         placeholder="Enter project goals & objectives"
@@ -363,7 +362,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
               label: "Both Central & State Government",
             },
           ]}
-          //required
+          required
         />
         <FormField
           label="Project Status"
@@ -383,6 +382,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
               label: status,
             })) || []
           }
+          required
         />
       </div>
 
@@ -404,14 +404,14 @@ const ProjectForm = ({ onSubmitSuccess }) => {
         placeholder="Enter project manager name"
       />
 
-      <FormField
+      {/* <FormField
         label=" Project Contact Information "
         name="contactInformation"
         type="text"
         value={formData.contactInformation}
         onChange={handleInputChange}
         placeholder="Enter contact information"
-      />
+      /> */}
     </div>
   );
 
@@ -421,24 +421,26 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       <FormField
         label="परियोजना की स्वीकृत लागत (Approved Project Cost)"
         name="approvedProjectCost"
-        type="number"
+        type="text"
         value={formData.approvedProjectCost}
         onChange={handleInputChange}
         placeholder="Enter amount"
+        required
       />
       <FormField
         label="अनुबन्ध के अनुसर परियोजना की धनराशि (Contract Cost)"
         name="contractCost"
-        type="number"
+        type="text"
         value={formData.contractCost}
         onChange={handleInputChange}
         placeholder="Enter amount"
+        required
       />
 
       <FormField
         label="कुल अवमुक्त धनराशि (Total Released Funds)"
         name="totalReleasedFunds"
-        type="number"
+        type="text"
         value={formData.totalReleasedFunds}
         onChange={handleInputChange}
         placeholder="Enter amount"
@@ -446,7 +448,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
       <FormField
         label="कुल व्यय धनराशि (Total Expenditure)"
         name="totalExpenditure"
-        type="number"
+        type="text"
         value={formData.totalExpenditure}
         onChange={handleInputChange}
         placeholder="Enter amount"
@@ -492,18 +494,14 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           name="projectSanctionDate"
           type="date"
           value={projectSanctionDate}
-          // onChange={(date) => handleDateChange(date, "projectSanctionDate")}
           onChange={setProjectSanctionDate}
           placeholder="Select date"
+          required
         />
         <FormField
           label="परियोजना हेतु शासन द्वारा जारी वित्तीय स्वीकृति का दिनांक (Project Financial Approval Date)"
           name="projectFinancialApprovalDate"
           type="date"
-          // value={formData.projectFinancialApprovalDate}
-          // onChange={(date) =>
-          //   handleDateChange(date, "projectFinancialApprovalDate")
-          // }
           value={projectFinancialApprovalDate}
           onChange={setProjectFinancialApprovalDate}
           placeholder="Select date"
@@ -529,6 +527,9 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           onChange={setContractDate}
           placeholder="Select date"
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           label="कार्य प्रारंभ की वास्तविक तिथि (Actual Project Start Date)"
           name="actualProjectStartDate"
@@ -539,9 +540,6 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           onChange={setActualProjectStartDate}
           placeholder="Select date"
         />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           label="अनुबन्ध के अनुसार कार्य पूर्ण करने की तिथि (Project Completion Date as per work order)"
           name="projectCompletionDate"
@@ -552,6 +550,9 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           onChange={setProjectCompletionDate}
           placeholder="Select date"
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           label="Revised Project Sanction Date"
           name="revisedProjectSanctionDate"
@@ -564,9 +565,6 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           onChange={setRevisedProjectSanctionDate}
           placeholder="Select date"
         />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           label="मूल निर्धारित तिथि तक कार्य पूर्ण न होने की स्थिति मे विभाग द्वारा निर्धारित नई लक्षित तिथि (Revised Project Completion Date)"
           name="revisedProjectCompletionDate"
@@ -594,23 +592,23 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           required
         /> */}
 
-        <FormField
+        {/* <FormField
           label="यदि परियोजना मूल निर्धारित तिथि तक पूर्ण न  होने पर विलम्ब का कारण` (Reason for delay in case project not completed by original scheduled date)"
           name="delayReason"
           type="text"
           value={formData.delayReason}
           onChange={handleInputChange}
-          placeholder="Enter Enter Delay Reason"
-        />
+          placeholder="Enter Delay Reason"
+        /> */}
 
-        <FormField
+        {/* <FormField
           label="Meeting instructions given in the meeting"
           name="meetingInstructions"
           type="text"
           value={formData.meetingInstructions}
           onChange={handleInputChange}
           placeholder="Enter the instructions given in the meeting"
-        />
+        /> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

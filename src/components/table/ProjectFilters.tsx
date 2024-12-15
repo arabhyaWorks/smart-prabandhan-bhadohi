@@ -38,7 +38,7 @@ export const ProjectFilters = ({
   visibleColumns,
   onToggleColumn,
 }: ProjectFiltersProps) => {
-  const { entities, reloadEntities } = useEntities();
+  const { user, entities, reloadEntities } = useEntities();
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -66,14 +66,48 @@ export const ProjectFilters = ({
             }}
             className="rounded-md outline-none font-medium border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600"
           >
-            <option value="">सभी विभाग</option>
-            {entities
-              ?.filter((entity) => entity.entity_type === 1)
-              .map((entity) => (
-                <option key={entity.id} value={entity.entity_name}>
-                  {entity.entity_name}
-                </option>
-              ))}
+            {/* {user?.userRole == 3 || user?.userRole == 4  ? (
+              <option value={user?.entityName}>{user?.entityName}</option>
+            ) : (
+              <>
+                <option value="">विभाग चुनें</option>
+                {entities
+                  ?.filter((entity) => entity.entity_type === 1)
+                  .map((entity) => (
+                    <option key={entity.id} value={entity.entity_name}>
+                      {entity.entity_name}
+                    </option>
+                  ))}
+              </>
+            )} */}
+
+            {user?.entityTypeId === 1 ? (
+              user?.userRole == 3 || user?.userRole == 4 ? (
+                <option value={user?.entityName}>{user?.entityName}</option>
+              ) : (
+                <>
+                  <option value="">विभाग चुनें</option>
+                  {entities
+                    ?.filter((entity) => entity.entity_type === 1)
+                    .map((entity) => (
+                      <option key={entity.id} value={entity.entity_name}>
+                        {entity.entity_name}
+                      </option>
+                    ))}
+                </>
+              )
+            ) : (
+              <>
+                <option value="">विभाग चुनें</option>
+                {entities
+                  ?.filter((entity) => entity.entity_type === 1)
+                  .map((entity) => (
+                    <option key={entity.id} value={entity.entity_name}>
+                      {entity.entity_name}
+                    </option>
+                  ))}
+              </>
+            )}
           </select>
 
           <select
@@ -97,14 +131,42 @@ export const ProjectFilters = ({
             onChange={(e) => onSelectedExecutiveAgency(e.target.value)}
             className="rounded-md className=w-10 outline-none font-medium border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600"
           >
-            <option value="">सभी कार्यदायी संस्था</option>
+            {/* <option value="">सभी कार्यदायी संस्था</option>
             {entities
               ?.filter((entity) => entity.entity_type === 2)
               .map((entity) => (
                 <option key={entity.id} value={entity.entity_name}>
                   {entity.entity_name}
                 </option>
-              ))}
+              ))} */}
+
+            {user?.entityTypeId === 2 ? (
+              user?.userRole == 3 || user?.userRole == 4 ? (
+                <option value={user?.entityName}>{user?.entityName}</option>
+              ) : (
+                <>
+                  <option value="">कार्यदायी संस्था चुनें</option>
+                  {entities
+                    ?.filter((entity) => entity.entity_type === 2)
+                    .map((entity) => (
+                      <option key={entity.id} value={entity.entity_name}>
+                        {entity.entity_name}
+                      </option>
+                    ))}
+                </>
+              )
+            ) : (
+              <>
+                <option value="">विभाग चुनें</option>
+                {entities
+                  ?.filter((entity) => entity.entity_type === 1)
+                  .map((entity) => (
+                    <option key={entity.id} value={entity.entity_name}>
+                      {entity.entity_name}
+                    </option>
+                  ))}
+              </>
+            )}
           </select>
 
           <ColumnVisibilityToggle

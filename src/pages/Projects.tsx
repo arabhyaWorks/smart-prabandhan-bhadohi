@@ -62,6 +62,7 @@ export function Projects() {
       });
 
       if (response.data.success) {
+        console.log(response.data.data);
         setProjects(response.data.data);
       } else {
         setError("Failed to fetch projects. Please try again.");

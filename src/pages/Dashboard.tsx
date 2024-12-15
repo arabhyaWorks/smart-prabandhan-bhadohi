@@ -46,7 +46,7 @@ export function Dashboard() {
     try {
       const response = await axios.get(
         `${endpoint}/api/entity-overview`,
-        user.userRole == 3 || user.userRole == 4 ? { params: paramsData } : {}
+        user.userRole == 1 ? {} : { params: paramsData }
       );
 
       if (response.data.success) {
@@ -180,67 +180,71 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="rounded-lg bg-white shadow">
-        <div className="px-6 py-5 flex justify-between items-center">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Department-wise Project Count
-          </h3>
-          <button
-            onClick={() =>
-              exportChartAsPNG(pieChartRef, "DepartmentWisePieChart")
-            }
-            className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
-            <Download className="h-4 w-4 mr-1" />
-            Export as PNG
-          </button>
-        </div>
-        <div ref={pieChartRef} className="p-6">
-          <DepartmentPieChart data={departmentData} />
-        </div>
-      </div>
-
-      <div className="rounded-lg bg-white shadow">
-        <div className="px-6 py-5 flex justify-between items-center">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Department-wise Project Count (Bar Chart)
-          </h3>
-          <button
-            onClick={() =>
-              exportChartAsPNG(barChartRef, "DepartmentWiseBarChart")
-            }
-            className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
-            <Download className="h-4 w-4 mr-1" />
-            Export as PNG
-          </button>
-        </div>
-        <div ref={barChartRef} className="p-6">
-          <DepartmentBarChart data={departmentData} />
-        </div>
-      </div>
-
-      <div className="rounded-lg bg-white shadow">
-        <div className="px-6 py-5 border-b border-gray-200">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Department-wise Distribution
-          </h3>
-        </div>
-        <div className="px-6 py-5">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {departmentData.map((data, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-gray-500">
-                  {data.name}
-                </h4>
-                <p className="mt-1 text-3xl font-semibold text-gray-900">
-                  {data.value} Projects
-                </p>
-              </div>
-            ))}
+      {user?.userRole == 1 && (
+        <>
+          <div className="rounded-lg bg-white shadow">
+            <div className="px-6 py-5 flex justify-between items-center">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Department-wise Project Count
+              </h3>
+              <button
+                onClick={() =>
+                  exportChartAsPNG(pieChartRef, "DepartmentWisePieChart")
+                }
+                className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Export as PNG
+              </button>
+            </div>
+            <div ref={pieChartRef} className="p-6">
+              <DepartmentPieChart data={departmentData} />
+            </div>
           </div>
-        </div>
-      </div>
+
+          <div className="rounded-lg bg-white shadow">
+            <div className="px-6 py-5 flex justify-between items-center">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Department-wise Project Count (Bar Chart)
+              </h3>
+              <button
+                onClick={() =>
+                  exportChartAsPNG(barChartRef, "DepartmentWiseBarChart")
+                }
+                className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Export as PNG
+              </button>
+            </div>
+            <div ref={barChartRef} className="p-6">
+              <DepartmentBarChart data={departmentData} />
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-white shadow">
+            <div className="px-6 py-5 border-b border-gray-200">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Department-wise Distribution
+              </h3>
+            </div>
+            <div className="px-6 py-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {departmentData.map((data, index) => (
+                  <div key={index} className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="text-sm font-medium text-gray-500">
+                      {data.name}
+                    </h4>
+                    <p className="mt-1 text-3xl font-semibold text-gray-900">
+                      {data.value} Projects
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
