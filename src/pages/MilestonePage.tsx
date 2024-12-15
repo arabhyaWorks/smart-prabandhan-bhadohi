@@ -13,43 +13,16 @@ export default function MilestonePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchIssues = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const params: any = {};
-
-      // Include entityId and entityTypeId if user exists
-      if (user?.entityId && user?.entityTypeId && user?.userRole == 3 || user?.userRole == 4)  {
-        params["entityId"] = user.entityId;
-        params["entityTypeId"] = user.entityTypeId;
-      }
-
-      const response = await axios.get(`${endpoint}/api/entity/issues`, {
-        params,
-      });
-
-      setIssues(response.data.data);
-    } catch (err) {
-      console.error("Error fetching issues:", err);
-      setError("Failed to fetch issues.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (user) fetchIssues();
-  }, [user]);
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Projects Issues</h2>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Projects Milestone
+          </h2>
           <p className="mt-1 text-sm text-gray-500">
-            Manage and monitor all project issues
+            Manage and monitor all project milestone
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -64,20 +37,12 @@ export default function MilestonePage() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg overflow-hidden">
-        {loading ? (
-          <p className="text-center py-6 text-gray-600">Loading issues...</p>
-        ) : error ? (
-          <p className="text-center py-6 text-red-600">{error}</p>
-        ) : (
-          <IssueTable
-            headers={projectIssuesHeaders}
-            projects={issues}
-            searchTerm={searchTerm}
-            subTableKeyName="issues"
-          />
-        )}
+      <div className=" h-full flex flex-row justify-center align-center ">
+        <img
+          className="w-1/2 h-1/2 mt-20"
+          src="https://cdni.iconscout.com/illustration/premium/thumb/website-launching-coming-soon-illustration-download-in-svg-png-gif-file-formats--business-landing-page-ui-web-app-pack-illustrations-1782224.png"
+          alt="Milestone"
+        />
       </div>
     </div>
   );

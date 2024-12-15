@@ -7,12 +7,34 @@ import { endpoint } from "../utils/dataSet";
 import { useEntities } from "../context/EntityContect";
 
 export default function BudgetUcUpload() {
-  const { user } = useEntities(); // Access user context
+  // const { user } = useEntities(); // Access user context
+  const { entities } = useEntities(); // Access user context
+
+  const user = {
+    id: 17,
+    userName: "Testing",
+    userEmail: "user@testing.com",
+    userRole: 1,
+    entityId: 16,
+    entityName: "उत्तर प्रदेश जल निगम (RURAL)",
+    entityTypeId: 1,
+    userDesignation: "testing",
+    userPhoneNumber: "1234567890",
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [budgetUcupload, setBudgetUcupload] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedExecutiveAgency, setSelectedExecutiveAgency] = useState("");
+  const [selectedProject, setSelectedProject] = useState("");
+
+  const [installmentAmount, setInstallmentAmount] = useState("");
+  const [expenditureAmount, setExpenditureAmount] = useState("");
+  const [amountReceivedDate, setAmountReceivedDate] = useState("");
+  const [utilizationCertificate, setUtilizationCertificate] = useState("");
 
   const fetchBudgetUcupload = async () => {
     setLoading(true);
@@ -21,14 +43,20 @@ export default function BudgetUcUpload() {
       const params = {};
 
       // Include entityId and entityTypeId in the request if user exists
-      if (user?.entityId && user?.entityTypeId && user?.userRole == 3 || user?.userRole == 4) {
+      if (
+        (user?.entityId && user?.entityTypeId && user?.userRole == 3) ||
+        user?.userRole == 4
+      ) {
         params["entityId"] = user.entityId;
         params["entityTypeId"] = user.entityTypeId;
       }
 
-      const response = await axios.get(`${endpoint}/api/projects-with-budgets`, {
-        params,
-      });
+      const response = await axios.get(
+        `${endpoint}/api/projects-with-budgets`,
+        {
+          params,
+        }
+      );
       setBudgetUcupload(response.data.data);
     } catch (error) {
       console.error("Error fetching budget uploads:", error);
@@ -38,9 +66,14 @@ export default function BudgetUcUpload() {
     }
   };
 
+  // useEffect(() => {
+  //   if (user)
+  //      fetchBudgetUcupload();
+  // }, [user]);
+
   useEffect(() => {
-    if (user) fetchBudgetUcupload();
-  }, [user]);
+    fetchBudgetUcupload();
+  }, []);
 
   return (
     <div className="">
@@ -97,32 +130,28 @@ export default function BudgetUcUpload() {
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               Add Projects Budget Received Installment
             </h2>
-            <div className="space-y-4">
-              <div className="flex gap-2">
-                <div className="w-full">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Department Name
-                  </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                    <option value="औद्योगिक विकास विभाग">
-                      औद्योगिक विकास विभाग
-                    </option>
-                    <option value="नगरीय विकास विभाग">
-                      नगरीय विकास विभाग
-                    </option>
-                    <option value="योजना विभाग">योजना विभाग</option>
-                  </select>
-                </div>
-                <div className="w-full">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Project Name
-                  </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                    <option value="Project 1">Project 1</option>
-                    <option value="Project 2">Project 2</option>
-                  </select>
-                </div>
+            <div className="space-y-4 mt-10">
+              {/* <div className="flex gap-2"> */}
+            
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Select Project
+                </label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+
+                </select>
               </div>
+
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Project Name
+                </label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                  <option value="Project 1">Project 1</option>
+                  <option value="Project 2">Project 2</option>
+                </select>
+              </div>
+              {/* </div> */}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

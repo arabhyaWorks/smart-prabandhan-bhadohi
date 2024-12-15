@@ -110,14 +110,14 @@ const subTable = (
                 {detail.utilizationCertificate || "N/A"}
               </td>
 
-              <td
+              {/* <td
                 className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-center"
                 style={{ wordWrap: "break-word" }}
               >
                 <button className="bg-orange-500 text-white font-medium hover:shadow-md px-5 py-1 rounded-md">
                   Edit
                 </button>
-              </td>
+              </td> */}
             </tr>
           ))
         ) : (
@@ -132,14 +132,14 @@ const subTable = (
               </td>
             ))}
 
-            <td
+            {/* <td
               className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-center"
               style={{ wordWrap: "break-word" }}
             >
               <button className="bg-orange-500 text-white font-medium hover:shadow-md px-5 py-1 rounded-md">
                 Add
               </button>
-            </td>
+            </td> */}
           </tr>
         )}
       </tbody>

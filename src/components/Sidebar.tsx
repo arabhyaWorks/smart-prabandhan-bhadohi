@@ -39,7 +39,7 @@ const menuItems = [
   { icon: Receipt, label: "Budget & UC Upload", route: "/budget-uc-upload" },
   { icon: Milestone, label: "Milestones", route: "/milestones" },
   { icon: AlertCircle, label: "Issue Management", route: "/issue-management" },
-  { icon: BarChart2, label: "Reports", route: "/reports" },
+  // { icon: BarChart2, label: "Reports", route: "/reports" },
   { icon: Image, label: "Gallery", route: "/gallery" },
   // {
   //   icon: PenTool,
