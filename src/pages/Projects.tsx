@@ -9,6 +9,124 @@ import { DataTable } from "../components/table/SuperProjectTable";
 import { ProjectFilters } from "../components/table/ProjectFilters";
 import Drawer from "../components/drawer/Drawer";
 import ProjectForm from "../components/drawer/dataEntryForm";
+import classNames from "classnames";
+import { convertToIST } from "../utils/functions";
+
+const MeetingLogModal = ({ projectName, projectId, closeModal, showModal }) => {
+  const meetingHeaders = [
+    "क्रम संख्या",
+    "समीक्षा बैठक निर्देश",
+    "समीक्षा बैठक दिनांक",
+    "दिये गये निर्देश के सापेक्ष अनुपालन",
+    "अभ्यूक्ति",
+  ];
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [meetingLogs, setMeetingLogs] = useState([]);
+
+  const fetchMeetingLogs = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await axios.get(
+        `${endpoint}/api/projects/${projectId}/meetings`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (response.data.success) {
+        setMeetingLogs(response.data.data);
+      } else {
+        setError("Failed to fetch meeting logs. Please try again.");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "An error occurred while fetching meeting logs."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMeetingLogs();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-600">{error}</p>;
+
+  if (!showModal) return null;
+
+  return (
+    <div
+      style={{ zIndex: 9999, margin: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <div className="bg-white rounded-lg shadow-lg overflow-auto max-h-[80vh] w-[90%]">
+        <h2 className="text-lg font-bold text-gray-900 p-4 border-b">
+          Meeting Logs for {projectName}
+        </h2>
+        <div className="p-5">
+          <table className="min-w-full  divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {meetingHeaders.map((header, index) => (
+                  <th
+                    key={index}
+                    className="px-6 py-4 text-left text-sm font-bold text-orange-800 tracking-wider border-2 border-gray-200"
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {meetingLogs.map((meeting, index) => (
+                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 text-sm text-gray-900 border-2 border-gray-200 text-center">
+                    {meeting.id}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900 border-2 border-gray-200">
+                    {meeting.description}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900 border-2 border-gray-200">
+                    {/* {new Date(meeting.date).toLocaleString()} */}
+                    {convertToIST(meeting.date)}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900 border-2 border-gray-200">
+                    {meeting.compliance}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900 border-2 border-gray-200">
+                    {meeting.feedback}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Modal Buttons */}
+        <div className=" pr-5 pb-5 flex justify-end gap-3 mt-6">
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            Close
+          </button>
+          {/* <button
+            // onClick={uploadBudgetUc}
+            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+          >
+            Submit
+          </button> */}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MeetingLogModal;
 
 export function Projects() {
   const { user } = useEntities(); // Access user data from the context
@@ -22,6 +140,7 @@ export function Projects() {
   const [selectedExecutiveAgency, setSelectedExecutiveAgency] = useState("");
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [showModal, setShowModal] = useState(true);
 
   const [visibleColumns, setVisibleColumns] = useState(
     headers.hi.map((_, index) => index.toString())
@@ -168,6 +287,13 @@ export function Projects() {
           <ProjectForm onSubmitSuccess={() => setIsDrawerOpen(false)} />
         </div>
       </Drawer>
+
+      <MeetingLogModal
+        projectName="Project Name"
+        projectId={48}
+        closeModal={() => setShowModal(false)}
+        showModal={showModal}
+      />
     </div>
   );
 }
