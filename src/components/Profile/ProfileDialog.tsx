@@ -36,7 +36,12 @@ export function ProfileDialog({ isOpen, onClose }: ProfileDialogProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div
+      style={{
+        zIndex: 999,
+      }}
+      className="fixed inset-0 overflow-y-auto"
+    >
       <div className="flex min-h-screen items-center justify-center px-4 py-8">
         <div
           className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm"

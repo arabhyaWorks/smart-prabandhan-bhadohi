@@ -26,6 +26,8 @@ interface EntitiesContextType {
   setUser: (user: User | null) => void;
   projectNameData: any;
   setProjectNameData: any;
+  isProfileOpen: boolean;
+  setIsProfileOpen: any;
 }
 
 const EntitiesContext = createContext<EntitiesContextType | undefined>(
@@ -36,6 +38,7 @@ export function EntitiesProvider({ children }: { children: React.ReactNode }) {
   const [entities, setEntities] = useState<Entity[] | null>(null);
   const [user, setUserState] = useState<User | null>(null);
   const [projectNameData, setProjectNameData] = useState([]);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // Fetch entities from API
   const fetchEntities = async () => {
@@ -91,7 +94,16 @@ export function EntitiesProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <EntitiesContext.Provider
-      value={{ entities, reloadEntities, user, setUser, projectNameData, setProjectNameData }}
+      value={{
+        entities,
+        reloadEntities,
+        user,
+        setUser,
+        projectNameData,
+        setProjectNameData,
+        isProfileOpen,
+        setIsProfileOpen,
+      }}
     >
       {children}
     </EntitiesContext.Provider>

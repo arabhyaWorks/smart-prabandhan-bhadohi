@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
-import './sidebar.css'
+import "./sidebar.css";
 import {
   LayoutDashboard,
   Database,
@@ -21,11 +21,17 @@ import {
   FileCheck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProfileDialog } from "./Profile/ProfileDialog";
+import { useEntities } from "../context/EntityContect";
+
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", route: "/dashboard" },
   { icon: Database, label: "Issues", route: "/projectDashboard" },
   { icon: FolderOpen, label: "All Projects", route: "/projects" },
   { icon: Users, label: "All Users", route: "/users" },
+  { icon: Image, label: "Gallery", route: "/gallery" },
+  { icon: Receipt, label: "Budget & UC Upload", route: "/budget-uc-upload" },
+  { icon: AlertCircle, label: "Issue Management", route: "/issue-management" },
   {
     icon: InspectionPanel,
     label: "Inspection Panel",
@@ -36,11 +42,9 @@ const menuItems = [
   //   label: "Project Essential Test",
   //   route: "/projectTest",
   // },
-  { icon: Receipt, label: "Budget & UC Upload", route: "/budget-uc-upload" },
   { icon: Milestone, label: "Milestones", route: "/milestones" },
-  { icon: AlertCircle, label: "Issue Management", route: "/issue-management" },
   // { icon: BarChart2, label: "Reports", route: "/reports" },
-  { icon: Image, label: "Gallery", route: "/gallery" },
+
   // {
   //   icon: PenTool,
   //   label: "Project Essential Test",
@@ -65,12 +69,13 @@ interface SidebarProps {
 const indiaLogo =
   "https://upload.wikimedia.org/wikipedia/commons/f/fa/Seal_of_Uttar_Pradesh.svg";
 
-  const Playlogo =
+const Playlogo =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/1200px-Google_Play_Store_badge_EN.svg.png";
 
 export default function Sidebar({ isOpen }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isProfileOpen, setIsProfileOpen } = useEntities();
 
   return (
     <>
@@ -78,7 +83,7 @@ export default function Sidebar({ isOpen }: SidebarProps) {
         // className={`${
         //   !isOpen ? "w-20" : "w-[250px]"
         // } bg-white h-screen  fixed left-0 top-0 border-r border-gray-200 flex flex-col transition-all duration-300 z-20`}
-      
+
         className={classNames(
           "w-20 bg-white h-screen  fixed left-0 top-0 border-r border-gray-200 flex flex-col transition-all duration-300 z-20",
           {
@@ -88,10 +93,8 @@ export default function Sidebar({ isOpen }: SidebarProps) {
           // 'sm:hidden'
           // "hidden sm:block"
           // "lg:bg-red-800 md:bg-green-600 sm:bg-blue-500"
-          'sidebarContainer'
+          "sidebarContainer"
         )}
-
-
       >
         <div className="p-3 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -121,14 +124,24 @@ export default function Sidebar({ isOpen }: SidebarProps) {
               );
             })}
           </ul>
+
+          <ul className="space-y-2">
+            <li>
+              <button
+                // href="/"
+                onClick={() => setIsProfileOpen(true)}
+                className="flex items-center gap-3 px-3 py-[0.62rem] rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+              >
+                <User className="w-5 h-5 flex-shrink-0" />
+                <p>Profile</p>
+              </button>
+            </li>
+          </ul>
         </nav>
 
         <div className="p-4 ">
-          <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
-          >
-            {/* img src={Playlogo} alt="Playstore Logo" className="w-10 h-10"  */}
+          <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors">
             <img src={Playlogo} alt="Playstore Logo" className="w-full " />
-
           </button>
         </div>
 
@@ -139,10 +152,6 @@ export default function Sidebar({ isOpen }: SidebarProps) {
               localStorage.removeItem("user");
               navigate("/login");
             }}
-
-
-
-
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
@@ -159,6 +168,8 @@ export default function Sidebar({ isOpen }: SidebarProps) {
             </AnimatePresence>
           </button>
         </div>
+
+       
       </motion.div>
     </>
   );

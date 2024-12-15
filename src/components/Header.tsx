@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Bell, UserCircle, PanelLeft } from "lucide-react";
 // import { ProfileDialog } from "./profile/ProfileDialog";
 import { ProfileDialog } from "./Profile/ProfileDialog";
+import { useEntities } from "../context/EntityContect";
 
 interface HeaderProps {
   isOpen: boolean;
@@ -10,7 +11,8 @@ interface HeaderProps {
 }
 
 export function Header({ isOpen, onToggle }: HeaderProps) {
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  // const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { isProfileOpen, setIsProfileOpen } = useEntities();
 
   return (
     <header
