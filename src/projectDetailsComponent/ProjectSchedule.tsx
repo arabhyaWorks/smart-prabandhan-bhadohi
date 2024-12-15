@@ -35,42 +35,53 @@ const ProjectSchedule = ({ project }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {project.mileStones.map((milestone, index) => (
-                <tr key={milestone.id}>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {/* {milestone.id} */}
-                    {index + 1}
-                  </td>
-                  <td className="px-4 py-4 text-sm text-gray-900">
-                    {milestone.milestoneName}
-                  </td>
-                  <td className="px-4 py-4 text-sm text-gray-900">
-                    {milestone.milestoneProgress}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {convertToIST(milestone.milestoneFromDate)}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {convertToIST(milestone.milestoneCompletionDate)}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {convertToIST(milestone.milestoneActualCompletionDate)}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-green-500 rounded-full"
-                          style={{ width: `${milestone.milestoneProgress}%` }}
-                        />
+              {project.mileStones.length > 0 ? (
+                project.mileStones.map((milestone, index) => (
+                  <tr key={milestone.id}>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {/* {milestone.id} */}
+                      {index + 1}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-900">
+                      {milestone.milestoneName}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-900">
+                      {milestone.milestoneProgress}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {convertToIST(milestone.milestoneFromDate)}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {convertToIST(milestone.milestoneCompletionDate)}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {convertToIST(milestone.milestoneActualCompletionDate)}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-green-500 rounded-full"
+                            style={{ width: `${milestone.milestoneProgress}%` }}
+                          />
+                        </div>
+                        <span className="ml-2 text-sm text-gray-900">
+                          {milestone.milestoneProgress}%
+                        </span>
                       </div>
-                      <span className="ml-2 text-sm text-gray-900">
-                        {milestone.milestoneProgress}%
-                      </span>
-                    </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    className="px-4 py-4 text-sm text-gray-500 text-center"
+                    colSpan={7}
+                  >
+                    No Milestones found
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

@@ -26,11 +26,11 @@ import { useEntities } from "../context/EntityContect";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", route: "/dashboard" },
-  { icon: Database, label: "Issues", route: "/projectDashboard" },
+  // { icon: Database, label: "Issues", route: "/projectDashboard" },
   { icon: FolderOpen, label: "All Projects", route: "/projects" },
   { icon: Users, label: "All Users", route: "/users" },
-  { icon: Image, label: "Gallery", route: "/gallery" },
   { icon: Receipt, label: "Budget & UC Upload", route: "/budget-uc-upload" },
+  { icon: Image, label: "Gallery", route: "/gallery" },
   { icon: AlertCircle, label: "Issue Management", route: "/issue-management" },
   {
     icon: InspectionPanel,
@@ -140,14 +140,16 @@ export default function Sidebar({ isOpen }: SidebarProps) {
         </nav>
 
         <div className="p-4 ">
-          <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors">
-            <img src={Playlogo} alt="Playstore Logo" className="w-full " />
-          </button>
+        <button
+  onClick={() => window.open("https://play.google.com/store/apps/details?id=com.pmsss&hl=en_IN")}
+  className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+>
+  <img src={Playlogo} alt="Playstore Logo" className="w-full" />
+</button>
         </div>
 
         <div className="p-4 border-t border-gray-200">
           <button
-            // href="/login"
             onClick={() => {
               localStorage.removeItem("user");
               navigate("/login");
@@ -168,8 +170,6 @@ export default function Sidebar({ isOpen }: SidebarProps) {
             </AnimatePresence>
           </button>
         </div>
-
-       
       </motion.div>
     </>
   );
