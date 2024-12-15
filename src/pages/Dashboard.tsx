@@ -13,56 +13,55 @@ import { ProjectStatusChart } from "../components/dashboard/ProjectStatusChart";
 import { BudgetChart } from "../components/dashboard/BudgetChart";
 import { DepartmentPieChart } from "../components/dashboard/dashboardPieChart";
 import { DepartmentBarChart } from "../components/dashboard/DepartmentBarChart";
-import { use } from "framer-motion/client";
 import { endpoint } from "../utils/dataSet";
 import { useEntities } from "../context/EntityContect";
 
-const projectStatusData = [
-  { name: "In Progress", value: 45 },
-  { name: "Completed", value: 30 },
-  { name: "On Hold", value: 15 },
-  { name: "In Planning", value: 10 },
-];
-
-const data = {
-  totalApprovedBudget: "146.19",
-  totalReleasedFunds: "82.76",
-  totalExpenditure: "55.77",
-  totalPendingBudget: "90.42",
-};
-const budgetData = [
-  {
-    name: "Total",
-    sanctioned: 209040.72,
-    released: 13012.79,
-    pending: 196027.93,
-  },
-];
-
-const projectStatusLabels = [
-  "In Planning",
-  "In Progress",
-  "On Hold",
-  "Delayed",
-  "Completed",
-];
-
 export function Dashboard() {
-  const { entities, reloadEntities } = useEntities();
+  const { user, entities, reloadEntities } = useEntities();
 
-  const [projectStatus, setProjectStatus] = useState([]);
+  const [dashboardStats, setDashboardStats] = useState({});
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [departmentData, setDepartmentData] = useState([]);
-  const [stats, setStats] = useState({});
+
   const pieChartRef = useRef(null);
   const barChartRef = useRef(null);
 
-  const fetchProjectStatus = async () => {
+  const fetchDashboardStats = async () => {
+    if (!user?.entityId || !user?.entityTypeId) {
+      setError("Entity ID or Entity Type ID is missing.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    const paramsData = {
+      entityId: user.entityId,
+      entityTypeId: user.entityTypeId,
+    };
+
+    console.log("paramsData", paramsData);
+
     try {
-      const response = await axios.get(`${endpoint}/api/stats/project-status`);
-      // console.log(response.data.data);
-      setProjectStatus(response.data.data);
-    } catch (error) {
-      console.error(error);
+      const response = await axios.get(
+        `${endpoint}/api/entity-overview`,
+        user.userRole == 3 || user.userRole == 4 ? { params: paramsData } : {}
+      );
+
+      if (response.data.success) {
+        console.log("response.data.data", response.data.data);
+        setDashboardStats(response.data.data);
+      } else {
+        setError("Failed to fetch data. Please try again.");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "An error occurred while fetching data."
+      );
+      console.error("Error fetching dashboard stats:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,32 +75,13 @@ export function Dashboard() {
           },
         }
       );
-      console.log(response.data);
-      setDepartmentData(response.data.data);
+      setDepartmentData(response.data.data || []);
     } catch (error) {
       console.error(error);
+      setDepartmentData([]);
     }
   };
 
-  // Fetch Overall Stats Data
-  const fetchStatsData = async () => {
-    try {
-      const response = await axios.get(
-        `${endpoint}/api/stats/budget-overview`,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "true",
-          },
-        }
-      );
-      // console.log(response.data);
-      setStats(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Export Chart as PNG
   const exportChartAsPNG = (ref, filename) => {
     if (ref.current) {
       html2canvas(ref.current, { useCORS: true }).then((canvas) => {
@@ -114,10 +94,34 @@ export function Dashboard() {
   };
 
   useEffect(() => {
-    fetchProjectStatus();
+    if (user) {
+      fetchDashboardStats();
+    }
     fetchDepartmentData();
-    fetchStatsData();
-  }, []);
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-red-500">{error}</div>
+      </div>
+    );
+  }
+
+  const projectStatusData =
+    dashboardStats?.projectStatusDistribution?.map((data) => ({
+      name: data.status,
+      value: data.count,
+    })) || [];
+
   return (
     <div className="space-y-6">
       <div>
@@ -129,24 +133,29 @@ export function Dashboard() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Projects"
-          value={stats.totalProjects}
+          value={dashboardStats?.totalProjects || 0}
           icon={Building2}
           trend={{ value: 1.5, label: "from last month" }}
         />
         <StatCard
           title="Total Budget (Crore)"
-          value={"₹" + stats?.totalBudget?.approved}
+          value={`₹${dashboardStats?.cumulativeTotalBudget || 0}`}
           icon={IndianRupee}
         />
         <StatCard
           title="In Progress Projects"
-          value={stats?.activeProjects?.count}
+          value={dashboardStats?.inProgressProjects || 0}
           icon={Activity}
           trend={{ value: 8, label: "from last month" }}
         />
         <StatCard
           title="Executing Agencies"
-          value={entities?.filter((entity) => entity.entity_type === 2).length}
+          value={
+            user?.userRole == 3 || user?.userRole == 4
+              ? dashboardStats?.totalRelatedEntities || 0
+              : entities?.filter((entity) => entity.entity_type === 2).length ||
+                0
+          }
           icon={Users}
         />
       </div>
@@ -157,13 +166,7 @@ export function Dashboard() {
             <h3 className="text-lg font-medium leading-6 text-gray-900">
               Project Status Distribution
             </h3>
-            <ProjectStatusChart
-              data={projectStatus.map((data) => ({
-                ...data,
-                name: projectStatusLabels[data.project_status - 1],
-                value: data.count,
-              }))}
-            />
+            <ProjectStatusChart data={projectStatusData} />
           </div>
         </div>
 
@@ -172,12 +175,11 @@ export function Dashboard() {
             <h3 className="text-lg font-medium leading-6 text-gray-900">
               Budget Overview (in Crores)
             </h3>
-            <BudgetChart/>
+            <BudgetChart data={dashboardStats} />
           </div>
         </div>
       </div>
 
-      {/* Department-wise Project Count - Pie Chart */}
       <div className="rounded-lg bg-white shadow">
         <div className="px-6 py-5 flex justify-between items-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
@@ -192,19 +194,12 @@ export function Dashboard() {
             <Download className="h-4 w-4 mr-1" />
             Export as PNG
           </button>
-          {/* <button
-            className="bg-blue-500 text-white px-3 py-1 rounded-md"
-            onClick={() => exportChartAsPNG(pieChartRef, "DepartmentWisePieChart")}
-          >
-            Export as PNG
-          </button> */}
         </div>
         <div ref={pieChartRef} className="p-6">
           <DepartmentPieChart data={departmentData} />
         </div>
       </div>
 
-      {/* Department-wise Project Count - Bar Chart */}
       <div className="rounded-lg bg-white shadow">
         <div className="px-6 py-5 flex justify-between items-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">

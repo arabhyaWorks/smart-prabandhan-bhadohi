@@ -17,10 +17,9 @@ interface GalleryProps {
 }
 
 export default function Gallery({ isSidebarOpen }: GalleryProps) {
-  const { entities, reloadEntities } = useEntities();
-  const [executingAgencies, setExecutingAgencies] = useState(
-    entities?.filter((entity) => entity.entity_type === 2)
-  );
+  const { user, entities, reloadEntities } = useEntities();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [selectedAgency, setSelectedAgency] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,21 +33,36 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
     imageDescription: "",
   });
 
+  // Fetch Project Gallery
   const fetchProjectGallery = async () => {
-    const url = `${endpoint}/api/fetchGallery`;
+    if (!user?.entityId || !user?.entityTypeId ) {
+      setError("Entity ID or Entity Type ID is missing.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    const paramsData = {
+      entityId: user.entityId,
+      entityTypeId: user.entityTypeId,
+    }
 
     try {
-      const response = await axios.get(url, {});
+      const response = await axios.get(`${endpoint}/api/fetchGallery`, user.userRole == 3 || user.userRole == 4 ? { params: paramsData } : {});
 
-      console.log("Response Data:", response.data.data);
-
-      return setProjectGallery(response.data.data);
-    } catch (error) {
-      console.error(
-        "Error fetching data:",
-        error.response ? error.response.data : error.message
+      if (response.data.success) {
+        setProjectGallery(response.data.data);
+      } else {
+        setError("Failed to fetch gallery. Please try again.");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "An error occurred while fetching gallery."
       );
-      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,12 +90,16 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
   };
 
   useEffect(() => {
-    fetchProjectGallery();
-  }, []);
+    if (user) {
+      fetchProjectGallery();
+    }
+  }, [user]);
 
   const filteredProjects = projectGallery.filter((project) => {
     const matchesAgency =
       !selectedAgency || project.executiveAgencyId === parseInt(selectedAgency);
+
+    // const matchesUserRole  = user?.userRole ==
 
     const matchesProjectId =
       !filterSelectedProject ||
@@ -108,6 +126,7 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
       className={`min-h-screen bg-gray-50 transition-all duration-300 m-0
         `}
     >
+      <h1>{error}</h1>
       <div className="max-w-7xl mx-auto py-6">
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
@@ -338,3 +357,289 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
     </div>
   );
 }
+
+// {
+//   import React, { useState, useEffect } from "react";
+//   import { Search, Image as ImageIcon, Filter, Plus } from "lucide-react";
+//   import axios from "axios";
+//   import { endpoint } from "../utils/dataSet";
+//   import { useEntities } from "../context/EntityContect";
+
+//   interface GalleryProps {
+//     isSidebarOpen: boolean;
+//   }
+
+//   export default function Gallery({ isSidebarOpen }: GalleryProps) {
+//     const { user, entities } = useEntities();
+//     const [loading, setLoading] = useState(false);
+//     const [error, setError] = useState("");
+
+//     const [selectedAgency, setSelectedAgency] = useState("");
+//     const [filterSelectedProject, setFilterSelectedProject] = useState(null);
+//     const [projectGallery, setProjectGallery] = useState([]);
+//     const [showUpdateModal, setShowUpdateModal] = useState(false);
+//     const [selectedProject, setSelectedProject] = useState({});
+//     const [uploadData, setUploadData] = useState({
+//       image: "",
+//       imageDescription: "",
+//     });
+
+//     // Fetch Project Gallery
+//     const fetchProjectGallery = async () => {
+//       if (!user?.entityId || !user?.entityTypeId) {
+//         setError("Entity ID or Entity Type ID is missing.");
+//         return;
+//       }
+
+//       setLoading(true);
+//       setError("");
+
+//       try {
+//         const response = await axios.get(`${endpoint}/api/fetchGallery`, {
+//           params: {
+//             entityId: user.entityId,
+//             entityTypeId: user.entityTypeId,
+//           },
+//         });
+
+//         if (response.data.success) {
+//           setProjectGallery(response.data.data);
+//         } else {
+//           setError("Failed to fetch gallery. Please try again.");
+//         }
+//       } catch (err) {
+//         setError(
+//           err.response?.data?.message || "An error occurred while fetching gallery."
+//         );
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     // Handle Image Upload
+//     const handleUploadImage = async () => {
+//       if (!selectedProject?.projectId) return;
+
+//       const url = `${endpoint}/api/projects/${selectedProject.projectId}/gallery`;
+//       try {
+//         const response = await axios.post(
+//           url,
+//           { ...uploadData, time: new Date() },
+//           { headers: { "Content-Type": "application/json" } }
+//         );
+
+//         if (response.data.success) {
+//           setShowUpdateModal(false);
+//           fetchProjectGallery();
+//         } else {
+//           setError("Failed to upload image. Please try again.");
+//         }
+//       } catch (err) {
+//         setError(
+//           err.response?.data?.message || "An error occurred while uploading image."
+//         );
+//       }
+//     };
+
+//     useEffect(() => {
+//       if (user) fetchProjectGallery();
+//     }, [user]);
+
+//     const filteredProjects = projectGallery.filter((project) => {
+//       const matchesAgency =
+//         !selectedAgency || project.executiveAgencyId === parseInt(selectedAgency);
+//       const matchesProjectId =
+//         !filterSelectedProject ||
+//         project.projectId === parseInt(filterSelectedProject);
+
+//       return matchesAgency && matchesProjectId;
+//     });
+
+//     return (
+//       <div
+//         className={`min-h-screen bg-gray-50 transition-all duration-300 ${
+//           isSidebarOpen ? "ml-64" : "ml-0"
+//         }`}
+//       >
+//         <div className="max-w-7xl mx-auto py-6">
+//           {/* Filters */}
+//           <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+//             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+//               {/* Executing Agency Filter */}
+//               <div className="relative">
+//                 <Filter
+//                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+//                   size={20}
+//                 />
+//                 <select
+//                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+//                   value={selectedAgency}
+//                   onChange={(e) => setSelectedAgency(e.target.value)}
+//                 >
+//                   <option value="">All Executing Agencies</option>
+//                   {entities
+//                     ?.filter((entity) => entity.entity_type === 2)
+//                     .map((entity) => (
+//                       <option key={entity.id} value={entity.id}>
+//                         {entity.entity_name}
+//                       </option>
+//                     ))}
+//                 </select>
+//               </div>
+//               {/* Project Filter */}
+//               <div className="relative">
+//                 <Filter
+//                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+//                   size={20}
+//                 />
+//                 <select
+//                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+//                   value={filterSelectedProject}
+//                   onChange={(e) => setFilterSelectedProject(e.target.value)}
+//                 >
+//                   <option value="">All Projects</option>
+//                   {projectGallery.map((project) => (
+//                     <option key={project.projectId} value={project.projectId}>
+//                       {project.projectName}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+//               {/* Reset Filters */}
+//               <button
+//                 className="px-4 py-2 text-orange-500 border border-orange-500 rounded-lg hover:bg-orange-50 transition-colors"
+//                 onClick={() => {
+//                   setSelectedAgency("");
+//                   setFilterSelectedProject(null);
+//                 }}
+//               >
+//                 Reset Filters
+//               </button>
+//             </div>
+//           </div>
+
+//           {/* Gallery Grid */}
+//           <div className="space-y-8">
+//             {loading ? (
+//               <div className="text-center text-gray-500">Loading...</div>
+//             ) : filteredProjects.length > 0 ? (
+//               filteredProjects.map((project) => (
+//                 <div
+//                   key={project.projectId}
+//                   className="bg-white rounded-lg shadow-sm overflow-hidden"
+//                 >
+//                   <div className="p-4 border-b flex justify-between gap-3">
+//                     <div>
+//                       <h2 className="text-xl font-semibold text-gray-900">
+//                         {project.projectName}
+//                       </h2>
+//                       <p className="text-sm text-gray-500">
+//                         {project.executiveAgencyName}
+//                       </p>
+//                       <p className="text-sm text-gray-500">
+//                         {project.departmentName}
+//                       </p>
+//                     </div>
+//                     <button
+//                       onClick={() => {
+//                         setSelectedProject(project);
+//                         setShowUpdateModal(true);
+//                       }}
+//                       className="px-4 py-2 bg-orange-500 text-white rounded-lg flex items-center gap-2 hover:bg-orange-600 transition-colors"
+//                     >
+//                       <ImageIcon size={20} />
+//                       Upload Images
+//                     </button>
+//                   </div>
+
+//                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+//                     {project.gallery.map((image, index) => (
+//                       <div
+//                         key={index}
+//                         className="relative group aspect-[4/3] overflow-hidden rounded-lg"
+//                       >
+//                         <img
+//                           src={image.image}
+//                           alt={image.imageDescription}
+//                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+//                         />
+//                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity">
+//                           <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform">
+//                             <p className="text-sm font-medium">
+//                               {image.imageDescription}
+//                             </p>
+//                             <p className="text-xs mt-1 opacity-75">
+//                               Uploaded: {new Date(image.uploadedAt).toLocaleString()}
+//                             </p>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     ))}
+//                   </div>
+//                 </div>
+//               ))
+//             ) : (
+//               <div className="text-center text-gray-500">No projects found.</div>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Modal for Image Upload */}
+//         {showUpdateModal && selectedProject && (
+//           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+//             <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full">
+//               <h2 className="text-lg font-bold text-gray-900 mb-4">
+//                 Update Gallery for {selectedProject.projectName}
+//               </h2>
+//               <div className="space-y-4">
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">
+//                     Image URL
+//                   </label>
+//                   <input
+//                     type="text"
+//                     className="w-full px-3 py-2 border rounded-lg"
+//                     value={uploadData.image}
+//                     onChange={(e) =>
+//                       setUploadData({ ...uploadData, image: e.target.value })
+//                     }
+//                   />
+//                 </div>
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">
+//                     Description
+//                   </label>
+//                   <textarea
+//                     className="w-full px-3 py-2 border rounded-lg"
+//                     rows={3}
+//                     value={uploadData.imageDescription}
+//                     onChange={(e) =>
+//                       setUploadData({
+//                         ...uploadData,
+//                         imageDescription: e.target.value,
+//                       })
+//                     }
+//                   ></textarea>
+//                 </div>
+//               </div>
+//               <div className="flex justify-end mt-4 gap-3">
+//                 <button
+//                   className="px-4 py-2 border rounded-lg"
+//                   onClick={() => setShowUpdateModal(false)}
+//                 >
+//                   Cancel
+//                 </button>
+//                 <button
+//                   className="px-4 py-2 bg-orange-500 text-white rounded-lg"
+//                   onClick={handleUploadImage}
+//                 >
+//                   Upload
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   }
+// }

@@ -66,15 +66,13 @@ export const ProjectTableDataKeys = [
   "actualProjectStartDate",
   "projectCompletionDate",
   "revisedProjectCompletionDate",
-  
+
   "lastFundReceivedDate",
   "utilizationCertificateSubmissionDate",
   "delayReason",
   "landHandoverDate",
   "lastUpdatedDateOnCmis",
-  
-  
-  
+
   // "totalApprovedBudget",
   // "revisedProjectCost",
   // "revisedProjectSanctionDate",
@@ -82,9 +80,8 @@ export const ProjectTableDataKeys = [
   // "actualCompletionDate",
   // "workOrderFormationDate",
   // "lastUpdatedDate",
-  
-  // "landHandoverDate",
 
+  // "landHandoverDate",
 
   "geoTaggedPhotosLastMonth",
   "geoTaggedPhotosCurrentMonth",
@@ -160,11 +157,6 @@ interface Users {
   executingOfficerEmailUsername: string;
   executingOfficerMobile: string;
 }
-
-
-
-
-
 
 interface InspectionDetail {
   srNo: string;
@@ -672,6 +664,28 @@ export const projectInspectionHeader = {
   },
 };
 
+export const projectIssuesHeaders = {
+  main: {
+    hi: ["क्रमांक", "परियोजना का नाम", "परियोजना निरीक्षण विवरण"],
+  },
+  subHeaders: {
+    hi: [
+      "क्रमांक",
+      "मुद्दा नाम",
+      "मुद्दा विवरण",
+      "द्वारा उठाया गया",
+      "उठाने की तिथि",
+      "जिसे सौंपा गया",
+      "रिपोर्ट की गई तिथि",
+      "स्थिति",
+      "प्राथमिकता",
+      "बंद करने की तिथि",
+      "बंद करने वाला",
+      "कार्रवाई",
+    ],
+  },
+};
+
 export const budgetUcupload: BudgetUCUpload[] = [
   {
     srNo: "1",
@@ -786,7 +800,7 @@ export const BudgetUcHeaders = {
       "किस्त व्यय (लाख में)",
       "प्राप्त राशि की तारीख",
       "उपयोग प्रमाणपत्र (यूसी)",
-      "टिप्पणी",
+      // "टिप्पणी",
       "कार्रवाई",
     ],
   },
@@ -840,37 +854,35 @@ export const headers = {
     "अभ्यूक्ति", // meetingfeedback meetingComment
   ],
   en: [
-
-      "Serial Number", // क्रम संख्या
-      "Project Name", // projectName
-      "Project Current Status", // projectStatus
-      "Department Name", // projectDepartment
-      "Executing Agency", // executingAgency
-      "Scheme Name", // scheme (19place)
-      "Project Sanction Date", // projectSanctionDate
-      "Government Order Number Issued for Financial Sanction", // projectFinancialApprovalGoNumber
-      "Date of Financial Sanction Issued by Government", // projectFinancialApprovalDate
-      "Approved Project Cost (in crores) (₹)", // approvedProjectCost
-      "Contract Date", // contractDate
-      "Project Cost as per Contract (in crores) (₹)", // contractCost
-      "Total Released Funds (₹)", // totalReleasedFunds
-      "Total Expenditure (₹)", // totalExpenditure
-      "Last Month's Physical Progress (%)", // lastMonthPhysicalProgress
-      "Current Month's Physical Progress (%)", // currentMonthPhysicalProgress
-      "Actual Project Start Date", // actualProjectStartDate
-      "Project Completion Date as per Contract", // projectCompletionDate
-      "New Target Date Set by Department in Case of Non-Completion by Original Deadline", // revisedProjectCompletionDate
-      "Date of Last Fund Received for the Project", // lastFundReceivedDate
-      "Utilization Certificate Submission Date", // utilizationCertificateSubmissionDate
-      "Reason for Delay if the Project was Not Completed by the Original Deadline", // delayReason nhi tha headers me // add in the projects
-      "Date of Land Availability to Executing Agency", // landAvailabilityDate (land hand over date) nhi tha header me
-      "Last Updated Date on CMIS", // lastUpdatedDateOnCmis
-      "Geotagged Photos of Last Month", // geoTaggedPhotosLastMonth
-      "Geotagged Photos of Current Month", // geoTaggedPhotosCurrentMonth
-      "Review Meeting Instructions", // meetingDescription
-      "Compliance with Given Instructions", // meetingCompliance
-      "Feedback/Remarks" // meetingfeedback meetingComment
-  
+    "Serial Number", // क्रम संख्या
+    "Project Name", // projectName
+    "Project Current Status", // projectStatus
+    "Department Name", // projectDepartment
+    "Executing Agency", // executingAgency
+    "Scheme Name", // scheme (19place)
+    "Project Sanction Date", // projectSanctionDate
+    "Government Order Number Issued for Financial Sanction", // projectFinancialApprovalGoNumber
+    "Date of Financial Sanction Issued by Government", // projectFinancialApprovalDate
+    "Approved Project Cost (in crores) (₹)", // approvedProjectCost
+    "Contract Date", // contractDate
+    "Project Cost as per Contract (in crores) (₹)", // contractCost
+    "Total Released Funds (₹)", // totalReleasedFunds
+    "Total Expenditure (₹)", // totalExpenditure
+    "Last Month's Physical Progress (%)", // lastMonthPhysicalProgress
+    "Current Month's Physical Progress (%)", // currentMonthPhysicalProgress
+    "Actual Project Start Date", // actualProjectStartDate
+    "Project Completion Date as per Contract", // projectCompletionDate
+    "New Target Date Set by Department in Case of Non-Completion by Original Deadline", // revisedProjectCompletionDate
+    "Date of Last Fund Received for the Project", // lastFundReceivedDate
+    "Utilization Certificate Submission Date", // utilizationCertificateSubmissionDate
+    "Reason for Delay if the Project was Not Completed by the Original Deadline", // delayReason nhi tha headers me // add in the projects
+    "Date of Land Availability to Executing Agency", // landAvailabilityDate (land hand over date) nhi tha header me
+    "Last Updated Date on CMIS", // lastUpdatedDateOnCmis
+    "Geotagged Photos of Last Month", // geoTaggedPhotosLastMonth
+    "Geotagged Photos of Current Month", // geoTaggedPhotosCurrentMonth
+    "Review Meeting Instructions", // meetingDescription
+    "Compliance with Given Instructions", // meetingCompliance
+    "Feedback/Remarks", // meetingfeedback meetingComment
   ],
 };
 
@@ -980,7 +992,5 @@ export const projectTestHeader = {
 
 // export const endpoint =
 //   "https://pradyogik.in";
-  
-export const endpoint =
-  "http://localhost:3000";
-  
+
+export const endpoint = "http://localhost:3000";

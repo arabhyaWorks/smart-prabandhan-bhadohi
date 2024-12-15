@@ -28,13 +28,10 @@ export function Login() {
 
         console.log("Login successful:", user);
 
-        // Store token and user information in local storage
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-
-        // Navigate to the dashboard
-        // navigate("/dashboard");
+        navigate("/dashboard");
       } else {
         setErrorMessage("Invalid username or password.");
       }

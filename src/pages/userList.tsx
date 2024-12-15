@@ -24,7 +24,7 @@ export const copyToClipboard = async (text: string) => {
 };
 
 const USER_ROLES = [
-  { id: 1, name: "Super Admin" },
+  // { id: 1, name: "Super Admin" },
   { id: 2, name: "Admin" },
   { id: 3, name: "Project Manager" },
   { id: 4, name: "Data Operator" },
@@ -45,6 +45,7 @@ export default function UsersList() {
   const [showModal, setShowModal] = useState(false);
   const [usersData, setUsersData] = useState([]);
 
+  const [entityType, setEntityType] = useState("");
   const [userName, setUserName] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
   const [userPhone, setUserPhone] = useState(null);
@@ -74,18 +75,7 @@ export default function UsersList() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("data");
-    const entityData = JSON.parse(entityId);
-    console.log(entityData);
-    console.log(
-      userName,
-      userEmail,
-      userPhone,
-      userDesignation,
-      userPassword,
-      userRole,
-      entityId,
-      entityName
-    );
+
 
     if (
       userName !== null &&
@@ -98,7 +88,7 @@ export default function UsersList() {
       entityName !== null
     ) {
       const payload = {
-        entityId: entityId.id,
+        entityId: entityId,
         entityName: entityName,
         userName: userName,
         userEmail: userEmail,
@@ -348,8 +338,6 @@ export default function UsersList() {
         </div>
       )} */}
 
-      <h1>{(entityName, entityId)}</h1>
-
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -358,17 +346,40 @@ export default function UsersList() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Select Entity Type
+                </label>
+                <select
+                  name="entityId"
+                  value={entityType}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setEntityType(value);
+                  }}
+                  className="w-full px-3 py-2 border rounded-lg"
+                >
+                  <option value="">Select Entity</option>
+                  <option value="1">Department</option>
+                  <option value="2">Executive Agency</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Entity
                 </label>
                 <select
                   name="entityId"
                   value={entityId}
                   onChange={(e) => {
-                    const value = JSON.parse(e.target.value);
-                    console.log(value);
-
+                    const value = e.target.value;
+                    // console.log(value);
                     setEntityId(value);
-                    setEntityName(value.entity_name);
+                    setEntityName(
+                      entities.find((entity) => entity.id === Number(value))
+                        .entity_name
+                    );
+
+                    // setEntityName(value.entity_name);
                   }}
                   className="w-full px-3 py-2 border rounded-lg"
                 >
@@ -376,10 +387,12 @@ export default function UsersList() {
                   {entities
                     ?.filter(
                       (entity) =>
-                        entity.entity_type === 2 || entity.entity_type === 3
+                        // entity.entity_type === 2 || entity.entity_type === 3
+                        entity.entity_type === Number(entityType) ||
+                        entity.entity_type === 3
                     )
                     .map((entity) => (
-                      <option key={entity.id} value={entity}>
+                      <option key={entity.id} value={entity.id}>
                         {entity.entity_name}
                       </option>
                     ))}

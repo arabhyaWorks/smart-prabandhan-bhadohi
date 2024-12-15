@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Landing } from "./pages/Landing";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { Projects } from "./pages/Projects";
 import Testing from "./pages/testing.jsx";
-import ProjectCreation from "./components/drawer/dataEntryForm";
+import ProjectCreation from "./components/drawer/4StepDataEntry.js";
 
 import { Issues } from "./pages/Issues";
 import { AuthProvider } from "./context/AuthContext";

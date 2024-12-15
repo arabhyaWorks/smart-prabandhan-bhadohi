@@ -1,20 +1,54 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Plus, Search, Download, Filter, Calendar } from "lucide-react";
-import { DataTable } from "../components/table/ProjectTable";
-import { ProjectFilters } from "../components/table/ProjectFilters";
+import React, { useEffect, useState } from "react";
+import { Plus, Download, Calendar } from "lucide-react";
+import { BudgetTable } from "../components/table/BudgetTable";
 import { budgetUcupload, BudgetUcHeaders } from "../utils/dataSet";
+import axios from "axios";
+import { endpoint } from "../utils/dataSet";
+import { useEntities } from "../context/EntityContect";
 
 export default function BudgetUcUpload() {
+  const { user } = useEntities(); // Access user context
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [budgetUcupload, setBudgetUcupload] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchBudgetUcupload = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const params = {};
+
+      // Include entityId and entityTypeId in the request if user exists
+      if (user?.entityId && user?.entityTypeId && user?.userRole == 3 || user?.userRole == 4) {
+        params["entityId"] = user.entityId;
+        params["entityTypeId"] = user.entityTypeId;
+      }
+
+      const response = await axios.get(`${endpoint}/api/projects-with-budgets`, {
+        params,
+      });
+      setBudgetUcupload(response.data.data);
+    } catch (error) {
+      console.error("Error fetching budget uploads:", error);
+      setError("Failed to fetch budget uploads.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user) fetchBudgetUcupload();
+  }, [user]);
 
   return (
     <div className="">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
-            Projects Budget Recieved Installament
+            Projects Budget Received Installment
           </h2>
           <p className="mt-1 text-sm text-gray-500">
             Manage and monitor all development projects
@@ -30,21 +64,28 @@ export default function BudgetUcUpload() {
             className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500"
           >
             <Plus className="h-5 w-5 mr-1" />
-            Add Projects Budget Recieved Installament
+            Add Projects Budget Received Installment
           </button>
         </div>
       </div>
 
-      <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg overflow-hidden	">
-        <div className="border-b border-gray-200 p-4"></div>
-        <DataTable
-          headers={BudgetUcHeaders}
-          projects={budgetUcupload}
-          searchTerm={searchTerm}
-          subTableKeyName="budgetDetails"
-        />
+      {/* Table */}
+      <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg overflow-hidden">
+        {loading ? (
+          <p className="text-center py-6 text-gray-600">Loading data...</p>
+        ) : error ? (
+          <p className="text-center py-6 text-red-600">{error}</p>
+        ) : (
+          <BudgetTable
+            headers={BudgetUcHeaders}
+            projects={budgetUcupload}
+            searchTerm={searchTerm}
+            subTableKeyName="budgetDetails"
+          />
+        )}
       </div>
 
+      {/* Modal */}
       {showModal && (
         <div
           style={{
@@ -52,39 +93,36 @@ export default function BudgetUcUpload() {
           }}
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
         >
-          <div className="bg-white rounded-xl shadow-xl  p-6 w-full max-w-2xl">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Add Projects Budget Recieved Installment
+              Add Projects Budget Received Installment
             </h2>
-
             <div className="space-y-4">
-
               <div className="flex gap-2">
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Department Name
-                </label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                  <option value="औद्योगिक विकास विभाग">
-                    औद्योगिक विकास विभाग
-                  </option>
-                  <option value="नगरीय विकास विभाग">नगरीय विकास विभाग </option>
-                  <option value="योजना विभाग">योजना विभाग </option>
-                </select>
-              </div>
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Name
-                </label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                  <option value="औद्योगिक विकास विभाग">
-                    औद्योगिक विकास विभाग
-                  </option>
-                  <option value="नगरीय विकास विभाग">नगरीय विकास विभाग </option>
-                  <option value="योजना विभाग">योजना विभाग </option>
-                </select>
-              </div>
+                <div className="w-full">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Department Name
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="औद्योगिक विकास विभाग">
+                      औद्योगिक विकास विभाग
+                    </option>
+                    <option value="नगरीय विकास विभाग">
+                      नगरीय विकास विभाग
+                    </option>
+                    <option value="योजना विभाग">योजना विभाग</option>
+                  </select>
                 </div>
+                <div className="w-full">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Project Name
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="Project 1">Project 1</option>
+                    <option value="Project 2">Project 2</option>
+                  </select>
+                </div>
+              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -99,56 +137,18 @@ export default function BudgetUcUpload() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Instalment Expenditure (In Lac)
-                </label>
-                <textarea
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  rows={1}
-                  placeholder="Enter Instalment Expenditure (In Lac)"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Remark
-                </label>
-                <textarea
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  rows={1}
-                  placeholder="Enter Remark"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Amount Recived Date
+                  Amount Received Date
                 </label>
                 <div className="relative">
                   <input
-                    type="text"
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
-                    placeholder="DD-MM-YYYY"
+                    type="date"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   />
-                  <Calendar className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload Utilization certificate(UC)
-                </label>
-                <div className="flex items-center justify-center w-full">
-                  <label className="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:border-orange-500">
-                    <Plus className="w-8 h-8 text-gray-400" />
-                    <span className="mt-2 text-sm text-red-500">
-                      (only .jpg, .jpeg, .png Format Maximum size 200 KB )
-                    </span>
-                    <input type="file" className="hidden" />
-                  </label>
                 </div>
               </div>
             </div>
 
+            {/* Modal Buttons */}
             <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => setShowModal(false)}
@@ -157,7 +157,7 @@ export default function BudgetUcUpload() {
                 Cancel
               </button>
               <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors">
-                Update Progress
+                Submit
               </button>
             </div>
           </div>
