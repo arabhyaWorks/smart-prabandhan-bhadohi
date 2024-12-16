@@ -131,8 +131,8 @@ export const DataTable = ({
                           }}
                         >
                           {key === "id" ? (
-                            <p>{rowIndex + 1}</p>
-                            // project[key]
+                            // <p>{rowIndex + 1}</p>
+                            project[key]
                           ) : 
                           //
                           key === "projectStatus" ? (
