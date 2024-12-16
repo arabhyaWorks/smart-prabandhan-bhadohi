@@ -1,63 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { Plus, Download, Calendar } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import { BudgetTable } from "../components/table/budgetTable";
-import { budgetUcupload, BudgetUcHeaders } from "../utils/dataSet";
+import { BudgetUcHeaders } from "../utils/dataSet";
 import axios from "axios";
 import { endpoint } from "../utils/dataSet";
 import { useEntities } from "../context/EntityContect";
-import { set } from "date-fns";
 
 export default function BudgetUcUpload() {
-  // const { user } = useEntities(); // Access user context
-  const { user, entities, projectNameData, setProjectNameData } = useEntities(); // Access user context
+  const { user, projectNameData } = useEntities(); // Access user context
+  const [file, setFile] = useState<File | null>(null); // File state
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // Store the PDF preview URL
 
-  // const user = {
-  //   id: 17,
-  //   userName: "Testing",
-  //   userEmail: "user@testing.com",
-  //   userRole: 3,
-  //   entityId: 16,
-  //   entityName: "उत्तर प्रदेश जल निगम (RURAL)",
-  //   entityTypeId: 1,
-  //   userDesignation: "testing",
-  //   userPhoneNumber: "1234567890",
-  // };
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [budgetUcupload, setBudgetUcupload] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedExecutiveAgency, setSelectedExecutiveAgency] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
-
   const [installmentAmount, setInstallmentAmount] = useState("");
   const [expenditureAmount, setExpenditureAmount] = useState("");
   const [amountReceivedDate, setAmountReceivedDate] = useState("");
-  const [utilizationCertificate, setUtilizationCertificate] = useState("");
 
+  // Fetch Budget UC Uploads
   const fetchBudgetUcupload = async () => {
     setLoading(true);
     setError("");
     try {
       const params = {};
-
-      // Include entityId and entityTypeId in the request if user exists
       if (
-        (user?.entityId && user?.entityTypeId && user?.userRole == 3) ||
-        user?.userRole == 4
+        (user?.entityId && user?.entityTypeId && user?.userRole === 3) ||
+        user?.userRole === 4
       ) {
         params["entityId"] = user.entityId;
         params["entityTypeId"] = user.entityTypeId;
       }
 
-      const response = await axios.get(
-        `${endpoint}/api/projects-with-budgets`,
-        {
-          params,
-        }
-      );
+      const response = await axios.get(`${endpoint}/api/projects-with-budgets`, {
+        params,
+      });
       setBudgetUcupload(response.data.data);
     } catch (error) {
       console.error("Error fetching budget uploads:", error);
@@ -71,56 +52,70 @@ export default function BudgetUcUpload() {
     if (user) fetchBudgetUcupload();
   }, [user]);
 
-  const uploadBudgetUc = async (e) => {
-    e.preventDefault();
-    console.log("uploading budget uc");
-    console.log("selectedProject", selectedProject);
-    console.log("installmentAmount", installmentAmount);
-    console.log("expenditureAmount", expenditureAmount);
-    console.log("amountReceivedDate", amountReceivedDate);
-    console.log("utilizationCertificate", utilizationCertificate);
+  // Handle File Change
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFile = e.target.files[0];
 
-    if (
-      selectedProject === "" ||
-      installmentAmount === "" ||
-      // expenditureAmount === "" ||
-      amountReceivedDate === "" 
-      // utilizationCertificate === ""
-    ) {
-      alert("Please fill all fields");
-      return;
-    }
-    try {
-      const response = await axios.post(
-        `${endpoint}/api/projects/${selectedProject}/budget-installments`,
-        {
-          projectId: selectedProject,
-          installmentAmount,
-          installmentExpenditure: expenditureAmount,
-          amountReceivedDate,
-          utilizationCertificate,
-        }
-      );
-      console.log(response.data);
-      fetchBudgetUcupload();
-      setShowModal(false);
-      setInstallmentAmount("");
-      setExpenditureAmount("");
-      setAmountReceivedDate("");
-      setUtilizationCertificate("");
-
-      alert("Budget UC uploaded successfully");
-    } catch (error) {
-      console.error("Error uploading budget uc:", error);
+      // Only accept PDFs
+      if (selectedFile.type === "application/pdf") {
+        setFile(selectedFile);
+        setPreviewUrl(URL.createObjectURL(selectedFile)); // Generate a URL for the PDF preview
+      } else {
+        alert("Only PDF files are allowed.");
+        setFile(null);
+        setPreviewUrl(null);
+      }
     }
   };
 
-  useEffect(() => {
-    fetchBudgetUcupload();
-  }, [projectNameData]);
+  // Upload Budget UC
+  const uploadBudgetUc = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!file || selectedProject === "" || installmentAmount === "" || amountReceivedDate === "") {
+      alert("Please fill all required fields and upload a PDF file.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("utilizationCertificate", file); // Use the key expected by the backend
+      formData.append("installmentAmount", installmentAmount);
+      formData.append("installmentExpenditure", expenditureAmount || "0");
+      formData.append("amountReceivedDate", amountReceivedDate);
+
+      const response = await axios.post(
+        `${endpoint}/api/projects/${selectedProject}/budget-installments`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      console.log(response.data);
+      fetchBudgetUcupload();
+      setShowModal(false);
+      resetFormFields();
+      alert("Budget UC uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading budget UC:", error);
+      alert("Failed to upload Budget UC. Please try again.");
+    }
+  };
+
+  // Reset Form Fields
+  const resetFormFields = () => {
+    setFile(null);
+    setPreviewUrl(null);
+    setInstallmentAmount("");
+    setExpenditureAmount("");
+    setAmountReceivedDate("");
+    setSelectedProject("");
+  };
 
   return (
-    <div className="">
+    <div>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -165,9 +160,7 @@ export default function BudgetUcUpload() {
       {/* Modal */}
       {showModal && (
         <div
-          style={{
-            zIndex: 9999,
-          }}
+          style={{ zIndex: 9999 }}
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
         >
           <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl">
@@ -175,7 +168,8 @@ export default function BudgetUcUpload() {
               Add Projects Budget Received Installment
             </h2>
             <div className="space-y-4 mt-10">
-              <div className="w-full">
+              {/* Select Project */}
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Select Project
                 </label>
@@ -184,93 +178,85 @@ export default function BudgetUcUpload() {
                   onChange={(e) => setSelectedProject(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
-                  <option value={""}>Select Project</option>
-                  {user?.userRole == 1 || user?.userRole == 2
-                    ? projectNameData.map((project) => (
-                        <option key={project.id} value={project.id}>
-                          {project.projectName}
-                        </option>
-                      ))
-                    : projectNameData
-                        .filter(
-                          (project) =>
-                            project[
-                              user.entityTypeId == 1
-                                ? "departmentId"
-                                : "executiveAgencyId"
-                            ] == user.entityId
-                        )
-                        .map((project) => (
-                          <option key={project.id} value={project.id}>
-                            {project.projectName}
-                          </option>
-                        ))}
+                  <option value="">Select Project</option>
+                  {projectNameData.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.projectName}
+                    </option>
+                  ))}
                 </select>
               </div>
 
+              {/* Installment Amount */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Installment Amount (In Crore)
                 </label>
                 <input
                   value={installmentAmount}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.match(/^\d*\.?\d{0,2}$/)) {
-                      setInstallmentAmount(value);
-                    }
-                  }}
+                  onChange={(e) => setInstallmentAmount(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   placeholder="Enter Installment Amount (In Crore)"
                   type="text"
                 />
               </div>
 
+              {/* Expenditure Amount */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Expenditure Amount (In Crore)
                 </label>
                 <input
                   value={expenditureAmount}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.match(/^\d*\.?\d{0,2}$/)) {
-                      setExpenditureAmount(value);
-                    }
-                  }}
+                  onChange={(e) => setExpenditureAmount(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  placeholder="Enter Installment Amount (In Crore)"
+                  placeholder="Enter Expenditure Amount (In Crore)"
                   type="text"
                 />
               </div>
 
+              {/* Upload File */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Utilization Certificate
+                  Upload PDF
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={utilizationCertificate}
-                    onChange={(e) => setUtilizationCertificate(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    placeholder="Enter the link Utilization Certificate"
-                  />
+                <div className="flex items-center justify-center w-full">
+                  <label className="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:border-orange-500">
+                    {previewUrl ? (
+                      <iframe
+                        src={previewUrl}
+                        className="w-full h-64 rounded-lg"
+                        title="PDF Preview"
+                      ></iframe>
+                    ) : (
+                      <>
+                        <Plus size={24} className="text-gray-400" />
+                        <p className="text-sm text-gray-400 mt-2">
+                          Click to select a PDF file
+                        </p>
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="application/pdf"
+                      onChange={handleFileChange}
+                    />
+                  </label>
                 </div>
               </div>
 
+              {/* Amount Received Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Amount Received Date
                 </label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={amountReceivedDate}
-                    onChange={(e) => setAmountReceivedDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  />
-                </div>
+                <input
+                  type="date"
+                  value={amountReceivedDate}
+                  onChange={(e) => setAmountReceivedDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                />
               </div>
             </div>
 
@@ -279,10 +265,7 @@ export default function BudgetUcUpload() {
               <button
                 onClick={() => {
                   setShowModal(false);
-                  setInstallmentAmount("");
-                  setExpenditureAmount("");
-                  setAmountReceivedDate("");
-                  setUtilizationCertificate("");
+                  resetFormFields();
                 }}
                 className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >

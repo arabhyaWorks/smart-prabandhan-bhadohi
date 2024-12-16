@@ -57,7 +57,7 @@ export const MeetingLogModal = ({
 
   useEffect(() => {
     fetchMeetingLogs();
-  }, []);
+  }, [projectId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
@@ -145,8 +145,11 @@ export function Projects() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedExecutiveAgency, setSelectedExecutiveAgency] = useState("");
 
+  const [projectName, setProjectName] = useState("");
+  const [projectId, setProjectId] = useState(null);
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const [visibleColumns, setVisibleColumns] = useState(
     headers.hi.map((_, index) => index.toString())
@@ -280,9 +283,23 @@ export function Projects() {
             projects={filteredProjects}
             searchTerm={searchTerm}
             visibleColumns={visibleColumns}
+            onMeetingLogsClick={(projectName, projectId) => {
+              console.log(projectName, projectId);
+
+              setProjectName(projectName);
+              setProjectId(projectId);
+              setShowModal(true);
+            }}
           />
         </div>
       )}
+
+      <MeetingLogModal
+        projectName={projectName}
+        projectId={projectId}
+        closeModal={() => setShowModal(false)}
+        showModal={showModal}
+      />
 
       <Drawer
         isOpen={isDrawerOpen}

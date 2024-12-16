@@ -40,6 +40,7 @@ export const DataTable = ({
   projects,
   headers,
   visibleColumns,
+  onMeetingLogsClick,
 }: DataTableProps) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -133,8 +134,7 @@ export const DataTable = ({
                           {key === "id" ? (
                             // <p>{rowIndex + 1}</p>
                             project[key]
-                          ) : 
-                          //
+                          ) : //
                           key === "projectStatus" ? (
                             <div className="w-20 flex-row justify-center align-center">
                               <p
@@ -196,7 +196,13 @@ export const DataTable = ({
                               //   // navigate(`/meetingLog/${project.id}`)
                               // }
 
-                              onClick={() => setShowModal(true)}
+                              // onClick={() => setShowModal(true)}
+                              onClick={() =>
+                                onMeetingLogsClick(
+                                  project.projectName,
+                                  project.id
+                                )
+                              }
                               className="text-white w-full rounded-md px-4 bg-blue-400 hover:underline focus:outline-none"
                             >
                               {/* {project[key]} */}
@@ -209,13 +215,6 @@ export const DataTable = ({
                       )
                   )}
                 </tr>
-
-                <MeetingLogModal
-                  projectName={project.projectName}
-                  projectId={48}
-                  closeModal={() => setShowModal(false)}
-                  showModal={showModal}
-                />
               </>
             ))}
           </tbody>
