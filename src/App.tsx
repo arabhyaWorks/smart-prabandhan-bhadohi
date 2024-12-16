@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Landing } from "./pages/Landing";
@@ -28,19 +29,24 @@ import BudgetUcUpload from "./pages/BudgetUCUpload";
 // Custom component for checking user and navigation
 const AppWithAuthCheck = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // useEffect(() => {
-  //   // Check for user in local storage
-  //   const userData = localStorage.getItem("user");
-  //   if (userData) {
-  //     // If user exists, navigate to dashboard
-  //     navigate("/dashboard");
-  //   } else {
-  //     // If user doesn't exist, navigate to login page
-  //     // navigate("/login");
-  //   }
-  // }, [navigate]);
+  useEffect(() => {
+    const user = localStorage.getItem("user");
 
+    const path = location.pathname;
+    if (path === "/") {
+      // Redirect to the dashboard if the user is already logged in
+      if (user) {
+        navigate("/dashboard");
+      }
+    }else{
+      // Redirect to the login page if the user is not logged in
+      if (!user) {
+        navigate("/login");
+      }
+    }
+  }, [navigate]);
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
