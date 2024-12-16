@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Plus, Download, Calendar } from "lucide-react";
-import { BudgetTable } from "../components/table/BudgetTable";
+import { BudgetTable } from "../components/table/budgetTable";
 import { budgetUcupload, BudgetUcHeaders } from "../utils/dataSet";
 import axios from "axios";
 import { endpoint } from "../utils/dataSet";
