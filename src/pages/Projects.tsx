@@ -67,7 +67,7 @@ export const MeetingLogModal = ({
   return (
     <div
       style={{ zIndex: 9999, margin: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      className="fixed inset-0 bg-black bg-opacity-15 flex items-center justify-center"
     >
       <div className="bg-white rounded-lg shadow-lg overflow-auto max-h-[80vh] w-[90%]">
         <h2 className="text-lg font-bold text-gray-900 p-4 border-b">

@@ -68,8 +68,7 @@ export default function BudgetUcUpload() {
   };
 
   useEffect(() => {
-    if (user)
-       fetchBudgetUcupload();
+    if (user) fetchBudgetUcupload();
   }, [user]);
 
   const uploadBudgetUc = async (e) => {
@@ -84,9 +83,9 @@ export default function BudgetUcUpload() {
     if (
       selectedProject === "" ||
       installmentAmount === "" ||
-      expenditureAmount === "" ||
-      amountReceivedDate === "" ||
-      utilizationCertificate === ""
+      // expenditureAmount === "" ||
+      amountReceivedDate === "" 
+      // utilizationCertificate === ""
     ) {
       alert("Please fill all fields");
       return;
@@ -186,20 +185,26 @@ export default function BudgetUcUpload() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value={""}>Select Project</option>
-                  {projectNameData
-                    .filter(
-                      (project) =>
-                        project[
-                          user.entityTypeId == 1
-                            ? "departmentId"
-                            : "executiveAgencyId"
-                        ] == user.entityId
-                    )
-                    .map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.projectName}
-                      </option>
-                    ))}
+                  {user?.userRole == 1 || user?.userRole == 2
+                    ? projectNameData.map((project) => (
+                        <option key={project.id} value={project.id}>
+                          {project.projectName}
+                        </option>
+                      ))
+                    : projectNameData
+                        .filter(
+                          (project) =>
+                            project[
+                              user.entityTypeId == 1
+                                ? "departmentId"
+                                : "executiveAgencyId"
+                            ] == user.entityId
+                        )
+                        .map((project) => (
+                          <option key={project.id} value={project.id}>
+                            {project.projectName}
+                          </option>
+                        ))}
                 </select>
               </div>
 

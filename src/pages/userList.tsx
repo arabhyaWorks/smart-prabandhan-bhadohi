@@ -24,7 +24,7 @@ export const copyToClipboard = async (text: string) => {
 };
 
 const USER_ROLES = [
-  // { id: 1, name: "Super Admin" },
+  { id: 1, name: "Super Admin" },
   { id: 2, name: "Admin" },
   { id: 3, name: "Project Manager" },
   { id: 4, name: "Data Operator" },

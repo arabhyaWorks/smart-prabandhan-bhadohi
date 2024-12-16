@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Save } from "lucide-react";
 import classNames from "classnames";
 import StepIndicator from "./StepIndicator";
@@ -75,7 +75,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
     delayReason: "",
     meetingInstructions: "",
 
-    // meetingInstructions: [],
+    meetingInstructions: [],
     projectInspection: [],
     projectEssentialTest: [],
     projectGallery: [],
@@ -100,6 +100,10 @@ const ProjectForm = ({ onSubmitSuccess }) => {
   const [contractDate, setContractDate] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    console.log("User", user);
+  }, [user]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -255,6 +259,22 @@ const ProjectForm = ({ onSubmitSuccess }) => {
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
+  const shoudShowDepartment = () => {
+    if (user?.userRole == 1 || user?.userRole == 2) {
+      return entities?.map((entity) => ({
+        value: entity.id, // The value should match `departmentId`
+        label: entity.entity_name,
+      }));
+    } else {
+      return entities
+        ?.filter((entity) => entity.id == user?.entityId)
+        .map((entity) => ({
+          value: entity.id, // The value should match `departmentId`
+          label: entity.entity_name,
+        }));
+    }
+  };
+
   const renderProjectInformation = () => (
     <div className="space-y-6 animate-fadeIn">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -265,12 +285,7 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           type="select"
           value={formData.departmentId} // Use the ID to match the selected option
           onChange={handleEntityChange}
-          options={entities
-            ?.filter((entity) => entity.id == user?.entityId)
-            .map((entity) => ({
-              value: entity.id, // The value should match `departmentId`
-              label: entity.entity_name,
-            }))}
+          options={shoudShowDepartment()}
           required
         />
         <FormField
@@ -601,14 +616,14 @@ const ProjectForm = ({ onSubmitSuccess }) => {
           placeholder="Enter Delay Reason"
         /> */}
 
-        {/* <FormField
+        <FormField
           label="Meeting instructions given in the meeting"
           name="meetingInstructions"
           type="text"
           value={formData.meetingInstructions}
           onChange={handleInputChange}
           placeholder="Enter the instructions given in the meeting"
-        /> */}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
