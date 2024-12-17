@@ -270,16 +270,21 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                   {project.gallery.map((image, index) => (
-                    <div
-                      key={index}
-                      className="group relative aspect-[948/592] overflow-hidden rounded-lg"
-                    >
+                    <div key={index} className="">
                       <img
                         src={image.image}
                         alt={image.imageDescription}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-48 object-cover rounded-lg"
                       />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity">
+                      <div className="px-1">
+                        <p className="text-[#9a3412] mt-1 text-sm font-semibold">
+                          Uploaded: {convertToIST(image.uploadedAt)}
+                        </p>
+                        {/* <p className="text-sm font-medium">
+                          {image.imageDescription || "No description"}
+                        </p> */}
+                      </div>
+                      {/* <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity">
                         <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform">
                           <p className="text-sm font-medium">
                             {image.imageDescription}
@@ -288,7 +293,7 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
                             Uploaded: {convertToIST(image.uploadedAt)}
                           </p>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   ))}
                 </div>

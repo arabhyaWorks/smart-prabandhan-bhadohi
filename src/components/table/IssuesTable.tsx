@@ -142,8 +142,9 @@ export const IssueTable = ({
             {currentEntries.map((project, index) => (
               <React.Fragment key={index}>
                 <tr className="hover:bg-gray-50 transition-colors">
-                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
-                    {project.projectId}
+                  <td className="text-sm text-center text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {/* {project.projectId} */}
+                    {index + 1}
                   </td>
                   <td className="text-sm text-gray-900 border-2 border-gray-100 w-40 flex w-[300px] border-none px-6 py-4 ">
                     {project.projectName}
@@ -174,6 +175,11 @@ export const IssueTable = ({
                   </td>
                   <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
                     {convertToIST(project.issueClosedDate) || "-"}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    <button className="text-sm bg-orange-600 text-white font-semibold rounded-md px-6 py-1">
+                      Edit
+                    </button>
                   </td>
                 </tr>
               </React.Fragment>

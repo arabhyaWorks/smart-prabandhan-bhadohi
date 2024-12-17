@@ -294,7 +294,6 @@ export function Projects() {
             visibleColumns={visibleColumns}
             onMeetingLogsClick={(projectName, projectId) => {
               console.log(projectName, projectId);
-
               setProjectName(projectName);
               setProjectId(projectId);
               setShowModal(true);

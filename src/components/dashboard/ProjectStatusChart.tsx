@@ -1,7 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
-const COLORS = ['#04B70D', '#0088FE', '#FB1216', '#FFBB28'];
+const COLORS = ["#FFBB28",'#04B70D', '#0088FE', '#FB1216', '#00C49F'];
 
 interface ProjectStatusChartProps {
   data: Array<{

@@ -57,7 +57,7 @@ export function BudgetChart({ data }) {
           <Bar dataKey="sanctioned" name="Sanctioned Budget" fill="#0088FE" />
           <Bar dataKey="released" name="Released Budget" fill="#00C49F" />
           <Bar dataKey="expenditure" name="Expenditure" fill="#FB1216" />
-          <Bar dataKey="pending" name="Pending Budget" fill="#FB1216" />
+          <Bar dataKey="pending" name="Pending Budget" fill="#FFBB28" />
         </BarChart>
       </ResponsiveContainer>
     </div>

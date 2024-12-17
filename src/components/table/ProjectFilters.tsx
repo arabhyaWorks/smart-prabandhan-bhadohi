@@ -40,6 +40,30 @@ export const ProjectFilters = ({
 }: ProjectFiltersProps) => {
   const { user, entities, reloadEntities } = useEntities();
 
+  const ExecutiveAgency = () => {
+    if (user?.userRole == 1 || user?.userRole == 2) {
+      return (
+        <select
+          style={{
+            width: "12rem",
+          }}
+          value={selectedExecutiveAgency}
+          onChange={(e) => onSelectedExecutiveAgency(e.target.value)}
+          className="rounded-md className=w-10 outline-none font-medium border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600"
+        >
+          <option value="">सभी कार्यदायी संस्था</option>
+          {entities
+            ?.filter((entity) => entity.entity_type === 2)
+            .map((entity) => (
+              <option key={entity.id} value={entity.entity_name}>
+                {entity.entity_name}
+              </option>
+            ))}
+        </select>
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="relative flex-1 max-w-xs">
@@ -104,23 +128,7 @@ export const ProjectFilters = ({
             ))}
           </select>
 
-          <select
-            style={{
-              width: "12rem",
-            }}
-            value={selectedExecutiveAgency}
-            onChange={(e) => onSelectedExecutiveAgency(e.target.value)}
-            className="rounded-md className=w-10 outline-none font-medium border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600"
-          >
-            <option value="">सभी कार्यदायी संस्था</option>
-            {entities
-              ?.filter((entity) => entity.entity_type === 2)
-              .map((entity) => (
-                <option key={entity.id} value={entity.entity_name}>
-                  {entity.entity_name}
-                </option>
-              ))}
-          </select>
+          <ExecutiveAgency />
 
           <ColumnVisibilityToggle
             columns={columns}

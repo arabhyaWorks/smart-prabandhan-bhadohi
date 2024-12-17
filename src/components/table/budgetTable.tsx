@@ -77,7 +77,7 @@ const subTable = (
       <tbody>
         {inspectionDetails.length > 0 ? (
           inspectionDetails.map((detail, index) => (
-            <tr key={index} className="hover:bg-gray-50 text-center h-[100px]">
+            <tr key={index} className="hover:bg-gray-50 text-center h-[50px]">
               <td
                 className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-center"
                 style={{ wordWrap: "break-word" }}
@@ -107,7 +107,16 @@ const subTable = (
                 className="border border-gray-300 px-4 py-2 text-sm text-gray-900"
                 style={{ wordWrap: "break-word" }}
               >
-                {detail.utilizationCertificate || "N/A"}
+                {
+                  <a
+                    href={detail.utilizationCertificate}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-500 font-semibold hover:underline"
+                  >
+                    View
+                  </a>
+                 || "N/A"}
               </td>
 
               {/* <td
@@ -235,7 +244,8 @@ export const BudgetTable = ({
                   ))} */}
 
                   <td className="text-sm text-gray-900 border-2 border-gray-100 w-16 text-center">
-                    {project.projectId}
+                    {/* {project.projectId} */}
+                    {index + 1}
                   </td>
                   <td className="text-sm text-gray-900 border-2 border-gray-100 w-40 flex w-[300px] border-none  px-6 py-4 ">
                     {project.projectName}

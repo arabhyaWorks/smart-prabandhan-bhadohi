@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { LogIn } from "lucide-react";
+import { LogIn, Eye, EyeOff  } from "lucide-react";
 import bgImage from "../assets/bg_img.png";
 import { endpoint } from "../utils/dataSet";
 
@@ -9,6 +9,8 @@ export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -88,7 +90,7 @@ export function Login() {
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
@@ -97,13 +99,21 @@ export function Login() {
             </label>
             <input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle visibility
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute top-9 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
+
 
           <div className="flex items-center justify-between">
             <div className="flex items-center">

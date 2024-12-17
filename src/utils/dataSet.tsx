@@ -827,7 +827,7 @@ export const headers = {
     "परियोजना का नाम", // projectName
     "परियोजना अद्यतन स्थिति", // projectStatus
     "विभाग का नाम", // projectDepartment
-    "कार्यान्वयन एजेंसी", // executingAgency
+    "कार्यदायी संस्था", // executingAgency
     "योजना का नाम", // scheme (19place)
     "परियोजना स्वीकृति की तिथि", // projectSanctionDate
     "परियोजना हेतु शासन द्वारा जारी वित्तीय स्वीकृति का  शासनादेश संख्या", // projectFinancialApprovalGoNumber
@@ -1006,7 +1006,7 @@ export const projectTestHeader = {
   },
 };
 
-// export const endpoint =
-//   "https://pradyogik.in";
+export const endpoint =
+  "https://pradyogik.in";
 
-export const endpoint = "http://localhost:3000";
+// export const endpoint = "http://localhost:3000";
