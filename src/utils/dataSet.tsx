@@ -822,7 +822,7 @@ export const headers = {
     "परियोजना की स्वीकृत लागत (करोड़ में) (₹)", // approvedProjectCost
 
     "अनुबन्ध की तिथि", // contractDate
-    "अनुबन्ध के अनुसर परियोजना की धनराशि (करोड़ में) (₹)", // contractCost
+    "अनुबंध की धनराशि (करोड़ मे)", // contractCost
     "कुल अवमुक्त धनराशि (₹)", // totalReleasedFunds
     "कुल व्यय धनराशि (₹)", // totalExpenditure
 

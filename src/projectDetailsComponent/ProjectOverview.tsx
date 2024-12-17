@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import { convertToIST } from "../utils/functions";
 
-const status = ["योजना चरण", "प्रगति पर है", "रोक पर", "विलंबित", "पूर्ण हुआ"];
+const status = ["योजना चरण", "प्रगति पर है", "विवादित", "विलंबित", "पूर्ण हुआ"];
 const ProjectOverview = ({ project }) => {
   return (
     <div className="bg-white rounded-lg shadow">

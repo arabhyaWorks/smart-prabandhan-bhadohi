@@ -46,7 +46,7 @@ const subTable = (
 ) => {
   return (
     <table className="min-w-full divide-y divide-gray-200">
-      <thead className="bg-gray-50">
+      <thead className="bg-gray-50 sticky top-0 z-10">
         <tr>
           {headers.hi.map((header, index) => (
             <th

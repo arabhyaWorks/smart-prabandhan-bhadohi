@@ -22,7 +22,7 @@ const yojnaCategories = [
 const projectStatuses = [
   "योजना चरण में",
   "प्रगति पर है",
-  "रोक पर",
+  "विवादित",
   "विलंबित",
   "पूर्ण हुआ",
 ];

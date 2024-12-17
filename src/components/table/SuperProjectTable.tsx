@@ -13,14 +13,14 @@ import { MeetingLogModal } from "../../pages/Projects";
 
 const projectStatuses = [
   // "योजना चरण में",
-  // "रोक पर",
+  // "विवादित",
   // "प्रगति पर है",
   // "विलंबित",
   // "पूर्ण हुआ",
 
   "योजना चरण",
   "प्रगति पर है",
-  "रोक पर",
+  "विवादित",
   "विलंबित",
   "पूर्ण हुआ",
 ];
@@ -44,7 +44,7 @@ export const DataTable = ({
 }: DataTableProps) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage, setEntriesPerPage] = useState(100);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [showModal, setShowModal] = useState(false);
 
   const indexOfLastEntry = currentPage * entriesPerPage;

@@ -16,13 +16,14 @@ const yojnaCategories = [
   "Sansad Nidhi",
   "Vidhayak Nidhi",
   "Purvanchal Vikas Nidhi",
+  "District Construction Work",
   "Others",
 ];
 
 const projectStatuses = [
   "योजना चरण में",
   "प्रगति पर है",
-  "रोक पर",
+  "विवादित",
   "विलंबित",
   "पूर्ण हुआ",
 ];
