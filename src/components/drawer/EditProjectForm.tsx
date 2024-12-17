@@ -272,11 +272,18 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
           type="select"
           value={formData.departmentId} // Use the ID to match the selected option
           onChange={handleEntityChange}
+          // options={entities
+          //   ?.filter((entity) => entity.id == user?.entityId)
+          //   .map((entity) => ({
+          //     value: entity.id, // The value should match `departmentId`
+          //     label: entity.entity_name,
+          //   }))}
+
           options={entities
-            ?.filter((entity) => entity.id == user?.entityId)
+            ?.filter((entity) => entity.entity_type === 1)
             .map((entity) => ({
-              value: entity.id, // The value should match `departmentId`
-              label: entity.entity_name,
+              value: entity.id, // ID as the option value
+              label: entity.entity_name, // Display name as the option label
             }))}
           required
         />

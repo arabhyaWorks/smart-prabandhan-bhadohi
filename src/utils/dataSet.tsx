@@ -89,7 +89,7 @@ export const ProjectTableDataKeys = [
   "meetingCompliance",
   "meetingfeedback",
 
-  "viewMeetingLog"
+  "viewMeetingLog",
 ];
 
 interface Project {
@@ -668,7 +668,20 @@ export const projectInspectionHeader = {
 
 export const projectIssuesHeaders = {
   main: {
-    hi: ["क्रमांक", "परियोजना का नाम", "परियोजना निरीक्षण विवरण"],
+    hi: [
+      "Sr. No.",
+      "Project",
+      "Issue",
+      "Priority",
+      "Status",
+      "Raised By",
+      "Assigned To",
+      "Raised On",
+      "Issue Reported On",
+      "Issue Closed On",
+      "Closed By",
+      "Action",
+    ],
   },
   subHeaders: {
     hi: [
@@ -854,7 +867,7 @@ export const headers = {
     "समीक्षा बैठक निर्देश", // meetingDescription
     "दिये गये निर्देश के सापेक्ष अनुपालन", // meetingCompliance
     "अभ्यूक्ति", // meetingfeedback meetingComment
-    "मीटिंग लॉग देखें"
+    "मीटिंग लॉग देखें",
   ],
   en: [
     "Serial Number", // क्रम संख्या
@@ -993,7 +1006,7 @@ export const projectTestHeader = {
   },
 };
 
-export const endpoint =
-  "https://pradyogik.in";
+// export const endpoint =
+//   "https://pradyogik.in";
 
-// export const endpoint = "http://localhost:3000";
+export const endpoint = "http://localhost:3000";

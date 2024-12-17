@@ -62,6 +62,7 @@ export default function Gallery({ isSidebarOpen }: GalleryProps) {
       );
 
       if (response.data.success) {
+        console.log(response.data.data);
         setProjectGallery(response.data.data);
       } else {
         setError("Failed to fetch gallery. Please try again.");

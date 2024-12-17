@@ -44,7 +44,7 @@ export const DataTable = ({
 }: DataTableProps) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [entriesPerPage, setEntriesPerPage] = useState(100);
   const [showModal, setShowModal] = useState(false);
 
   const indexOfLastEntry = currentPage * entriesPerPage;
@@ -132,8 +132,8 @@ export const DataTable = ({
                           }}
                         >
                           {key === "id" ? (
-                            // <p>{rowIndex + 1}</p>
-                            project[key]
+                            <p>{rowIndex + 1}</p>
+                            // project[key]
                           ) : //
                           key === "projectStatus" ? (
                             <div className="w-20 flex-row justify-center align-center">

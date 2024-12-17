@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -8,35 +8,39 @@ import {
 } from "lucide-react";
 import classNames from "classnames";
 import { convertToIST } from "../../utils/functions";
+import { useEntities } from "../../context/EntityContect";
+
+const priorityOptions = {
+  1: "High",
+  2: "Medium",
+  3: "Low",
+};
+
+const statusOptions = {
+  1: "Active",
+  2: "In Progress",
+  3: "Resolved",
+  4: "Closed",
+};
 
 interface IssuesDetails {
-  id: string;
-  issue_name: string;
-  issue_description: string;
-  issue_raised_by: string;
-  issue_raised_date: string;
-  assigned_to: string;
-  issue_reported_on: string;
-  issue_status: string;
-  priority: string;
-  issue_closed_date: string;
-  project_id: string;
-  department_id: string;
-  executive_agency_id: string;
-  departmentName: string;
-  executiveAgencyName: string;
-  images: Array<string>;
-}
-
-interface ProjectTable {
   projectId: string;
   projectName: string;
   executiveAgencyId: string;
   executiveAgencyName: string;
   departmentId: string;
   departmentName: string;
-
-  issues: Array<IssuesDetails>;
+  issueName: string;
+  issueDescription: string;
+  issueRaisedBy: string;
+  issueRaisedDate: string;
+  assignedTo: string;
+  issueReportedOn: string;
+  issueStatus: string;
+  priority: string;
+  issueClosedDate: string;
+  issueClosedBy: string;
+  images: Array<string>;
 }
 
 interface Header {
@@ -50,149 +54,41 @@ interface Header {
 
 interface DataTableProps {
   searchTerm: string;
-  projects: ProjectTable[];
+  projects: IssuesDetails[];
   headers: Header;
   subTableKeyName: string;
 }
 
-const subTablKeys = [
-  "id",
-  "issue_name",
-  "issue_description",
-  "issue_raised_by",
-  "issue_raised_date",
-  "assigned_to",
-  "issue_reported_on",
-  "issue_status",
-  "priority",
-  "issue_closed_date",
-  "issue_closed_by",
-];
-
-const headerdata = [
-  {
-    main: {
-      hi: ["ID", "Project Name", "Issues"],
-    },
-    subHeaders: {
-      hi: [
-        "ID",
-        "Issue Name",
-        "Issue Description",
-        "Raised By",
-        "Raised Date",
-        "Assigned To",
-        "Reported On",
-        "Status",
-        "Priority",
-        "Closed Date",
-        "Closed By",
-        "Actions",
-      ],
-    },
-  },
-];
-
-const subTable = (
-  inspectionDetails: IssuesDetails[],
-  headers: Header["subHeaders"]
-) => {
-  return (
-    <table
-      className="table-auto border-collapse border border-gray-200"
-      style={{ tableLayout: "fixed", width: "100%" }}
-    >
-      <thead className="bg-gray-50 m-0 my-0">
-        <tr>
-          {headers.hi.map((header, index) => (
-            <th
-              key={index}
-              className="border border-gray-300 px-4 py-2 text-orange-800 text-sm font-bold"
-              style={{
-                // width: headersKeys.includes(header) ? "250px" : "150px",
-                width: "250px",
-                wordWrap: "break-word",
-              }}
-            >
-              {header}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {inspectionDetails.length > 0 ? (
-          inspectionDetails.map((detail, index) => (
-            <tr key={index} className="hover:bg-gray-50 text-center h-[100px]">
-              {subTablKeys.map((key, index) => (
-                <td
-                  key={index}
-                  className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-center"
-                  style={{ wordWrap: "break-word" }}
-                >
-                  {key === "issue_raised_date" || key === "issue_closed_date"
-                    ? convertToIST(detail[key])
-                    : detail[key]}
-                </td>
-              ))}
-
-              <td
-                className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-center"
-                style={{ wordWrap: "break-word" }}
-              >
-                <button className="bg-orange-500 text-white font-medium hover:shadow-md px-5 py-1 rounded-md">
-                  Edit
-                </button>
-              </td>
-            </tr>
-          ))
-        ) : (
-          <tr className="hover:bg-gray-50 text-center">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((_, index) => (
-              <td
-                key={index}
-                className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-center"
-                style={{ wordWrap: "break-word" }}
-              >
-                N/A
-              </td>
-            ))}
-
-            <td
-              className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-center"
-              style={{ wordWrap: "break-word" }}
-            >
-              <button className="bg-orange-500 text-white font-medium hover:shadow-md px-5 py-1 rounded-md">
-                Add
-              </button>
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-  );
-};
-
 export const IssueTable = ({
   searchTerm,
   projects,
-  headers = headerdata[0],
+  headers,
   subTableKeyName,
 }: DataTableProps) => {
+  const { entities, reloadEntities, user, projectNameData } = useEntities();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-
-  console.log(projects);
+  // console.log(projects);
 
   // Pagination calculations
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = projects.slice(indexOfFirstEntry, indexOfLastEntry);
   const totalPages = Math.ceil(projects.length / entriesPerPage);
-  
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(Math.min(Math.max(1, pageNumber), totalPages));
+  };
+
+  useEffect(() => {}, [entities]);
+
+  const getEntityName = (id: string) => {
+    if (entities) {
+      return entities.find((entity) => entity.id === id)?.entity_name;
+    }
+    // return id;
   };
 
   return (
@@ -246,14 +142,38 @@ export const IssueTable = ({
             {currentEntries.map((project, index) => (
               <React.Fragment key={index}>
                 <tr className="hover:bg-gray-50 transition-colors">
-                  <td className="text-sm text-gray-900 border-2 border-gray-100 w-16 text-center">
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
                     {project.projectId}
                   </td>
-                  <td className="text-sm text-gray-900 border-2 border-gray-100 w-40 flex w-[300px] border-none  px-6 py-4 ">
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 w-40 flex w-[300px] border-none px-6 py-4 ">
                     {project.projectName}
                   </td>
-                  <td className="text-sm text-gray-900 border-2 border-gray-100 w-40">
-                    {subTable(project.issues, headers.subHeaders)}
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {project.issueName}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {priorityOptions[project.priority]}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {statusOptions[project.issueStatus]}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {getEntityName(project.issueRaisedBy)}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {getEntityName(project.assignedTo)}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {convertToIST(project.issueRaisedDate)}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {convertToIST(project.issueReportedOn)}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {project.issueClosedBy || "-"}
+                  </td>
+                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                    {convertToIST(project.issueClosedDate) || "-"}
                   </td>
                 </tr>
               </React.Fragment>
