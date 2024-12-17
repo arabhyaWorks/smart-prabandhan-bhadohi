@@ -1,7 +1,16 @@
-import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { parse } from "date-fns";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
 
-const COLORS = ["#FFBB28",'#04B70D', '#0088FE', '#FB1216', '#00C49F'];
+const COLORS = ["#FFBB28", "#04B70D", "#0088FE", "#FB1216", "#00C49F"];
 
 interface ProjectStatusChartProps {
   data: Array<{
@@ -11,6 +20,19 @@ interface ProjectStatusChartProps {
 }
 
 export function ProjectStatusChart({ data }: ProjectStatusChartProps) {
+  const navigate = useNavigate();
+
+  const handleDepartmentClick = (department) => {
+    // Navigate to projects page with department filter
+    console.log("Department clicked", department);
+    console.log("Department clicked", department.index);
+    navigate("/projects", {
+      state: {
+        selectedProjectStatus: `${parseInt(department.index) + 1}`,
+        fromDashboard: true,
+      },
+    });
+  };
   return (
     <div className="h-[400px] w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -23,10 +45,16 @@ export function ProjectStatusChart({ data }: ProjectStatusChartProps) {
             outerRadius={150}
             fill="#8884d8"
             dataKey="value"
-            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            label={({ name, percent }) =>
+              `${name} ${(percent * 100).toFixed(0)}%`
+            }
           >
-            {data.map((_, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            {data.map((data, index) => (
+              <Cell
+                onClick={() => handleDepartmentClick(data)}
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
             ))}
           </Pie>
           <Tooltip />

@@ -159,27 +159,27 @@ const data = {
 const ProjectDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [project, setProject] = useState(data);
+  const [project, setProject] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // const fetchProjectDetail = async (projectId) => {
-  //   try {
-  //     const response = await axios.get(`${endpoint}/api/projects/${projectId}`);
-  //     if (response.status === 200) {
-  //       setProject(response.data);
-  //       console.log(response.data);
-  //     } else {
-  //       throw new Error(`Unexpected response code: ${response.status}`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching project details:", error.message);
-  //     return null;
-  //   }
-  // };
+  const fetchProjectDetail = async (projectId) => {
+    try {
+      const response = await axios.get(`${endpoint}/api/projects/${projectId}`);
+      if (response.status === 200) {
+        setProject(response.data);
+        console.log(response.data);
+      } else {
+        throw new Error(`Unexpected response code: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error fetching project details:", error.message);
+      return null;
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchProjectDetail(id);
-  // }, []);
+  useEffect(() => {
+    fetchProjectDetail(id);
+  }, []);
 
   if (!project) {
     return <div>Loading...</div>;

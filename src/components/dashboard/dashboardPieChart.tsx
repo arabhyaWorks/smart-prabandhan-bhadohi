@@ -1,11 +1,28 @@
-import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 const COLORS = [
-  '#8884d8', '#82ca9d', '#ffc658', '#ff7c43', '#f95d6a', 
-  '#665191', '#2f4b7c', '#a05195', '#d45087', '#f95d6a',
-  '#ff7c43', '#ffa600', '#003f5c', '#58508d', '#bc5090',
-  '#ff6361', '#ffa600', '#488f31', '#de425b', '#69b3a2'
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+  "#ff7c43",
+  "#f95d6a",
+  "#665191",
+  "#2f4b7c",
+  "#a05195",
+  "#d45087",
+  "#f95d6a",
+  "#ff7c43",
+  "#ffa600",
+  "#003f5c",
+  "#58508d",
+  "#bc5090",
+  "#ff6361",
+  "#ffa600",
+  "#488f31",
+  "#de425b",
+  "#69b3a2",
 ];
 
 interface DepartmentData {
@@ -18,6 +35,18 @@ interface Props {
 }
 
 export function DepartmentPieChart({ data }: Props) {
+  const navigate = useNavigate();
+
+  const handleDepartmentClick = (department) => {
+    // Navigate to projects page with department filter
+    navigate("/projects", {
+      state: {
+        selectedDepartment: department,
+        fromDashboard: true,
+      },
+    });
+  };
+
   return (
     <div className="w-full h-[500px] mt-4">
       <ResponsiveContainer width="100%" height="100%">
@@ -34,7 +63,7 @@ export function DepartmentPieChart({ data }: Props) {
               innerRadius,
               outerRadius,
               value,
-              index
+              index,
             }) => {
               const RADIAN = Math.PI / 180;
               const radius = outerRadius * 1.35;
@@ -46,7 +75,7 @@ export function DepartmentPieChart({ data }: Props) {
                   x={x}
                   y={y}
                   fill="#374151"
-                  textAnchor={x > cx ? 'start' : 'end'}
+                  textAnchor={x > cx ? "start" : "end"}
                   dominantBaseline="central"
                   fontSize="12"
                 >
@@ -59,11 +88,21 @@ export function DepartmentPieChart({ data }: Props) {
             dataKey="value"
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                onClick={()=>{
+
+                  handleDepartmentClick(entry.name);
+                }}
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number, name: string) => [`${value} Projects`, name]}
+            formatter={(value: number, name: string) => [
+              `${value} Projects`,
+              name,
+            ]}
           />
         </PieChart>
       </ResponsiveContainer>

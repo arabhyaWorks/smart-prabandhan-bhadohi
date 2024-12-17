@@ -15,6 +15,7 @@ import { DepartmentPieChart } from "../components/dashboard/dashboardPieChart";
 import { DepartmentBarChart } from "../components/dashboard/DepartmentBarChart";
 import { endpoint } from "../utils/dataSet";
 import { useEntities } from "../context/EntityContect";
+import { DepartmentStats } from "../components/DepartmentStats";
 
 export function Dashboard() {
   const { user, entities, reloadEntities } = useEntities();
@@ -82,6 +83,17 @@ export function Dashboard() {
     }
   };
 
+  const renderDepartmentStats = () => (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {departmentData.map((dept) => (
+        <DepartmentStats
+          key={dept.name}
+          department={dept.name}
+          projectCount={dept.value}
+        />
+      ))}
+    </div>
+  );
   const exportChartAsPNG = (ref, filename) => {
     if (ref.current) {
       html2canvas(ref.current, { useCORS: true }).then((canvas) => {
@@ -117,9 +129,10 @@ export function Dashboard() {
   }
 
   const projectStatusData =
-    dashboardStats?.projectStatusDistribution?.map((data) => ({
+    dashboardStats?.projectStatusDistribution?.map((data, index) => ({
       name: data.status,
       value: data.count,
+      index: index,
     })) || [];
 
   return (
@@ -229,7 +242,7 @@ export function Dashboard() {
               </h3>
             </div>
             <div className="px-6 py-5">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {departmentData.map((data, index) => (
                   <div key={index} className="bg-gray-50 rounded-lg p-4">
                     <h4 className="text-sm font-medium text-gray-500">
@@ -240,7 +253,9 @@ export function Dashboard() {
                     </p>
                   </div>
                 ))}
-              </div>
+              </div> */}
+
+              {renderDepartmentStats()}
             </div>
           </div>
         </>

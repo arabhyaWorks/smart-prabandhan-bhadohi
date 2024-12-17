@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import { useLocation } from "react-router-dom";
+
 import axios from "axios";
 import { useEntities } from "../context/EntityContect"; // Import useEntities hook
 import { endpoint } from "../utils/dataSet";
@@ -66,7 +68,9 @@ export const MeetingLogModal = ({
 
   return (
     <div
-      style={{ zIndex: 9999, margin: 0,
+      style={{
+        zIndex: 9999,
+        margin: 0,
         padding: 0,
         top: 0,
         left: 0,
@@ -74,8 +78,8 @@ export const MeetingLogModal = ({
         bottom: 0,
         position: "fixed",
         // position: "absolute"
-        transitionDuration: "1000ms"
-       }}
+        transitionDuration: "1000ms",
+      }}
       className="duration-1000		 inset-0 bg-black bg-opacity-15 flex items-center justify-center"
     >
       <div className="bg-white rounded-lg shadow-lg overflow-auto max-h-[80vh] w-[90%]">
@@ -144,6 +148,8 @@ export const MeetingLogModal = ({
 };
 
 export function Projects() {
+  const location = useLocation();
+  const { state } = location;
   const { user } = useEntities(); // Access user data from the context
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -213,6 +219,21 @@ export function Projects() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Check if navigating from dashboard with department filter
+    if (state?.fromDashboard && state?.selectedDepartment) {
+      setSelectedDepartment(state.selectedDepartment);
+      // Clear the state to prevent filter from persisting on manual navigation
+      window.history.replaceState({}, document.title);
+    }
+
+    if (state?.fromDashboard && state?.selectedProjectStatus) {
+      setSelectedStatus(state.selectedProjectStatus);
+      // Clear the state to prevent filter from persisting on manual navigation
+      window.history.replaceState({}, document.title);
+    }
+  }, [state]);
 
   // Filtered projects based on search and filters
   const filteredProjects = projects.filter((project) => {
