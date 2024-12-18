@@ -53,13 +53,13 @@ export default function ProjectInspection() {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <button
+          {/* <button
             className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             onClick={() => console.log("Export Data")}
           >
             <Download className="h-4 w-4 mr-1" />
             Export
-          </button>
+          </button> */}
           <button className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500">
             <Plus className="h-5 w-5 mr-1" />
             New Inspection

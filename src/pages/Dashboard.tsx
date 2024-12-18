@@ -76,6 +76,7 @@ export function Dashboard() {
           },
         }
       );
+      console.log("Department Data", response.data.data);
       setDepartmentData(response.data.data || []);
     } catch (error) {
       console.error(error);
@@ -90,6 +91,7 @@ export function Dashboard() {
           key={dept.name}
           department={dept.name}
           projectCount={dept.value}
+          issuesCount={dept.issues}
         />
       ))}
     </div>

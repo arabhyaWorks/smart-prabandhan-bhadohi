@@ -279,6 +279,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
           //     label: entity.entity_name,
           //   }))}
 
+          disabled={formData.departmentId}
           options={entities
             ?.filter((entity) => entity.entity_type === 1)
             .map((entity) => ({
@@ -300,6 +301,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
               label: entity.entity_name, // Display name as the option label
             }))}
           required
+          disabled={formData.executingAgencyId}
         />
       </div>
 

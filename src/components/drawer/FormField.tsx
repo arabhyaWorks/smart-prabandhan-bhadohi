@@ -168,6 +168,7 @@ const FormField: React.FC<FormFieldProps> = ({
   options,
   className,
   required,
+  disabled,
 }) => {
   const baseInputClasses =
     "w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-gray-50 hover:bg-white";
@@ -188,6 +189,7 @@ const FormField: React.FC<FormFieldProps> = ({
               }
             )}
             required={required}
+            disabled={disabled}
           >
             <option value="">{placeholder || "Select an option"}</option>
             {options?.map((option) => (
