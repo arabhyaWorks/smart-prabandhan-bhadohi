@@ -680,7 +680,7 @@ export const projectIssuesHeaders = {
       "Issue Reported On",
       "Issue Closed On",
       "Closed By",
-      "Action",
+      // "Action",
     ],
   },
   subHeaders: {

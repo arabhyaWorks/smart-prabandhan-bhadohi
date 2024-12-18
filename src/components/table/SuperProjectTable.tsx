@@ -41,6 +41,7 @@ export const DataTable = ({
   headers,
   visibleColumns,
   onMeetingLogsClick,
+  onMeetingLogCreateClick,
 }: DataTableProps) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -133,8 +134,8 @@ export const DataTable = ({
                         >
                           {key === "id" ? (
                             <p>{rowIndex + 1}</p>
-                            // project[key]
-                          ) : //
+                          ) : // project[key]
+                          //
                           key === "projectStatus" ? (
                             <div className="w-20 flex-row justify-center align-center">
                               <p
@@ -191,23 +192,30 @@ export const DataTable = ({
                               </p>
                             </div>
                           ) : key === "viewMeetingLog" ? (
-                            <button
-                              // onClick={() =>
-                              //   // navigate(`/meetingLog/${project.id}`)
-                              // }
-
-                              // onClick={() => setShowModal(true)}
-                              onClick={() =>
-                                onMeetingLogsClick(
-                                  project.projectName,
-                                  project.id
-                                )
-                              }
-                              className="text-white w-full rounded-md px-4 bg-blue-400 hover:underline focus:outline-none"
-                            >
-                              {/* {project[key]} */}
-                              View Meeting Log
-                            </button>
+                            <div className=" w-[140px]">
+                              <button
+                                onClick={() =>
+                                  onMeetingLogsClick(
+                                    project.projectName,
+                                    project.id
+                                  )
+                                }
+                                className="text-white w-full font-semibold rounded-md px-4 py-1  bg-blue-400 hover:underline focus:outline-none"
+                              >
+                                View Meeting Log
+                              </button>
+                              <button
+                                onClick={() =>
+                                  onMeetingLogCreateClick(
+                                    project.projectName,
+                                    project.id
+                                  )
+                                }
+                                className="text-white mt-3 w-full font-semibold rounded-md px-4 py-1 bg-orange-400 hover:underline focus:outline-none"
+                              >
+                                Create Meeting Log
+                              </button>
+                            </div>
                           ) : (
                             project[key]
                           )}

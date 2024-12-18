@@ -147,6 +147,154 @@ export const MeetingLogModal = ({
   );
 };
 
+export const CreateMeetingLog = ({
+  projectName,
+  projectId,
+  closeModal,
+  showModal,
+}) => {
+  const meetingHeaders = [
+    "क्रम संख्या",
+    "समीक्षा बैठक निर्देश",
+    "समीक्षा बैठक दिनांक",
+    "दिये गये निर्देश के सापेक्ष अनुपालन",
+    "अभ्यूक्ति",
+  ];
+
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+  const [compliance, setCompliance] = useState("");
+  const [feedback, setFeedback] = useState("");
+
+  const submitMeetingLog = async () => {
+    if (!description || !date || !compliance || !feedback) {
+      alert("Please fill all the fields");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${endpoint}/api/projects/${projectId}/meetings`,
+        {
+          description,
+          date,
+          compliance,
+          feedback,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (response.data.success) {
+        alert("Meeting log submitted successfully.");
+        closeModal();
+      } else {
+        console.error("Failed to submit meeting log.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (!showModal) return null;
+
+  return (
+    <div
+      style={{
+        zIndex: 9999,
+        margin: 0,
+        padding: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        position: "fixed",
+        // position: "absolute"
+        transitionDuration: "1000ms",
+      }}
+      className="duration-1000		 inset-0 bg-black bg-opacity-15 flex items-center justify-center"
+    >
+      <div className="bg-white rounded-lg shadow-lg overflow-auto max-h-[80vh] w-[90%]">
+        <h2 className="text-lg font-bold text-gray-900 p-4 border-b">
+          Meeting Logs
+        </h2>
+        <h3 className="text-sm font-semibold text-gray-900 p-4 border-b">
+          {projectName}
+        </h3>
+        <div className="p-5">
+          <div>
+            <div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  समीक्षा बैठक निर्देश
+                </label>
+                <input
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  placeholder="समीक्षा बैठक निर्देश"
+                  type="text"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  दिये गये निर्देश के सापेक्ष अनुपालन
+                </label>
+                <textarea
+                  value={compliance}
+                  onChange={(e) => setCompliance(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  rows={4}
+                  placeholder="दिये गये निर्देश के सापेक्ष अनुपालन"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  अभ्यूक्ति
+                </label>
+                <textarea
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  rows={4}
+                  placeholder="अभ्यूक्ति"
+                />
+              </div>
+            </div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              समीक्षा बैठक दिनांक
+            </label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            />
+          </div>
+        </div>
+        {/* Modal Buttons */}
+        <div className=" pr-5 pb-5 flex justify-end gap-3 mt-6">
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            Close
+          </button>
+          <button
+            onClick={submitMeetingLog}
+            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export function Projects() {
   const location = useLocation();
   const { state } = location;
@@ -165,6 +313,7 @@ export function Projects() {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showCreateMeetingLog, setShowCreateMeetingLog] = useState(false);
 
   const [visibleColumns, setVisibleColumns] = useState(
     headers.hi.map((_, index) => index.toString())
@@ -319,6 +468,12 @@ export function Projects() {
               setProjectId(projectId);
               setShowModal(true);
             }}
+            onMeetingLogCreateClick={(projectName, projectId) => {
+              console.log(projectName, projectId);
+              setProjectName(projectName);
+              setProjectId(projectId);
+              setShowCreateMeetingLog(true);
+            }}
           />
         </div>
       )}
@@ -328,6 +483,13 @@ export function Projects() {
         projectId={projectId}
         closeModal={() => setShowModal(false)}
         showModal={showModal}
+      />
+
+      <CreateMeetingLog
+        projectName={projectName}
+        projectId={projectId}
+        closeModal={() => setShowCreateMeetingLog(false)}
+        showModal={showCreateMeetingLog}
       />
 
       <Drawer

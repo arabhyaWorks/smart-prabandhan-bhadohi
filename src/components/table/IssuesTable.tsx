@@ -176,11 +176,11 @@ export const IssueTable = ({
                   <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
                     {convertToIST(project.issueClosedDate) || "-"}
                   </td>
-                  <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
+                  {/* <td className="text-sm text-gray-900 border-2 border-gray-100 px-6 py-4">
                     <button className="text-sm bg-orange-600 text-white font-semibold rounded-md px-6 py-1">
                       Edit
                     </button>
-                  </td>
+                  </td> */}
                 </tr>
               </React.Fragment>
             ))}
