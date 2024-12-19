@@ -33,6 +33,9 @@ interface DataTableProps {
     en: Array<string>;
   };
   visibleColumns: string[];
+  activeView: string;
+  onMeetingLogsClick: (projectName: string, projectId: string) => void;
+  onMeetingLogCreateClick: (projectName: string, projectId: string) => void;
 }
 
 export const DataTable = ({
@@ -42,10 +45,11 @@ export const DataTable = ({
   visibleColumns,
   onMeetingLogsClick,
   onMeetingLogCreateClick,
+  activeView
 }: DataTableProps) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage, setEntriesPerPage] = useState(100);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [showModal, setShowModal] = useState(false);
 
   const indexOfLastEntry = currentPage * entriesPerPage;
@@ -58,7 +62,7 @@ export const DataTable = ({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-[calc(100vh-10px)] relative">
       <div className="p-4 flex items-center justify-between bg-white border-b">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">Show</span>
@@ -85,148 +89,152 @@ export const DataTable = ({
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {headers.hi.map(
-                (header, index) =>
-                  visibleColumns.includes(index.toString()) && (
-                    <th
-                      key={header}
-                      className={classNames(
-                        "px-6 py-4 text-left text-sm font-bold text-orange-800 tracking-wider border-2 border-gray-100",
-                        index === 0 ? "w-16" : "w-40"
-                      )}
-                    >
-                      {header}
-                    </th>
-                  )
-              )}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {currentEntries.map((project, rowIndex) => (
-              <>
-                <tr
-                  key={rowIndex}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  {ProjectTableDataKeys.map(
-                    (key, index) =>
-                      visibleColumns.includes(index.toString()) && (
-                        <td
-                          key={index}
-                          className={classNames(
-                            "px-6 py-4 text-sm text-gray-900 border-2 border-gray-100",
-                            index === 0 ? "text-center" : "whitespace-normal"
-                          )}
-                          style={{
-                            maxWidth:
-                              key === "projectName"
-                                ? "500px"
-                                : key === "viewMeetingLog"
-                                ? "300px"
-                                : "200px",
-                            overflowWrap: "break-word",
-                            whiteSpace: "normal",
-                          }}
-                        >
-                          {key === "id" ? (
-                            <p>{rowIndex + 1}</p>
-                          ) : // project[key]
-                          //
-                          key === "projectStatus" ? (
-                            <div className="w-20 flex-row justify-center align-center">
-                              <p
+      <div className="flex-1 overflow-auto">
+        <div className="inline-block min-w-full align-middle">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50 sticky top-0 z-10">
+              <tr>
+                {headers.hi.map(
+                  (header, index) =>
+                    visibleColumns.includes(index.toString()) && (
+                      <th
+                        key={header}
+                        className={classNames(
+                          "px-6 py-4 text-left text-sm font-bold text-orange-800 tracking-wider border-2 border-gray-100",
+                          index === 0 ? "w-16" : "w-40"
+                        )}
+                      >
+                        {header}
+                      </th>
+                    )
+                )}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentEntries.map((project, rowIndex) => (
+                <>
+                  <tr
+                    key={rowIndex}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    {ProjectTableDataKeys.map(
+                      (key, index) =>
+                        visibleColumns.includes(index.toString()) && (
+                          <td
+                            key={index}
+                            className={classNames(
+                              "px-6 py-4 text-sm text-gray-900 border-2 border-gray-100",
+                              index === 0 ? "text-center" : "whitespace-normal"
+                            )}
+                            style={{
+                              maxWidth:
+                                key === "projectName"
+                                  ? "500px"
+                                  : key === "viewMeetingLog"
+                                  ? "300px"
+                                  : "200px",
+                              overflowWrap: "break-word",
+                              whiteSpace: "normal",
+                            }}
+                          >
+                            {key === "id" ? (
+                              <p>{rowIndex + 1}</p>
+                            ) : // project[key]
+                            //
+                            key === "projectStatus" ? (
+                              <div className="w-20 flex-row justify-center align-center">
+                                <p
+                                  className={classNames(
+                                    "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                                    project.projectStatus === "Complete"
+                                      ? "bg-green-100 text-green-800"
+                                      : project.projectStatus ===
+                                        "कार्य प्रगति पर"
+                                      ? "bg-blue-100 text-blue-800"
+                                      : project.projectStatus ===
+                                        "प्रारंभिक चरण"
+                                      ? "bg-yellow-100 text-yellow-800"
+                                      : project.projectStatus ===
+                                        "योजना निर्माण"
+                                      ? "bg-gray-100 text-gray-800"
+                                      : "bg-red-100 text-red-800"
+                                  )}
+                                >
+                                  {projectStatuses[parseInt(project[key]) - 1]}
+                                </p>
+                              </div>
+                            ) : key === "projectUpdate" ||
+                              key === "projectGallery" ||
+                              key === "meetingInstructions" ||
+                              key === "complianceOfMeetingInstructions" ? (
+                              <button
                                 className={classNames(
-                                  "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
-                                  project.projectStatus === "Complete"
-                                    ? "bg-green-100 text-green-800"
-                                    : project.projectStatus ===
-                                      "कार्य प्रगति पर"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : project.projectStatus === "प्रारंभिक चरण"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : project.projectStatus === "योजना निर्माण"
-                                    ? "bg-gray-100 text-gray-800"
-                                    : "bg-red-100 text-red-800"
+                                  "bg-[#4AA3E0] px-2 py-[1px] rounded shadow text-white",
+                                  key === "projectGallery"
+                                    ? "bg-[#FFB74D]"
+                                    : key === "meetingInstructions"
+                                    ? "bg-[#66BB6A]"
+                                    : key === "complianceOfMeetingInstructions"
+                                    ? "bg-[#5A87D2]"
+                                    : ""
                                 )}
                               >
-                                {projectStatuses[parseInt(project[key]) - 1]}
-                              </p>
-                            </div>
-                          ) : key === "projectUpdate" ||
-                            key === "projectGallery" ||
-                            key === "meetingInstructions" ||
-                            key === "complianceOfMeetingInstructions" ? (
-                            <button
-                              className={classNames(
-                                "bg-[#4AA3E0] px-2 py-[1px] rounded shadow text-white",
-                                key === "projectGallery"
-                                  ? "bg-[#FFB74D]"
-                                  : key === "meetingInstructions"
-                                  ? "bg-[#66BB6A]"
-                                  : key === "complianceOfMeetingInstructions"
-                                  ? "bg-[#5A87D2]"
-                                  : ""
-                              )}
-                            >
-                              {project[key]}
-                            </button>
-                          ) : key === "projectName" ? (
-                            <button
-                              onClick={() =>
-                                navigate(`/projectDetail/${project.id}`)
-                              }
-                              className="text-black-500 hover:underline focus:outline-none"
-                            >
-                              {project[key]}
-                            </button>
-                          ) : key.includes("Date") ? (
-                            <div className="">
-                              <p className="">
-                                {convertToIST(project[key])
-                                  .split("-")
-                                  .join("/")}
-                              </p>
-                            </div>
-                          ) : key === "viewMeetingLog" ? (
-                            <div className=" w-[140px]">
+                                {project[key]}
+                              </button>
+                            ) : key === "projectName" ? (
                               <button
                                 onClick={() =>
-                                  onMeetingLogsClick(
-                                    project.projectName,
-                                    project.id
-                                  )
+                                  navigate(`/projectDetail/${project.id}`)
                                 }
-                                className="text-white w-full font-semibold rounded-md px-4 py-1  bg-blue-400 hover:underline focus:outline-none"
+                                className="text-black-500 hover:underline focus:outline-none"
                               >
-                                View Meeting Log
+                                {project[key]}
                               </button>
-                              <button
-                                onClick={() =>
-                                  onMeetingLogCreateClick(
-                                    project.projectName,
-                                    project.id
-                                  )
-                                }
-                                className="text-white mt-3 w-full font-semibold rounded-md px-4 py-1 bg-orange-400 hover:underline focus:outline-none"
-                              >
-                                Create Meeting Log
-                              </button>
-                            </div>
-                          ) : (
-                            project[key]
-                          )}
-                        </td>
-                      )
-                  )}
-                </tr>
-              </>
-            ))}
-          </tbody>
-        </table>
+                            ) : key.includes("Date") ? (
+                              <div className="">
+                                <p className="">
+                                  {convertToIST(project[key])
+                                    .split("-")
+                                    .join("/")}
+                                </p>
+                              </div>
+                            ) : key === "viewMeetingLog" ? (
+                              <div className=" w-[140px]">
+                                <button
+                                  onClick={() =>
+                                    onMeetingLogsClick(
+                                      project.projectName,
+                                      project.id
+                                    )
+                                  }
+                                  className="text-white w-full font-semibold rounded-md px-4 py-1  bg-blue-400 hover:underline focus:outline-none"
+                                >
+                                  View Meeting Log
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    onMeetingLogCreateClick(
+                                      project.projectName,
+                                      project.id
+                                    )
+                                  }
+                                  className="text-white mt-3 w-full font-semibold rounded-md px-4 py-1 bg-orange-400 hover:underline focus:outline-none"
+                                >
+                                  Create Meeting Log
+                                </button>
+                              </div>
+                            ) : (
+                              project[key]
+                            )}
+                          </td>
+                        )
+                    )}
+                  </tr>
+                </>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="p-4 flex items-center justify-between border-t bg-white">

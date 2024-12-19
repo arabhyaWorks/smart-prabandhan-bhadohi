@@ -85,7 +85,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
     projectInspection: projectData.projectInspection,
     projectEssentialTest: projectData.projectEssentialTest,
     projectGallery: projectData.projectGallery,
-    mileStones: projectData.mileStones,
+    mileStones: [],
     issues: projectData.issues,
     budgetInstallment: projectData.budgetInstallment,
   });
@@ -693,7 +693,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
 
   const renderDynamicSection = (field, fieldsConfig) => (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold">{field.replace(/([A-Z])/g, " $1")}</h3>
+      {/* <h3 className="text-lg font-bold">{field.replace(/([A-Z])/g, " $1")}</h3> */}
       {formData[field].map((entry, index) => (
         <div key={index} className="border p-4 rounded-md space-y-2">
           {fieldsConfig.map(({ label, name, type }) => (
@@ -758,7 +758,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
   const renderDynamicSections = () => (
     <div className="space-y-6">
       {/* Project Inspection Section */}
-      {renderDynamicSection("projectInspection", [
+      {/* {renderDynamicSection("projectInspection", [
         { label: "Inspection Date", name: "inspectionDate", type: "date" },
         { label: "Official Name", name: "officialName", type: "text" },
         { label: "Official Email", name: "officialEmail", type: "text" },
@@ -781,10 +781,10 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
         },
         { label: "Inspection Status", name: "inspectionStatus", type: "text" },
         { label: "Inspection Report", name: "inspectionReport", type: "text" },
-      ])}
+      ])} */}
 
       {/* Project Essential Test Section */}
-      {renderDynamicSection("projectEssentialTest", [
+      {/* {renderDynamicSection("projectEssentialTest", [
         { label: "Test Name", name: "testName", type: "text" },
         {
           label: "Sample Collection Date",
@@ -807,10 +807,10 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
           name: "sampleCollectionSiteImages",
           type: "text",
         },
-      ])}
+      ])} */}
 
       {/* Project Gallery Section */}
-      {renderDynamicSection("projectGallery", [
+      {/* {renderDynamicSection("projectGallery", [
         { label: "Image", name: "image", type: "text" },
         { label: "Image Description", name: "imageDescription", type: "text" },
         { label: "Latitude", name: "latitude", type: "number" },
@@ -818,41 +818,41 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
         { label: "Elevation", name: "elevation", type: "number" },
         { label: "Accuracy", name: "accuracy", type: "number" },
         { label: "Time", name: "time", type: "date" },
-      ])}
+      ])} */}
 
       {/* Milestones Section */}
       {renderDynamicSection("mileStones", [
-        { label: "Milestone Name", name: "milestoneName", type: "text" },
+        { label: "Monthly Progress Name", name: "milestoneName", type: "text" },
         {
-          label: "Milestone From Date",
+          label: "Monthly Progress From Date",
           name: "milestoneFromDate",
           type: "date",
         },
         {
-          label: "Milestone Completion Date",
+          label: "Monthly Progress Completion Date",
           name: "milestoneCompletionDate",
           type: "date",
         },
         {
-          label: "Milestone Actual Completion Date",
+          label: "Monthly Progress Actual Completion Date",
           name: "milestoneActualCompletionDate",
           type: "date",
         },
-        { label: "Milestone Status", name: "milestoneStatus", type: "text" },
+        { label: "Monthly Progress Status", name: "milestoneStatus", type: "text" },
         {
-          label: "Milestone Description",
+          label: "Monthly Progress Description",
           name: "milestoneDescription",
           type: "text",
         },
         {
-          label: "Milestone Progress",
+          label: "Progress",
           name: "milestoneProgress",
           type: "text",
         },
       ])}
 
       {/* Issues Section */}
-      {renderDynamicSection("issues", [
+      {/* {renderDynamicSection("issues", [
         { label: "Issue Name", name: "issueName", type: "text" },
         { label: "Issue Description", name: "issueDescription", type: "text" },
         { label: "Issue Raised By", name: "issueRaisedBy", type: "text" },
@@ -862,10 +862,10 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
         { label: "Issue Status", name: "issueStatus", type: "text" },
         { label: "Issue Closed Date", name: "issueClosedDate", type: "date" },
         { label: "Issue Closed By", name: "issueClosedBy", type: "text" },
-      ])}
+      ])} */}
 
       {/* Budget Installment Section */}
-      {renderDynamicSection("budgetInstallment", [
+      {/* {renderDynamicSection("budgetInstallment", [
         {
           label: "Installment Amount",
           name: "installmentAmount",
@@ -886,7 +886,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
           name: "utilizationCertificate",
           type: "text",
         },
-      ])}
+      ])} */}
     </div>
   );
 
@@ -919,9 +919,9 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
             {renderScheduleInformation()}
           </div>
         )}
-        {/* {currentStep === 4 && (
+        {currentStep === 4 && (
           <div className="space-y-6">{renderDynamicSections()}</div>
-        )} */}
+        )}
       </div>
 
       <div className="flex justify-between pt-6 border-t">
@@ -940,7 +940,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
           Previous
         </button>
 
-        {currentStep < 3 && (
+        {currentStep < 4 && (
           <button
             type="button"
             onClick={nextStep}
@@ -951,7 +951,7 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
           </button>
         )}
 
-        {currentStep === 3 && (
+        {currentStep === 4 && (
           <button
             className={classNames(
               "flex items-center px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-white",

@@ -31,7 +31,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep, steps }) => 
                 "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500",
                 "border-2 z-10",
                 {
-                  'bg-orange-600 border-orange-600': index + 1 <= currentStep,
+                    'bg-orange-600 border-orange-600': index + 1 <= currentStep,
                   'bg-white border-gray-300': index + 1 > currentStep
                 }
               )}

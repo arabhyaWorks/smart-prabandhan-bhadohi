@@ -45,7 +45,10 @@ const ProjectMeetingLogs = ({ meetingInstructions }) => {
                 {meetingInstructions?.map((meeting, index) => (
  <tr key={index} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 text-sm text-gray-900 border-2 border-gray-200 text-center">
-                    {meeting.id}
+                    {/* {meeting.id} */}
+                    {
+                      index + 1
+                    }
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900 border-2 border-gray-200">
                     {meeting.description}
