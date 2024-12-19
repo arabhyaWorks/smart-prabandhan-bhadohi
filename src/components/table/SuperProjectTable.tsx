@@ -25,6 +25,21 @@ const projectStatuses = [
   "पूर्ण हुआ",
 ];
 
+const simplifiedTableKeys = [
+  "id",
+  "projectName",
+  "projectStatus",
+  "projectSanctionDate",
+  "approvedProjectCost",
+  "contractCost",
+  "totalReleasedFunds",
+  "totalExpenditure",
+  "lastMonthPhysicalProgress",
+  "currentMonthPhysicalProgress",
+  "projectCompletionDate",
+  "meetingfeedback",
+];
+
 interface DataTableProps {
   searchTerm: string;
   projects: Array<string>;
@@ -45,7 +60,7 @@ export const DataTable = ({
   visibleColumns,
   onMeetingLogsClick,
   onMeetingLogCreateClick,
-  activeView
+  activeView,
 }: DataTableProps) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,6 +74,17 @@ export const DataTable = ({
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(Math.min(Math.max(1, pageNumber), totalPages));
+  };
+
+  const activeKeys =
+    activeView === "full" ? ProjectTableDataKeys : simplifiedTableKeys;
+  const activeHeaders = {
+    hi: headers.hi.filter((_, index) =>
+      activeKeys.includes(ProjectTableDataKeys[index])
+    ),
+    en: headers.en.filter((_, index) =>
+      activeKeys.includes(ProjectTableDataKeys[index])
+    ),
   };
 
   return (
@@ -94,7 +120,7 @@ export const DataTable = ({
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
-                {headers.hi.map(
+                {activeHeaders.hi.map(
                   (header, index) =>
                     visibleColumns.includes(index.toString()) && (
                       <th
@@ -109,6 +135,22 @@ export const DataTable = ({
                     )
                 )}
               </tr>
+              <tr>
+                {activeHeaders.hi.map(
+                  (header, index) =>
+                    visibleColumns.includes(index.toString()) && (
+                      <th
+                        key={header}
+                        className={classNames(
+                          "px-6 py-4 text-left text-center text-sm font-bold text-orange-800 tracking-wider border-2 border-gray-100",
+                          index === 0 ? "w-16" : "w-40"
+                        )}
+                      >
+                        {index + 1}
+                      </th>
+                    )
+                )}
+              </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {currentEntries.map((project, rowIndex) => (
@@ -117,7 +159,7 @@ export const DataTable = ({
                     key={rowIndex}
                     className="hover:bg-gray-50 transition-colors"
                   >
-                    {ProjectTableDataKeys.map(
+                    {activeKeys.map(
                       (key, index) =>
                         visibleColumns.includes(index.toString()) && (
                           <td
