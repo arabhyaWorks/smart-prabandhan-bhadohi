@@ -23,6 +23,7 @@ const projectStatuses = [
   "विवादित",
   "विलंबित",
   "पूर्ण हुआ",
+  "कोर्ट केस"
 ];
 
 const STEPS = [
