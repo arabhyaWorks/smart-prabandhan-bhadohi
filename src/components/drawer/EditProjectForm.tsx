@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { endpoint } from "../../utils/dataSet";
 import { useEntities } from "../../context/EntityContect";
+import { set } from "date-fns";
 
 const yojnaCategories = [
   "Sansad Nidhi",
@@ -28,6 +29,18 @@ const STEPS = [
   { title: "Financials", description: "Budget & costs" },
   { title: "Schedule", description: "Timeline & dates" },
 ];
+
+function getCurrentMonthStart() {
+  // Create a new Date object for the current date
+  const currentDate = new Date();
+
+  // Extract the current year and month
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+
+  // Return the formatted string in YYYY-MM-DD format
+  return `${year}-${month}-01`;
+}
 
 export const convertISOToDateInput = (isoDate) => {
   if (!isoDate) return "";
@@ -89,6 +102,9 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
     issues: projectData.issues,
     budgetInstallment: projectData.budgetInstallment,
   });
+
+  const [currentMonthPhysicalProgress, setCurrentMonthPhysicalProgress] =
+    useState(projectData.currentMonthPhysicalProgress);
 
   const [projectSanctionDate, setProjectSanctionDate] = useState(
     convertISOToDateInput(projectData.projectSanctionDate)
@@ -201,11 +217,14 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
     //       description: null,
     //       date: null,
     //       compliance: null,
-
     //       feedback: formData.meetingInstructions,
     //     },
     //   ],
     // };
+
+    // console.log(getCurrentMonthStart());
+    // console.log(currentMonthPhysicalProgress);
+    // console.log(user?.id);
 
     const dates = {
       projectSanctionDate,
@@ -249,6 +268,33 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
       const result = await response.json();
       console.log("Success:", result);
       if (result.success) {
+        const progressResponse = await fetch(
+          `${endpoint}/api/projects/progress`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              projectId: projectData.id, // Assuming `projectData.id` is the ID of the project
+              progressMonth: getCurrentMonthStart(), // Default date for demonstration
+              physicalProgress: currentMonthPhysicalProgress, // Default progress for demonstration
+              updatedBy: user?.id, // Replace `user.id` with your logged-in user's ID
+            }),
+          }
+        );
+
+        if (!progressResponse.ok) {
+          throw new Error(`HTTP error! status: ${progressResponse.status}`);
+        }
+
+        const progressResult = await progressResponse.json();
+        console.log("Progress updated successfully:", progressResult);
+
+        if (progressResult.success) {
+          alert("Project progress updated successfully");
+          onSubmitSuccess?.();
+        }
         alert("Project data updated successfully");
         onSubmitSuccess?.();
       }
@@ -652,17 +698,26 @@ const EditProjectForm = ({ onSubmitSuccess, projectData }) => {
         />
       </div>
 
-      <FormField
-        label="कार्यदायी संस्था को भूमि उपलब्ध होने की तिथि (Date of Land Handover to Executing Agency)"
-        name="landHandoverDate"
-        type="date"
-        // value={formData.landHandoverDate}
-        // onChange={(date) => handleDateChange(date, "landHandoverDate")}
-        value={landHandoverDate}
-        onChange={setLandHandoverDate}
-        placeholder="Select date"
-        // required
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          label="कार्यदायी संस्था को भूमि उपलब्ध होने की तिथि (Date of Land Handover to Executing Agency)"
+          name="landHandoverDate"
+          type="date"
+          value={landHandoverDate}
+          onChange={setLandHandoverDate}
+          placeholder="Select date"
+        />
+        <FormField
+          label="वर्तमान माह की भौतिक प्रगति (Current Month Physical Progress)"
+          name="currentMonthPhysicalProgress"
+          type="text"
+          value={currentMonthPhysicalProgress}
+          onChange={(e) => {
+            setCurrentMonthPhysicalProgress(e.target.value);
+          }}
+          placeholder="Enter progress"
+        />
+      </div>
     </div>
   );
 
