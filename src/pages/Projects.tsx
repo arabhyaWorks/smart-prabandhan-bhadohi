@@ -13,6 +13,8 @@ import Drawer from "../components/drawer/Drawer";
 import ProjectForm from "../components/drawer/dataEntryForm";
 import classNames from "classnames";
 import { convertToIST } from "../utils/functions";
+import { ProjectTableDataKeys } from "../utils/dataSet";
+import exportData from "../utils/exportXl";
 
 export const MeetingLogModal = ({
   projectName,
@@ -325,6 +327,21 @@ export function Projects() {
     label: header,
   }));
 
+  const projectStatuses = [
+    // "योजना चरण में",
+    // "विवादित",
+    // "प्रगति पर है",
+    // "विलंबित",
+    // "पूर्ण हुआ",
+
+    "योजना चरण",
+    "प्रगति पर है",
+    "विवादित",
+    "विलंबित",
+    "पूर्ण हुआ",
+    "कोर्ट केस",
+  ];
+
   // Toggle visibility of columns
   const handleToggleColumn = (columnKey: string) => {
     setVisibleColumns((prev) =>
@@ -412,6 +429,32 @@ export function Projects() {
     );
   });
 
+  const simplifiedTableKeys = [
+    "id",
+    "projectName",
+    "projectStatus",
+    "projectSanctionDate",
+    "approvedProjectCost",
+    "contractCost",
+    "totalReleasedFunds",
+    "totalExpenditure",
+    "lastMonthPhysicalProgress",
+    "currentMonthPhysicalProgress",
+    "projectCompletionDate",
+    "meetingfeedback",
+  ];
+
+  const activeKeys =
+    activeView === "full" ? ProjectTableDataKeys : simplifiedTableKeys;
+  const activeHeaders = {
+    hi: headers.hi.filter((_, index) =>
+      activeKeys.includes(ProjectTableDataKeys[index])
+    ),
+    en: headers.en.filter((_, index) =>
+      activeKeys.includes(ProjectTableDataKeys[index])
+    ),
+  };
+
   // Fetch projects when component mounts or user data changes
   useEffect(() => {
     if (user) fetchProjects();
@@ -427,6 +470,16 @@ export function Projects() {
           </p>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              exportData(activeView, filteredProjects);
+            }}
+            className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          >
+            <Download className="h-4 w-4 mr-1" />
+            Export
+          </button>
           <div className="flex items-center bg-gray-100 rounded-lg p-1">
             <button
               onClick={() => setActiveView("full")}
@@ -491,6 +544,8 @@ export function Projects() {
             searchTerm={searchTerm}
             visibleColumns={visibleColumns}
             activeView={activeView}
+            activeKeys={activeKeys}
+            activeHeaders={activeHeaders}
             onMeetingLogsClick={(projectName, projectId) => {
               console.log(projectName, projectId);
               setProjectName(projectName);
