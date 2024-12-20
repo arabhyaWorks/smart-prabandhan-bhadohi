@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEntities } from "../context/EntityContect"; // Import useEntities hook
 import { endpoint } from "../utils/dataSet";
 import { headers } from "../utils/dataSet";
-import { Plus, Download } from "lucide-react";
+import { Plus, Download, Table, LayoutGrid } from "lucide-react";
 import { DataTable } from "../components/table/SuperProjectTable";
 import { ProjectFilters } from "../components/table/ProjectFilters";
 import Drawer from "../components/drawer/Drawer";
@@ -298,6 +298,8 @@ export const CreateMeetingLog = ({
 export function Projects() {
   const location = useLocation();
   const { state } = location;
+  const [activeView, setActiveView] = useState("full"); // 'full' or 'simplified'
+
   const { user } = useEntities(); // Access user data from the context
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -425,6 +427,32 @@ export function Projects() {
           </p>
         </div>
         <div className="flex items-center gap-4">
+          <div className="flex items-center bg-gray-100 rounded-lg p-1">
+            <button
+              onClick={() => setActiveView("full")}
+              className={classNames(
+                "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+                activeView === "full"
+                  ? "bg-white text-orange-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              )}
+            >
+              <Table className="w-4 h-4" />
+              Detailed View
+            </button>
+            <button
+              onClick={() => setActiveView("simplified")}
+              className={classNames(
+                "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+                activeView === "simplified"
+                  ? "bg-white text-orange-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              )}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              Simple View
+            </button>
+          </div>
           <button
             onClick={() => setIsDrawerOpen(true)}
             className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500"
@@ -462,6 +490,7 @@ export function Projects() {
             projects={filteredProjects}
             searchTerm={searchTerm}
             visibleColumns={visibleColumns}
+            activeView={activeView}
             onMeetingLogsClick={(projectName, projectId) => {
               console.log(projectName, projectId);
               setProjectName(projectName);
